@@ -1,12 +1,13 @@
 from flask import Flask, request,g
 import json
+import pickle
 #from bson  import json_util
 #from bson.objectid import ObjectId
 import psycopg2
 import dateutil.parser as dparser  
 from flask import jsonify
 from flask_cors import CORS, cross_origin
-from flaskext.mysql import MySQL
+#from flaskext.mysql import MySQL
 import ujson
 
 
@@ -47,18 +48,20 @@ def release_location_count():
     if request.method == 'GET':
         #lim = int(request.args.get('limit', 50000))
         #off = int(request.args.get('offset', 0))
-    results=[]
-    with app.app_context():
-        conn = get_db().cursor() 
-        query = "SELECT * FROM musicbrainz.artist LIMIT 10"
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor() 
+            query = "SELECT * FROM musicbrainz.artist LIMIT 10"
+        
     
-
-        conn.execute(query)
-        data = conn.fetchall()
-        for item in data:
-            results.add(item)
-
-    return ujson.dumps(results)
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                results.append(item)
+    
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
  
 
 
@@ -66,6 +69,6 @@ def release_location_count():
 
 if __name__ == '__main__':
     from gevent.wsgi import WSGIServer
-    http_server = WSGIServer(('db03.cs.utah.edu', 9000), app)
+    http_server = WSGIServer(('db03.cs.utah.edu', 8181), app)
     http_server.serve_forever()
 
