@@ -14,6 +14,14 @@
     function init() {
         //Creating instances for each visualization
 
+
+        d3.json("public/data/country_track.json",function(error,track_data){
+            if(error) throw error;
+            var choroplethmap = new ChoroplethMap(track_data);
+            choroplethmap.update();
+        });
+
+
     }
 
     /**

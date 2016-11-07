@@ -4,14 +4,19 @@
     <meta charset="UTF-8">
     <title>Music Atlas</title>
     <script src="https://d3js.org/d3.v4.min.js"></script>
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,100,500' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <script src="public/js/topojson.js"></script>
 
-    <!-- Theme Style -->
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="public/css/navbar-style.css">
+    <style>
+        #choropleth{
+            min-height:600px;
+        }
+    </style>
 
 </head>
 <body>
+
 <header id="fh5co-header" role="banner">
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
@@ -31,8 +36,11 @@
         </div>
     </nav>
 </header>
-<!-- END .header -->
+<div id="choropleth">
 
+</div>
+<script type="application/javascript" src="public/js/choroplethmap.js"></script>
 <script type="application/javascript" src="public/js/main.js"></script>
+
 </body>
 </html>
