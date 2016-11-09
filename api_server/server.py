@@ -38,8 +38,6 @@ def close_connection(exception):
 def parseDate( date_string):
     return dparser.parse(date_string, fuzzy=True)
 
- 
- 
 @app.route('/api/release/location/', methods=['GET'])
 def release_location_count():
     """ RELEASE LOCATION COUNT
@@ -62,7 +60,6 @@ def release_location_count():
         return ujson.dumps(results)
     else:
         return ujson.dumps({"status":"error"})
- 
 
 
 
