@@ -35,12 +35,14 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
+
 def parseDate( date_string):
     return dparser.parse(date_string, fuzzy=True)
 
-@app.route('/api/release/location/', methods=['GET'])
+
+@app.route('/api/release_location_count', methods=['GET'])
 def release_location_count():
-    """ RELEASE LOCATION COUNT
+    """ RELEASE COUNT PER LOCATION
     GET /api/release/location/
     """
     if request.method == 'GET':
@@ -49,12 +51,16 @@ def release_location_count():
         results=[]
         with app.app_context():
             conn = get_db().cursor() 
-            query = "SELECT * FROM musicbrainz.artist LIMIT 10"
-        
+            # query = "select count(*) from musicbrainz.release C, musicbrainz.release_country A , musicbrainz.area B where A.country= B.id and A.release=C.id"
+            query = "select count(C.id),B.name  from musicbrainz.release C, musicbrainz.release_country A , musicbrainz.area B where A.country= B.id and A.release=C.id group by B.name "
+
     
             conn.execute(query)
             data = conn.fetchall()
             for item in data:
+                temp= {}
+                temp["release_count"] = item[0]
+                temp["country"] = item[1]
                 results.append(item)
     
         return ujson.dumps(results)
@@ -62,6 +68,173 @@ def release_location_count():
         return ujson.dumps({"status":"error"})
 
 
+@app.route('/api/country_track', methods=['GET'])
+def country_track():
+    """ COUNTRY TRACK COUNT
+    GET /api/country_track
+    """
+    if request.method == 'GET':
+        #lim = int(request.args.get('limit', 50000))
+        #off = int(request.args.get('offset', 0))
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor()
+            query = "select count(*), C.id, C.name from musicbrainz.track A, musicbrainz.release_country B, musicbrainz.area C  where A.medium=B.release and B.country=C.id group by C.id "
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                temp = {}
+                temp["count"] = item[0]
+                temp["id"] = item[1]
+                temp["country"] = item[2]
+                results.append(temp)
+
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
+
+
+@app.route('/api/artist_track', methods=['GET'])
+def artist_track():
+    """ ARTIST TRACK INFORMATION
+    GET /api/artist_track
+    """
+    if request.method == 'GET':
+        #lim = int(request.args.get('limit', 50000))
+        #off = int(request.args.get('offset', 0))
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor()
+            query = "select C.id release_id, C.name release_name, B.id artist_id, B.name artist_name,B.gender gender, A.id track_id, A.name track_name,round (A.length/60000::numeric,2) length,D.date_year as year, E.name country, F.name as language from musicbrainz.track A, musicbrainz.artist B, musicbrainz.release C, musicbrainz.release_country D, musicbrainz.area E, musicbrainz.language F  where A.artist_credit=B.id and A.medium = C.id and A.medium= D.release and D.country=E.id and C.language = F.id"
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                temp = {}
+                temp["release_id"] = item[0]
+                temp["release_name"] = item[1]
+                temp["artist_id"] = item[2]
+                temp["artist_name"] = item[3]
+                temp["gender"] = item[4]
+                temp["track_id"] = item[5]
+                temp["track_name"] = item[6]
+                temp["length"] = item[7]
+                temp["year"] = item[8]
+                temp["country"] = item[9]
+                temp["language"] = item[10]
+                results.append(temp)
+
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
+
+@app.route('/api/artist_genre', methods=['GET'])
+def artist_genre():
+    """ ARTIST GENRE INFORMATION
+    GET /api/artist_genre
+    """
+    if request.method == 'GET':
+        #lim = int(request.args.get('limit', 50000))
+        #off = int(request.args.get('offset', 0))
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor()
+            query = "select C.id artist_id, C.name artist_name, B.name as genre  from musicbrainz.artist C, musicbrainz.artist_tag A, musicbrainz.tag B  where A.tag=B.id and C.id=A.artist "
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                temp = {}
+                temp["artist_id"] = item[0]
+                temp["artist_name"] = item[1]
+                temp["genre"] = item[2]
+                results.append(temp)
+
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
+
+
+@app.route('/api/artist_release_language', methods=['GET'])
+def artist_release_language():
+    """ ARTIST RELEASE LANGUAGE RELATION
+    GET /api/artist_genre
+    """
+    if request.method == 'GET':
+        #lim = int(request.args.get('limit', 50000))
+        #off = int(request.args.get('offset', 0))
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor()
+            query = "select B.id artist_id, B.name artist_name, C.id release_id,C.name release_name, A.name as language from musicbrainz.language A, musicbrainz.artist B, musicbrainz.release C where A.id = C.language and B.id = C.artist_credit "
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                temp = {}
+                temp["artist_id"] = item[0]
+                temp["artist_name"] = item[1]
+                temp["release_id"] = item[2]
+                temp["release_name"] = item[3]
+                temp["language"] = item[4]
+                results.append(temp)
+
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
+
+
+@app.route('/api/label_location', methods=['GET'])
+def label_location():
+    """ LABEL LOCATION
+    GET /api/artist_genre
+    """
+    if request.method == 'GET':
+        #lim = int(request.args.get('limit', 50000))
+        #off = int(request.args.get('offset', 0))
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor()
+            query = "SELECT B.id country_id,B.name country,A.id label_id,A.name label_name FROM musicbrainz.label A , musicbrainz.area B where A.area=B.id group by B.id,A.id"
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                temp = {}
+                temp["country_id"] = item[0]
+                temp["country"] = item[1]
+                temp["label_id"] = item[2]
+                temp["label_name"] = item[3]
+                results.append(temp)
+
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
+
+
+@app.route('/api/artist_releasegroup', methods=['GET'])
+def artist_releasegroup():
+    """ ARTIST RELEASE GROUP LOCATION RELATION
+    GET /api/artist_genre
+    """
+    if request.method == 'GET':
+        #lim = int(request.args.get('limit', 50000))
+        #off = int(request.args.get('offset', 0))
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor()
+            query = "SELECT A.id release_id, A.name release_name, B.id artist_id, B.name artist_name, B.area, C.name country FROM musicbrainz.release_group A, musicbrainz.artist B, musicbrainz.area C WHERE A.artist_credit=B.id and B.area= C.id"
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                temp = {}
+                temp["release_id"] = item[0]
+                temp["release_name"] = item[1]
+                temp["artist_id"] = item[2]
+                temp["artist_name"] = item[3]
+                temp["country_id"] = item[4]
+                temp["country"] = item[5]
+                results.append(temp)
+
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
 
 
 if __name__ == '__main__':
