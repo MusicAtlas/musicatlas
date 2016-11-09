@@ -46,7 +46,7 @@ ChoroplethMap.prototype.drawMap =  function(world) {
 
     var self = this;
 
-    var topmargin = +20;
+    var topmargin = 20;
     // var projection = d3.geoMercator()
     var projection = d3.geoEquirectangular()
         .translate([self.svgWidth/2,self.svgHeight/2 + topmargin])
@@ -57,7 +57,7 @@ ChoroplethMap.prototype.drawMap =  function(world) {
     var path = d3.geoPath()
         .projection(projection);
 
-    //var graticule = d3.geoGraticule();
+    var graticule = d3.geoGraticule();
 
     self.svg.append("g")
         .classed("map",true);
@@ -65,7 +65,7 @@ ChoroplethMap.prototype.drawMap =  function(world) {
     var map = self.svg.select(".map");
 
      map.append("path")
-    //     .datum(graticule)
+         .datum(graticule)
          .attr("class", "grat")
          .attr("fill","none")
          .attr("d", path);
@@ -90,7 +90,9 @@ ChoroplethMap.prototype.drawMap =  function(world) {
             .datum(countries[i])
             .attr("class", "countries")
             .attr("id",countries[i].name_sort)
-            .attr("d", path);
+            .attr("d", path)
+            .attr("stroke","grey")
+            .attr("fill","none");
 
     }
 }
