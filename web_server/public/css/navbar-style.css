@@ -229,7 +229,7 @@ input, button, select, textarea {
   font-size: inherit;
   line-height: inherit; }
 
-a {
+.navbar a {
   color: #FBB040;
   text-decoration: none; }
 a:hover, a:focus {

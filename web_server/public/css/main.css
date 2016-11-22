@@ -1,0 +1,26 @@
+.margin-top-lg{
+    margin-top:65px;
+}
+#choropleth{
+    min-height:450px;
+}
+.card-header {
+    text-transform: uppercase;
+    font-weight: normal;
+    font-family: "Montserrat", arial, sans-serif;
+    text-align: center;
+    padding: .25rem .25rem;
+    margin-bottom: 0;
+    background-color: #f5f5f5;
+    color: #000;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    z-index: 100;
+}
+
+.card-header a{
+    color: black;
+    text-decoration: none;
+}
+.card-header a:hover{
+    color:steelblue;
+}

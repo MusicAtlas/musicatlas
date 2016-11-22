@@ -27,7 +27,7 @@ function ChoroplethMap(track_data){
  */
 ChoroplethMap.prototype.init = function(){
     var self = this;
-    self.margin = {top: 30, right: 20, bottom: 30, left: 50};
+    self.margin = {top:30, right: 20, bottom: 30, left: 50};
 
     //Gets access to the div element created for this chart from HTML
     var divchoropleth = d3.select("#choropleth");
@@ -49,7 +49,7 @@ ChoroplethMap.prototype.drawMap =  function(world,names) {
 
     var self = this;
 
-    var topmargin = 20;
+    var topmargin = 50;
     // var projection = d3.geoMercator()
     var projection = d3.geoEquirectangular()
         .translate([self.svgWidth/2,self.svgHeight/2 + topmargin])
