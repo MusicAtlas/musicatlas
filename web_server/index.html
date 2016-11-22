@@ -2,9 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Atlas</title>
+    <script src="public/js/jquery-3.1.1.min.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="public/js/topojson.js"></script>
+
+    <!-- BOOTSTRAP -->
+    <link href="public/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
 
     <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="public/css/navbar-style.css">
@@ -36,11 +42,16 @@
         </div>
     </nav>
 </header>
-<div id="choropleth">
+<div class="container-fluid">
+    <div class="row">
+            <div id="choropleth"></div>
+    </div>
+</div>
+
 
 </div>
 <script type="application/javascript" src="public/js/choroplethmap.js"></script>
 <script type="application/javascript" src="public/js/main.js"></script>
-
+<script src="public/bootstrap/js/bootstrap.min.js"></script>
 </body>
 </html>
