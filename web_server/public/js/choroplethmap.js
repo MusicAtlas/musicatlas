@@ -11,12 +11,15 @@ function ChoroplethMap(track_data){
 
     var self = this;
     self.track_data = track_data;
-    self.world_data =
     self.init();
-    d3.json("public/data/world.json",function(error,data){
-        if(error) throw error;
-        self.drawMap(data);
-    });
+    var q = d3.queue()
+    q.defer(d3.json,"public/data/world.json")
+        .defer(d3.tsv,"public/data/world-country-names.tsv")
+        .await(function(error,world,names){
+            if(error) throw error;
+
+            self.drawMap(world,names);
+        });
 };
 
 /**
@@ -42,7 +45,7 @@ ChoroplethMap.prototype.redraw = function() {
     self.svg.select("g").attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 }
 
-ChoroplethMap.prototype.drawMap =  function(world) {
+ChoroplethMap.prototype.drawMap =  function(world,names) {
 
     var self = this;
 
@@ -70,26 +73,29 @@ ChoroplethMap.prototype.drawMap =  function(world) {
          .attr("fill","none")
          .attr("d", path);
 
-    console.log(world);
+    //console.log(world);
+    //console.log(names);
 
     var countries = topojson.object(world, world.objects.countries).geometries,
         neighbors = topojson.neighbors(world, countries);
 
-    // var countries = topojson.object(world, world.objects.countries);
 
-    console.log(countries);
-    //var countries = countries_data.features;
+    //console.log(countries);
 
     for(var i = 0; i<countries.length; i++) {
-        //console.log(countries[i].id);
         if (countries[i].id == 10){
             continue;
         }
+        var c = names.filter(function(n) { return countries[i].id == n.id; })[0];
 
         map.insert("path", ".grat")
             .datum(countries[i])
             .attr("class", "countries")
-            .attr("id",countries[i].name_sort)
+            .attr("id",function(c){
+                if(typeof c === "undefined")
+                    return "undefined";
+                return c.name;
+            })
             .attr("d", path)
             .attr("stroke","grey")
             .attr("fill","none");
