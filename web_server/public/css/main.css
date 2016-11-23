@@ -24,3 +24,11 @@
 .card-header a:hover{
     color:steelblue;
 }
+
+
+.container-fluid  .btn-group-vertical > .btn {
+    margin-bottom: 5px;
+    border-radius: 10px;
+    padding: 6px 12px   ;
+    letter-spacing: 0px;
+}

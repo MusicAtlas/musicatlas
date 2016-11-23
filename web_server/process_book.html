@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Atlas</title>
+    <title>Music Atlas Process Book</title>
     <script src="public/js/jquery-3.1.1.min.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="public/js/topojson.js"></script>
@@ -17,6 +17,30 @@
     <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="public/css/navbar-style.css">
     <link rel="stylesheet" href="public/css/main.css">
+
+    <style>
+
+        /*
+        PDFObject appends the classname "pdfobject-container" to the target element.
+        This enables you to style the element differently depending on whether the embed was successful.
+        In this example, a successful embed will result in a large box.
+        A failed embed will not have dimensions specified, so you don't see an oddly large empty box.
+        */
+
+        .pdfobject-container {
+            float:none;
+            /*width: 80%;*/
+            /*max-width: 600px;*/
+            height: 640px;
+            margin: 2em auto;
+        }
+
+        .pdfobject { border: solid 1px #666; }
+        #results { padding: 1rem; }
+        .hidden { display: none; }
+        .success { color: #4F8A10; background-color: #DFF2BF; }
+        .fail { color: #D8000C; background-color: #FFBABA; }
+    </style>
 
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
@@ -43,51 +67,27 @@
         </div>
     </nav>
 </header>
-<div class="container-fluid">
-    <div class="margin-top-lg" id="accordion" role="tablist" aria-multiselectable="true">
-        <div class="card">
-            <div class="card-header" role="tab" id="headingOne">
-                <h5 class="mb-0">
-                    <i class="indicator glyphicon glyphicon-chevron-down"> </i>
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> Map </a>
-                    <i class="indicator glyphicon glyphicon-chevron-down"> </i>
-                </h5>
-            </div>
-            <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
-                <div class="row">
-                    <div id="choropleth"></div>
-                </div>
-            </div>
+<div class="container-fluid" style="margin-top: 70px;">
+
+    <div class="row">
+        <div class="btn-group-vertical col-sm-2" style="margin-top: 40px;">
+            <a href="files/process_book.pdf" class="btn btn-success embed-link">How to use</a>
+            <a href="files/process_book.pdf" class="btn btn-info embed-link">Process Book</a>
         </div>
-
-
-        <div class="card">
-            <div class="card-header" role="tab" id="headingTwo">
-                <h5 class="mb-0">
-                    <i class="indicator glyphicon glyphicon-chevron-down"> </i>
-                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        Dashboard
-                    </a>
-                    <i class="indicator glyphicon glyphicon-chevron-down"> </i>
-                </h5>
-            </div>
-            <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
-                <div class="card-block">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                </div>
-            </div>
+        <div class="col-sm-10">
+            <div id="pdf"></div>
         </div>
-
     </div>
+
+    <!--<div id="results" class="hidden"></div>-->
+
+
 </div>
 
 <!--https://github.com/shprink/d3js-wordcloud/blob/master/word-cloud.js-->
 <!--http://v4-alpha.getbootstrap.com/components/collapse/-->
 
 </div>
-<script type="application/javascript" src="public/js/choroplethmap.js"></script>
-<script type="application/javascript" src="public/js/main.js"></script>
-
 
 <script>
     function toggleChevron(e) {
@@ -99,5 +99,45 @@
     $('#accordion').on('hidden.bs.collapse', toggleChevron);
     $('#accordion').on('shown.bs.collapse', toggleChevron);
 </script>
+
+
+<script src="public/js/pdfobject.min.js"></script>
+<script>
+
+    var clickHandler = function (e){
+
+        e.preventDefault();
+
+        var pdfURL = this.getAttribute("href");
+
+        var options = {
+            pdfOpenParams: {
+                navpanes: 1,
+                page:1,
+                toolbar: 0,
+                statusbar: 1,
+                view: "FitV"
+            }
+        };
+
+        var myPDF = PDFObject.embed(pdfURL, "#pdf", options);
+
+//        var el = document.querySelector("#results");
+//        el.setAttribute("class", (myPDF) ? "success" : "fail");
+//        el.innerHTML = (myPDF) ? "PDFObject successfully embedded '" + pdfURL + "'!" : "Uh-oh, the embed didn't work.";
+
+    };
+
+
+    $.each($(".embed-link"),function(index,item)
+    {
+        item.addEventListener("click",clickHandler);
+    });
+
+    console.log($(".btn"));
+    $('.btn')[0].click();
+
+</script>
+
 </body>
 </html>
