@@ -14,13 +14,29 @@
     function init() {
         //Creating instances for each visualization
 
+        d3.queue()
+            .defer(d3.json,"public/data/world.json")
+            .defer(d3.tsv,"public/data/world-country-names.tsv")
+            .defer(d3.json,"public/data/country_track.json")
+            .await(function(error,world,names,track_data){
+                if(error) throw error;
+                var choroplethmap = new ChoroplethMap(track_data,world,names);
+                choroplethmap.update();
+            });
+/*
+        d3.json("public/data/world.json",function(error,world) {
+            if (error) throw error;
+            d3.tsv("public/data/world-country-names.tsv", function (error, names, world) {
+                if(error) throw error;
 
-        d3.json("public/data/country_track.json",function(error,track_data){
-            if(error) throw error;
-            var choroplethmap = new ChoroplethMap(track_data);
-            choroplethmap.update();
+                d3.json("public/data/country_track.json", function (error,track_data,names,world) {
+                    if (error) throw error;
+                    var choroplethmap = new ChoroplethMap(track_data,names,world);
+                    choroplethmap.update();
+                });
+            });
         });
-
+*/
 
     }
 
