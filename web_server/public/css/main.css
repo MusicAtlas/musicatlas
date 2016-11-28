@@ -1,9 +1,23 @@
 .margin-top-lg{
     margin-top:65px;
 }
+
 #choropleth{
-    min-height:450px;
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    vertical-align: middle;
+    overflow: hidden;
+    min-height: 450px;
 }
+
+.svg-content{
+    display: inline-block;
+    position: absolute;
+    /*top: 0;*/
+    /*left: 0;*/
+}
+
 .card-header {
     text-transform: uppercase;
     font-weight: normal;

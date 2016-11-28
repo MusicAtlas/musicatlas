@@ -14,16 +14,7 @@ function ChoroplethMap(track_data,world,names){
     self.init();
     self.world = world;
     self.names = names;
-    /*var q = d3.queue()
-    q.defer(d3.json,"public/data/world.json")
-        .defer(d3.tsv,"public/data/world-country-names.tsv")
-        .await(function(error,world,names){
-            if(error) throw error;
 
-            self.drawMap(world,names);
-        });*/
-    //console.log(world);
-    //console.log(names);
     self.drawMap();
 };
 
@@ -43,8 +34,9 @@ ChoroplethMap.prototype.init = function(){
 
     //creates svg element within the div
     self.svg = divchoropleth.append("svg")
-        .attr("width",self.svgWidth)
-        .attr("height",self.svgHeight)
+        .attr("viewBox","0 0 "+self.svgWidth+" "+self.svgHeight)
+        .classed("svg-content",true)
+        .attr("preserveAspectRatio","xMinYMin");
 };
 
 ChoroplethMap.prototype.redraw = function() {
@@ -55,11 +47,11 @@ ChoroplethMap.prototype.drawMap =  function() {
 
     var self = this;
 
-    var topmargin = 50;
+    var topmargin = 10;
     // var projection = d3.geoMercator()
     var projection = d3.geoEquirectangular()
         .translate([self.svgWidth/2,self.svgHeight/2 + topmargin])
-        .scale(self.svgWidth/8);
+        .scale(self.svgWidth/9);
 
     //Learnt from example
     //http://bl.ocks.org/mbostock/3734321
