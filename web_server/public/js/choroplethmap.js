@@ -75,9 +75,7 @@ ChoroplethMap.prototype.drawMap =  function() {
 
     var countries = topojson.object(self.world, self.world.objects.countries).geometries;
 
-
-
-
+    
     for(var i = 0; i<countries.length; i++) {
         if (countries[i].id == 10){
             continue;
@@ -160,6 +158,9 @@ ChoroplethMap.prototype.update = function(){
                 self.tooltip.transition()
                     .duration(3000)
                     .style("opacity", 0);
+            })
+            .on("click",function(){
+                $('#collapseOne').collapse('hide');
             });
         })
 };
