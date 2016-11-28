@@ -79,7 +79,8 @@ def country_track():
         results=[]
         with app.app_context():
             conn = get_db().cursor()
-            query = "select count(*), C.id, C.name from musicbrainz.track A, musicbrainz.release_country B, musicbrainz.area C  where A.medium=B.release and B.country=C.id group by C.id "
+            #query = "select count(*), C.id, C.name from musicbrainz.track A, musicbrainz.release_country B, musicbrainz.area C  where A.medium=B.release and B.country=C.id group by C.id "
+            query = "select track_count, id, name from country_track_group"
             conn.execute(query)
             data = conn.fetchall()
             for item in data:
@@ -126,6 +127,33 @@ def artist_track():
         return ujson.dumps(results)
     else:
         return ujson.dumps({"status":"error"})
+
+
+@app.route('/api/country_track_year/<country_id>', methods=['GET'])
+def country_track_year(country_id):
+    """ ARTIST TRACK INFORMATION
+    GET /api/country_track_year
+    """
+    if request.method == 'GET':
+        #lim = int(request.args.get('limit', 50000))
+        #off = int(request.args.get('offset', 0))
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor()
+            query = "select count(track_id), year  from country_track where country_id="+ str(country_id) +" group by year";
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                temp = {}
+                temp["count"] = item[0]
+                temp["year"] = item[1]
+                temp["country_id"] = country_id
+                results.append(temp)
+
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
+
 
 @app.route('/api/artist_genre', methods=['GET'])
 def artist_genre():
