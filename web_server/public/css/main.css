@@ -21,7 +21,7 @@
 
 .tooltip {
     position:fixed;
-    max-width: 400px;
+    max-width: 300px;
     right: 20px;
     top: 20%;
     border:1px solid #333;

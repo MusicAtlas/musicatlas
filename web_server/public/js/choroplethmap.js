@@ -98,7 +98,7 @@ ChoroplethMap.prototype.drawMap =  function() {
             .style("fill-opacity","0.5");
 
     }
-}
+};
 
 
 ChoroplethMap.prototype.colorDomainArray = function(min, max, n) {
