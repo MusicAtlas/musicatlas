@@ -37,6 +37,8 @@ ChoroplethMap.prototype.init = function(){
         .attr("viewBox","0 0 "+self.svgWidth+" "+self.svgHeight)
         .classed("svg-content",true)
         .attr("preserveAspectRatio","xMinYMin");
+
+    self.tooltip = divchoropleth.append("div").classed("tooltip",true);
 };
 
 ChoroplethMap.prototype.redraw = function() {
@@ -113,7 +115,23 @@ ChoroplethMap.prototype.colorDomainArray = function(min, max, n) {
         result.push(min  + ((range/n)*(i+1)));
     }
     return result;
-}
+};
+
+
+ChoroplethMap.prototype.tooltipText = function(d){
+    var html =  "<h3>" + d.name + "</h3>" +
+        "<p>Track Count: " + d.count + "</p>";
+    return html
+};
+
+ChoroplethMap.prototype.buildTooltip = function(d){
+    var self = this;
+    self.tooltip.transition()
+        .duration(200)
+        .style("opacity", .9);
+
+    self.tooltip.html( self.tooltipText(d) );
+};
 
 ChoroplethMap.prototype.update = function(){
     var self = this;
@@ -134,6 +152,14 @@ ChoroplethMap.prototype.update = function(){
         country.style("fill",function(){
             return self.colorScale(t.count);
         })
-            .style("fill-opacity","1");
+            .style("fill-opacity","1")
+            .on("mouseover",function(){
+                self.buildTooltip( {"name": t.country,"count": t.count } )
+            })
+            .on("mouseout",function(){
+                self.tooltip.transition()
+                    .duration(3000)
+                    .style("opacity", 0);
+            });
         })
 };
