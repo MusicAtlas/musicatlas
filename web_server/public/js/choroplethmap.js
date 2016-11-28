@@ -48,7 +48,7 @@ ChoroplethMap.prototype.drawMap =  function() {
     var self = this;
 
     var topmargin = 10;
-    // var projection = d3.geoMercator()
+
     var projection = d3.geoEquirectangular()
         .translate([self.svgWidth/2,self.svgHeight/2 + topmargin])
         .scale(self.svgWidth/9);
@@ -71,15 +71,10 @@ ChoroplethMap.prototype.drawMap =  function() {
          .attr("fill","none")
          .attr("d", path);
 
-    //console.log(world);
-    //console.log(names);
-
     var countries = topojson.object(self.world, self.world.objects.countries).geometries;
-        //neighbors = topojson.neighbors(self.world, countries);
 
 
-    //console.log(countries);
-    //console.log(names);
+
 
     for(var i = 0; i<countries.length; i++) {
         if (countries[i].id == 10){
@@ -132,18 +127,13 @@ ChoroplethMap.prototype.update = function(){
     self.colorScale.domain(colorDomain);
 
     self.track_data.forEach(function(t){
-        if(t.country == "Libya")
-            console.log(t);
-        var name = "#"+t.country.replace(/('|\.|\]|\[| )/g,"\\$1").trim();
 
+        var name = "#"+t.country.replace(/('|\.|\]|\[| )/g,"\\$1").trim();
         var country = d3.selectAll(name);
-        if(name == "#Libya")
-            console.log(country);
+
         country.style("fill",function(){
-            if(t.country == "Russia")
-                console.log(self.colorScale(t.count));
             return self.colorScale(t.count);
         })
             .style("fill-opacity","1");
-    })
+        })
 };
