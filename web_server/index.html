@@ -60,18 +60,25 @@
 
 
         <div class="card">
-            <div class="card-header" role="tab" id="headingTwo">
+            <div class="card-header" role="tab" id="accordion-dashboard">
                 <h5 class="mb-0">
-                    <i class="indicator glyphicon glyphicon-chevron-down"> </i>
-                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <i class="indicator glyphicon glyphicon-chevron-up"> </i>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                         Dashboard
                     </a>
-                    <i class="indicator glyphicon glyphicon-chevron-down"> </i>
+                    <i class="indicator glyphicon glyphicon-chevron-up"> </i>
                 </h5>
             </div>
             <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
                 <div class="card-block">
-                    Build Dashboard Here
+                    <div class="row">
+                        <div class="col-md-9">
+                            Table
+                        </div>
+                        <div class="col-md-3">
+                            Wordtag
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -95,6 +102,9 @@
     }
     $('#accordion').on('hidden.bs.collapse', toggleChevron);
     $('#accordion').on('shown.bs.collapse', toggleChevron);
+    $('#accordion-dashboard').on('hidden.bs.collapse', toggleChevron);
+    $('#accordion-dashboard').on('shown.bs.collapse', toggleChevron);
+
 </script>
 </body>
 </html>
