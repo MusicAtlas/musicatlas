@@ -13,6 +13,10 @@
      */
     function init() {
         //Creating instances for each visualization
+        $('#collapseTwo').collapse('show');
+        var yearChart = new YearChart();
+
+        $('#collapseTwo').collapse('hide');
 
         d3.queue()
             .defer(d3.json,"public/data/world.json")
@@ -20,7 +24,7 @@
             .defer(d3.json,"public/data/country_track.json")
             .await(function(error,world,names,track_data){
                 if(error) throw error;
-                var choroplethmap = new ChoroplethMap(track_data,world,names);
+                var choroplethmap = new ChoroplethMap(yearChart,track_data,world,names);
                 choroplethmap.update();
             });
 /*

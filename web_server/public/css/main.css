@@ -18,6 +18,11 @@
     left: 0;
 }
 
+#year-chart{
+    width: 100%;
+    min-height: 100px;
+    overflow: hidden;
+}
 
 .tooltip {
     position:fixed;
