@@ -70,13 +70,14 @@ YearChart.prototype.update = function(year_data,total_track){
     //
     // group.attr("transform","translate("+self.margin.left+",0)");
 
-    var stackedbar = self.svg.selectAll("rect").data(year_data);
+    var stackedbar = self.svg.selectAll(".yearbar").data(year_data);
 
     stackedbar.exit().remove();
 
     stackedbar = stackedbar.enter().append("rect")
         .attr("height",30)
         .attr("y",self.svgHeight/2)
+        .classed("yearbar",true)
         .merge(stackedbar);
 
 
