@@ -129,4 +129,33 @@ YearChart.prototype.update = function(year_data,total_track){
             //console.log(self.colorScale(parseInt(d.count)));
             return self.colorScale(parseInt(d.count));
         });
+
+
+    //http://bl.ocks.org/mbostock/34f08d5e11952a80609169b7917d4172
+    function brushed(){
+        //on work if there is an event or a selection
+        if(!d3.event.sourceEvent) return;
+        if(!d3.event.selection) return;
+        var s = d3.event.selection;
+
+        var value = 0;
+        var prev = 0;
+        var selected_year = [];
+        for(var j = 0; j<year_data.length; j++){
+            var d = year_data[j];
+            prev = value;
+            value += self.svgWidth/year_data.length;
+            if(s[0] <= prev && value <= s[1])
+                selected_year.push(d);
+        }
+    }
+
+    var width = self.svgWidth;
+    var height = self.svgHeight;
+
+    var brush = d3.brushX().extent([[0,height/2-10],[width,height/2+40]]).on("end", brushed);
+
+    self.svg.select(".brush").call(brush.move, null);
+
+    self.svg.selectAll(".brush").data([1]).enter().append("g").attr("class", "brush").call(brush);
 };
