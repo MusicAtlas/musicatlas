@@ -7,10 +7,11 @@
  *
  * @param
  */
-function ChoroplethMap(track_data,world,names){
+function ChoroplethMap(yearChart,track_data,world,names){
 
     var self = this;
     self.track_data = track_data;
+    self.yearChart = yearChart;
     self.init();
     self.world = world;
     self.names = names;
@@ -160,7 +161,13 @@ ChoroplethMap.prototype.update = function(){
                     .style("opacity", 0);
             })
             .on("click",function(){
+                d3.json("http://db03.cs.utah.edu:8181/api/country_track_year/"+t.id,function(error,data){
+                    if(error) throw error;
+
+                    self.yearChart.update(data,t.count);
+                });
                 $('#collapseOne').collapse('hide');
+                $('#collapseTwo').collapse('show');
             });
         })
 };
