@@ -154,6 +154,32 @@ def country_track_year(country_id):
     else:
         return ujson.dumps({"status":"error"})
 
+@app.route('/api/country_length_per_year/<country_id>', methods=['GET'])
+def country_length_per_year(country_id):
+    """ ARTIST TRACK INFORMATION
+    GET /api/country_length_per_year
+    """
+    if request.method == 'GET':
+        #lim = int(request.args.get('limit', 50000))
+        #off = int(request.args.get('offset', 0))
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor()
+            query = "select min(length) min_length, max(length) max_length, year  from country_track where country_id="+ str(country_id) +" group by year";
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                temp = {}
+                temp["min_length"] = item[0]
+                temp["max_length"] = item[1]
+                temp["year"] = item[2]
+                temp["country_id"] = country_id
+                results.append(temp)
+
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
+
 
 @app.route('/api/country_track_year_range/<country_id>/<start_year>/<end_year>', methods=['GET'])
 def country_track_year_range(country_id, start_year, end_year):
@@ -184,6 +210,33 @@ def country_track_year_range(country_id, start_year, end_year):
                 temp["country"] = item[9]
                 temp["country_id"] = country_id
                 temp["language"] = item[10]
+                results.append(temp)
+
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
+
+@app.route('/api/country_length_per_year_range/<country_id>/<start_year>/<end_year>', methods=['GET'])
+def country_length_per_year_range(country_id, start_year, end_year):
+    """ ARTIST TRACK INFORMATION
+    GET /api/country_length_per_year_range
+    """
+    if request.method == 'GET':
+        limit = int(request.args.get('limit', 500))
+        offset= int(request.args.get('offset', 0))
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor()
+            query = "select min(length), max(length), year from country_track where country_id="+ str(country_id) +" and year between "+ start_year +" AND "+ end_year ;
+
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                temp = {}
+                temp["min_length"] = item[0]
+                temp["max_length"] = item[1]
+                temp["year"] = item[8]
+                temp["country_id"] = country_id
                 results.append(temp)
 
         return ujson.dumps(results)
