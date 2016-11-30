@@ -180,6 +180,40 @@ def country_length_per_year(country_id):
     else:
         return ujson.dumps({"status":"error"})
 
+@app.route('/api/country_track_record/<country_id>', methods=['GET'])
+def country_track_record(country_id):
+    """ ARTIST TRACK INFORMATION
+    GET /api/country_track_record
+    """
+    if request.method == 'GET':
+        limit = int(request.args.get('limit', 500))
+        offset= int(request.args.get('offset', 0))
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor()
+            query = "select release_id,release_name, artist_id, artist_name, gender, track_id, track_name, length, year, country, country_id, language  from country_track where country_id="+ str(country_id) +" limit "+ str(limit) +" offset "+ str(offset);
+
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                temp = {}
+                temp["release_id"] = item[0]
+                temp["release_name"] = item[1]
+                temp["artist_id"] = item[2]
+                temp["artist_name"] = item[3]
+                temp["gender"] = item[4]
+                temp["track_id"] = item[5]
+                temp["track_name"] = item[6]
+                temp["length"] = item[7]
+                temp["year"] = item[8]
+                temp["country"] = item[9]
+                temp["country_id"] = country_id
+                temp["language"] = item[10]
+                results.append(temp)
+
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
 
 @app.route('/api/country_track_year_range/<country_id>/<start_year>/<end_year>', methods=['GET'])
 def country_track_year_range(country_id, start_year, end_year):
