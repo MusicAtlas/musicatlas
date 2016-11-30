@@ -269,7 +269,7 @@ def country_length_per_year_range(country_id, start_year, end_year):
                 temp = {}
                 temp["min_length"] = item[0]
                 temp["max_length"] = item[1]
-                temp["year"] = item[8]
+                temp["year"] = item[2]
                 temp["country_id"] = country_id
                 results.append(temp)
 
