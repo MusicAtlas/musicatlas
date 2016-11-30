@@ -20,8 +20,9 @@
 
 #year-chart{
     width: 100%;
-    min-height: 100px;
+    min-height: 50px;
     overflow: hidden;
+    padding-left: 20px;
 }
 
 .tooltip {
