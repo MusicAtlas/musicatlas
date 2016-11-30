@@ -227,7 +227,7 @@ def country_length_per_year_range(country_id, start_year, end_year):
         results=[]
         with app.app_context():
             conn = get_db().cursor()
-            query = "select min(length), max(length), year from country_track where country_id="+ str(country_id) +" and year between "+ start_year +" AND "+ end_year ;
+            query = "select min(length), max(length), year from country_track where country_id="+ str(country_id) +" and year between "+ start_year +" AND "+ end_year +" group by year " ;
 
             conn.execute(query)
             data = conn.fetchall()
