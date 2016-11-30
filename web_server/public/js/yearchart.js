@@ -35,7 +35,7 @@ YearChart.prototype.init = function(){
 };
 
 /**
- * Creates a chart with circles representing each election year, populates text content and other required elements for the Year Chart
+ * Creates a chart with rectangles representing each year
  */
 YearChart.prototype.update = function(year_data,total_track){
     var self = this;
