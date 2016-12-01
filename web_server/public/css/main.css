@@ -79,3 +79,28 @@
     padding: 6px 12px   ;
     letter-spacing: 0px;
 }
+
+.length,
+.length-inset,
+.length-overlay,
+.track-slider {
+    stroke-linecap: round;
+}
+
+.length {
+    stroke: #000;
+    stroke-opacity: 0.3;
+    stroke-width: 10px;
+}
+
+.length-inset {
+    stroke: #ddd;
+    stroke-width: 8px;
+}
+
+.length-overlay,
+.track-slider {
+    pointer-events: stroke;
+    stroke-width: 50px;
+    cursor: crosshair;
+}
