@@ -25,7 +25,7 @@ TrackLength.prototype.init = function(){
     //Gets access to the div element created for this chart from HTML
     self.svgBounds = divtrackLength.node().getBoundingClientRect();
     self.svgWidth = self.svgBounds.width - self.margin.right - self.margin.left;
-    self.svgHeight = 100;
+    self.svgHeight = 50;
 
     //creates svg element within the div
     self.svg = divtrackLength.append("svg")
