@@ -101,11 +101,11 @@ h2 {
 }
 
 th {
-    /*background-color: black;*/
+    background-color: #b1b1b1;/
     color: black;
 }
 tr, th{
-    border: 1px solid #bbb;
+    border: 1px solid #eeeeee;
     text-align: center;
     padding: 8px;
 }
