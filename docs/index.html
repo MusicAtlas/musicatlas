@@ -1,3 +1,145 @@
-<html>
-        musicatlas
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Atlas</title>
+    <script src="public/js/jquery-3.1.1.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="public/js/d3_v3.js"></script>
+    <script src="public/js/d3_v3.layout.cloud.js"></script>
+    <script src="public/js/topojson.js"></script>
+    <script src="public/js/colorbrewer.js"></script>
+
+    <!-- BOOTSTRAP -->
+    <link href="public/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="public/bootstrap/js/bootstrap.min.js"></script>
+
+
+
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="public/css/navbar-style.css">
+    <link rel="stylesheet" href="public/css/main.css">
+
+</head>
+<body>
+
+<header id="fh5co-header" role="banner">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <!-- Mobile Toggle Menu Button -->
+                <a href="#" class="js-fh5co-nav-toggle fh5co-nav-toggle" data-toggle="collapse" data-target="#fh5co-navbar" aria-expanded="false" aria-controls="navbar"><i></i></a>
+                <a class="navbar-brand" href="index.html">musicatlas</a>
+            </div>
+            <div id="fh5co-navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active"><a href="index.html"><span>Home <span class="border"></span></span></a></li>
+                    <li><a href="process_book.html"><span>Process Book <span class="border"></span></span></a></li>
+                    <li><a href="description.html"><span>Description<span class="border"></span></span></a></li>
+                    <li><a href="about.html"><span>About <span class="border"></span></span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container-fluid">
+    <div class="margin-top-lg" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="card">
+            <div class="card-header" role="tab" id="headingOne">
+                <h5 class="mb-0">
+                    <i class="indicator glyphicon glyphicon-chevron-down"> </i>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> Map </a>
+                    <i class="indicator glyphicon glyphicon-chevron-down"> </i>
+                </h5>
+            </div>
+            <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
+                <div class="row">
+                    <div id="choropleth"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card">
+            <div class="card-header" role="tab" id="accordion-dashboard">
+                <h5 class="mb-0">
+                    <i class="indicator glyphicon glyphicon-chevron-up"> </i>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                        Dashboard
+                    </a>
+                    <i class="indicator glyphicon glyphicon-chevron-up"> </i>
+                </h5>
+            </div>
+            <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+                <div class="card-block">
+                    <div class="row">
+                        <div id="year-chart" class="col-md-12">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="track-length" class="col-md-12">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="table-chart" class="col-md-12" >
+                            <h2>Artist-Track-Record Table</h2>
+                            <table width="100%" height="100%">
+                                <thead>
+                                    <tr></tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="pagination_btns" align="right" id="page-button">
+                            <div type="button" class="btn btn-default btn-md but" id="previous">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                                previous
+                            </div>
+                            <div type="button" class="btn btn-default btn-md but" id="next">
+                                next
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="wordcloud"  class="col-md-12" >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--https://github.com/shprink/d3js-wordcloud/blob/master/word-cloud.js-->
+<!--http://v4-alpha.getbootstrap.com/components/collapse/-->
+
+</div>
+<script type="application/javascript" src="public/js/tracklength.js"></script>
+<script type="application/javascript" src="public/js/yearchart.js"></script>
+<script type="application/javascript" src="public/js/choroplethmap.js"></script>
+<script type="application/javascript" src="public/js/tablechart.js"></script>
+<script type="application/javascript" src="public/js/wordcloud.js"></script>
+<script type="application/javascript" src="public/js/main.js"></script>
+
+
+
+<script>
+    function toggleChevron(e) {
+        $(e.target)
+                .prev('.card-header')
+                .find("i.indicator")
+                .toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
+    }
+    $('#accordion').on('hidden.bs.collapse', toggleChevron);
+    $('#accordion').on('shown.bs.collapse', toggleChevron);
+    $('#accordion-dashboard').on('hidden.bs.collapse', toggleChevron);
+    $('#accordion-dashboard').on('shown.bs.collapse', toggleChevron);
+
+</script>
+</body>
 </html>
