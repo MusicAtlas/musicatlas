@@ -37,7 +37,7 @@ YearChart.prototype.init = function(){
 /**
  * Creates a chart with rectangles representing each year
  */
-YearChart.prototype.update = function(year_data,total_track){
+YearChart.prototype.update = function(year_data){
     var self = this;
 
     //console.log(year_data);

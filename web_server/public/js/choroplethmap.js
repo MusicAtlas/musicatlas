@@ -7,13 +7,14 @@
  *
  * @param
  */
-function ChoroplethMap(yearChart,tableChart,track_data,world,names){
-// function ChoroplethMap(yearChart,track_data,world,names){
+
+function ChoroplethMap(track_data,world,names,yearChart,trackLength,tableChart){
 
     var self = this;
     self.track_data = track_data;
     self.yearChart = yearChart;
     self.tableChart = tableChart;
+    self.trackLength = trackLength;
     self.init();
     self.world = world;
     self.names = names;
@@ -163,17 +164,16 @@ ChoroplethMap.prototype.update = function(){
                     .style("opacity", 0);
             })
             .on("click",function(){
-                d3.json("http://db03.cs.utah.edu:8181/api/country_track_year/"+t.id,function(error,data){
-                    if(error) throw error;
-
-                    self.yearChart.update(data,t.count);
-                });
-
-                d3.json("http://db03.cs.utah.edu:8181/api/country_track_record/"+t.id+"?limit =50&offset=0",function(error,data){
-                    if(error) throw error;
-                    // console.log(data);
-                    self.tableChart.createTable(data,t.id);
-                });
+                d3.queue()
+                    .defer(d3.json,"http://db03.cs.utah.edu:8181/api/country_track_year/"+t.id)
+                    .defer(d3.json,"http://db03.cs.utah.edu:8181/api/country_length_per_year/"+t.id)
+                    .defer(d3.json,"http://db03.cs.utah.edu:8181/api/country_track_record/"+t.id+"?limit =50&offset=0")
+                    .await(function(error,year_data,length_data,table_data){
+                        if(error) throw error;
+                        self.yearChart.update(year_data);
+                        self.trackLength.update(length_data);
+                        self.tableChart.createTable(table_data,t.id);
+                    });
 
                 $('#collapseOne').collapse('hide');
                 $('#collapseTwo').collapse('show');
