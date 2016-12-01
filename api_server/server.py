@@ -140,7 +140,7 @@ def country_track_year(country_id):
         results=[]
         with app.app_context():
             conn = get_db().cursor()
-            query = "select count(track_id), year  from country_track where country_id="+ str(country_id) +" group by year";
+            query = "select count, year, country from country_track_year_group  where country_id="+ str(country_id)
             conn.execute(query)
             data = conn.fetchall()
             for item in data:
@@ -148,6 +148,7 @@ def country_track_year(country_id):
                 temp["count"] = item[0]
                 temp["year"] = item[1]
                 temp["country_id"] = country_id
+                temp["country"] = item[2]
                 results.append(temp)
 
         return ujson.dumps(results)
@@ -165,7 +166,7 @@ def country_length_per_year(country_id):
         results=[]
         with app.app_context():
             conn = get_db().cursor()
-            query = "select min(length) min_length, max(length) max_length, year  from country_track where country_id="+ str(country_id) +" group by year";
+            query = "select  min_length, max_length, year, country  from country_track_length_year_group where country_id="+ str(country_id) 
             conn.execute(query)
             data = conn.fetchall()
             for item in data:
@@ -174,6 +175,7 @@ def country_length_per_year(country_id):
                 temp["max_length"] = item[1]
                 temp["year"] = item[2]
                 temp["country_id"] = country_id
+                temp["year"] = item[3]
                 results.append(temp)
 
         return ujson.dumps(results)
@@ -214,6 +216,36 @@ def country_track_record(country_id):
         return ujson.dumps(results)
     else:
         return ujson.dumps({"status":"error"})
+
+@app.route('/api/artist_tags/<country_id>/<start_year>/<end_year>', methods=['GET'])
+def artist_tags(country_id, start_year, end_year):
+    """ ARTIST TRACK INFORMATION
+    GET /api/artist_tagse
+    """
+    if request.method == 'GET':
+        limit = int(request.args.get('limit', 500))
+        offset= int(request.args.get('offset', 0))
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor()
+            query = "select sum(count), artist_name, country from artist_country_year_group where year between "+ str(start_year) +" and "+ str(end_year) + " and country_id =" + str(country_id) + " group by artist_name, country order by sum(count)  desc limit "+ str(limit) +" offset "+ str(offset);
+
+            
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                temp = {}
+                temp["count"] = item[0]
+                temp["artist_name"] = item[1]
+                temp["country"] = item[2]
+                temp["country_id"] = country_id
+                results.append(temp)
+
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
+
+
 
 @app.route('/api/country_track_year_range/<country_id>/<start_year>/<end_year>', methods=['GET'])
 def country_track_year_range(country_id, start_year, end_year):
