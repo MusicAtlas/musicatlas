@@ -43,7 +43,7 @@ WordCloud.prototype.init = function(){
 
     //"/api/artist_tags/<country_id>/<start_year>/<end_year>?limit=500&offset=0"
 
-    d3_v3.json("http://db03.cs.utah.edu:8181/api/artist_tags/222/2008/2012?limit=100&offset=0",function(error, tags) {
+    d3_v3.json("https://db03.cs.utah.edu:8181/api/artist_tags/222/2008/2012?limit=100&offset=0",function(error, tags) {
         if (error) throw error;
 
         self.update(tags);
