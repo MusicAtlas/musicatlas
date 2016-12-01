@@ -208,7 +208,7 @@ def country_track_record(country_id):
                 temp["year"] = item[8]
                 temp["country"] = item[9]
                 temp["country_id"] = country_id
-                temp["language"] = item[10]
+                temp["language"] = item[11]
                 results.append(temp)
 
         return ujson.dumps(results)
@@ -243,7 +243,7 @@ def country_track_year_range(country_id, start_year, end_year):
                 temp["year"] = item[8]
                 temp["country"] = item[9]
                 temp["country_id"] = country_id
-                temp["language"] = item[10]
+                temp["language"] = item[11]
                 results.append(temp)
 
         return ujson.dumps(results)
