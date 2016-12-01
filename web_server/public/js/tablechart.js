@@ -33,51 +33,116 @@ var artist = 'artist_name',
     year = 'year',
     language = 'language';
 
+function descending(row_name){
+
+    switch(row_name) {
+
+        case "Track":
+            tableElements.sort(function (a, b) {
+                return d3.descending(a[track], b[track]);
+            });
+            break;
+
+        case "Artist":
+            tableElements.sort(function (a, b) {
+                return d3.descending(a[artist], b[artist]);
+            });
+            break;
+
+        case "Album":
+            tableElements.sort(function (a, b) {
+                return d3.descending(a[album], b[album]);
+            });
+            break;
+
+        case "Year":
+            tableElements.sort(function (a, b) {
+                return d3.descending(a[year], b[year]);
+            });
+            break;
+
+        case "Language":
+            tableElements.sort(function (a, b) {
+                return d3.descending(a[language], b[language]);
+            });
+            break;
+        case "Length":
+            tableElements.sort(function (a, b) {
+                return d3.descending(a[tracklength], b[tracklength]);
+            });
+            break;
+
+        default : console.log("Something Went Wrong In Descending!!!!!")
+    }
+
+}
+
+function ascending(row_name){
+
+    switch(row_name) {
+
+        case "Track":
+            tableElements.sort(function (a, b) {
+                return d3.ascending(a[track], b[track]);
+            });
+            break;
+
+        case "Artist":
+            tableElements.sort(function (a, b) {
+                return d3.ascending(a[artist], b[artist]);
+            });
+            break;
+
+        case "Album":
+            tableElements.sort(function (a, b) {
+                return d3.ascending(a[album], b[album]);
+            });
+            break;
+
+        case "Year":
+            tableElements.sort(function (a, b) {
+                return d3.ascending(a[year], b[year]);
+            });
+            break;
+
+        case "Language":
+            tableElements.sort(function (a, b) {
+                return d3.ascending(a[language], b[language]);
+            });
+            break;
+        case "Length":
+            tableElements.sort(function (a, b) {
+                return d3.ascending(a[tracklength], b[tracklength]);
+            });
+            break;
+
+        default : console.log("Something Went Wrong In Descending!!!!!")
+    }
+}
+var row;
+var order;
+
 function sortTable(row_name){
     console.log(row_name);
 
-    // if(sortHeaderAscending) {
-    //     tableElements.sort(function (a, b) {
-    //         console.log(a);
-    //         if (row_name.match("Artist")) {
-    //             return d3.ascending(a[artist], b[artist]);
-    //         }else if (row_name.match("Album")) {
-    //             return d3.ascending(a[album], b[album]);
-    //         }else if (row_name.match("Track")) {
-    //             return d3.ascending(a[track], b[track]);
-    //         }else if (row_name.match("Gender")) {
-    //             return d3.descending(a[gender], b[gender]);
-    //         }else if (row_name.match("Length")) {
-    //             return d3.descending(a[tracklength], b[tracklength]);
-    //         }else if (row_name.match("Year")) {
-    //             return d3.descending(a[year], b[year]);
-    //         }else if (row_name.match("Language")) {
-    //             return d3.descending(a[language], b[language]);
-    //         }
-    //     });
-    //     sortHeaderAscending = false;
-    // }else {
-    //     tableElements.sort(function (a, b) {
-    //         console.log(a);
-    //         if (row_name.match("Artist")) {
-    //             return d3.ascending(a[artist], b[artist]);
-    //         }else if (row_name.match("Album")) {
-    //             return d3.ascending(a[album], b[album]);
-    //         }else if (row_name.match("Track")) {
-    //             return d3.ascending(a[track], b[track]);
-    //         }else if (row_name.match("Gender")) {
-    //             return d3.descending(a[gender], b[gender]);
-    //         }else if (row_name.match("Length")) {
-    //             return d3.descending(a[tracklength], b[tracklength]);
-    //         }else if (row_name.match("Year")) {
-    //             return d3.descending(a[year], b[year]);
-    //         }else if (row_name.match("Language")) {
-    //             return d3.descending(a[language], b[language]);
-    //         }
-    //     });
-    // }
-    // update();
+    if(row == row_name){
+        if(order == "ascending"){
+            descending(row_name);
+            order = "descending";
+        }
+        else{
+            ascending(row_name);
+            order = "ascending";
+        }
+    }
+    else{
+        row = row_name;
+        order = "descending";
+        descending(row_name);
+    }
+    update();
 }
+
 var pageNumber = 1;
 var recordPerPage = 50;
 var country_id ;
@@ -87,22 +152,29 @@ TableChart.prototype.createTable = function(table_data, country){
     var self = this;
     tableElements = table_data;
     country_id = country;
-    console.log(tableElements);
+    // console.log(tableElements);
 
     var divtableChart = d3.select("#table-chart");
 
-    var tableDiv = divtableChart.append("table");
-    tableDiv.attr("id","recordTable");
+    // var tableDiv = divtableChart.append("table");
+    // tableDiv.attr("id","recordTable");
+    //
+    // var thead = tableDiv.append("thead"),
+    //     tbody = tableDiv.append("tbody");
 
-    var thead = tableDiv.append("thead"),
-        tbody = tableDiv.append("tbody");
-
+    var thead = divtableChart.select('table').select('thead');
     var columns =['Track','Artist','Album', 'Length', 'Year', 'Language'];
 
-    var thVar = thead.append('tr')
+    var thVar = thead.select('tr')
             .selectAll('th')
-            .data(columns).enter()
-            .append('th');
+            .data(columns);
+
+    var thVarEnter = thVar.enter()
+        .append("th");
+
+    thVar.exit().remove();
+
+    thVar = thVarEnter.merge(thVar);
 
     thVar.text(function (d) {
             return d;
@@ -110,15 +182,14 @@ TableChart.prototype.createTable = function(table_data, country){
         .append('span')
         .classed('glyphicon glyphicon-sort',true);
 
-    d3.select("thead").select("tr")
-        .selectAll("th")
+    d3.selectAll("th")
         .on("click",function(){
             // console.log(this.innerText);
             sortTable(this.innerText);
 
         });
 
-    // update();
+    update();
     createButtons();
 }
 
@@ -128,11 +199,12 @@ function update(){
     var trow = d3.select("tbody").selectAll("tr")
         .data(tableElements);
 
+    trow.exit().remove();
+
     trow = trow.enter()
         .append("tr")
         .merge(trow);
 
-    trow.exit().remove();
 
     var cell = trow.selectAll("td")
         .data(function(d){
@@ -140,14 +212,14 @@ function update(){
             return [d[track],d[artist],d[album],d[tracklength],d[year],d[language]];
         });
 
+    cell.exit().remove();
+
     cell = cell.enter()
         .append("td")
         .merge(cell);
 
-    cell.exit().remove();
-
     cell.text(function(d,i){
-        console.log(d);
+        // console.log(d);
         // if (i==1)
         //     //search artist in wiki
         //     //return html ref content eg: https://en.wikipedia.org/wiki/Chris_Martin(each space should replace with _ in artist name)
@@ -160,11 +232,15 @@ function update(){
 };
 
 function loadPrevious(){
-    var offset = (pageNumber-1) * recordPerPage;
-    pageNumber--;
+    var offset = 0;
+    if (pageNumber>0) {
+      offset = (pageNumber - 1) * recordPerPage;
+        pageNumber--;
+    }
+
     // viewdata = data.slice((page-1)*recordPerPage,page*recordPerPage);
 
-    d3.json("http://db03.cs.utah.edu:8181/api/country_track_record/"+country_id+"?limit =50&offset="+offset,function(error,data){
+    d3.json("http://db03.cs.utah.edu:8181/api/country_track_record/"+country_id+"?limit=20&offset="+offset,function(error,data){
         if(error) throw error;
         tableElements = data;
         update();
@@ -173,11 +249,12 @@ function loadPrevious(){
 
 function loadNext(){
     var offset = (pageNumber) * recordPerPage;
-    d3.select('#previous').classed('enabled',true);
+    d3.select('#previous').classed('disabled',false);
     pageNumber++;
     // viewdata = data.slice((page-1)*recordPerPage,page*recordPerPage);
+    console.log(pageNumber);
 
-    d3.json("http://db03.cs.utah.edu:8181/api/country_track_record/"+country_id+"?limit =50&offset="+offset,function(error,data){
+    d3.json("http://db03.cs.utah.edu:8181/api/country_track_record/"+country_id+"?limit=20&offset="+offset,function(error,data){
         if(error) throw error;
         tableElements = data;
         update();
@@ -186,42 +263,49 @@ function loadNext(){
 
 
 function createButtons() {
-    var divButton = d3.select("#page-button");
-
-    var data = ['previous','next'];
-
-    var buttonDiv = divButton.selectAll("button")
-        .data(data)
-        .enter()
-        .append("button")
-        .attr("type","button")
-        .attr("class","btn btn-default btn-md but")
-        .attr('id',function (d) {
-            return d;
-        });
-
-    divButton.select('#previous')
-        .append('span')
-        .attr('class','glyphicon glyphicon-chevron-left')
-        .text(function (d){
-        return d;
-    });
-
-    divButton.select('#next')
-        .text(function (d){
-            return d;
-        })
-        .append('span')
-        .attr('class','glyphicon glyphicon-chevron-right');
+    // var divButton = d3.select("#page-button");
+    //
+    // var data = ['previous','next'];
+    //
+    // var buttonDiv = divButton.selectAll("button")
+    //                         .data(data);
+    //
+    // buttonDiv.exit().remove();
+    //
+    // buttonDiv.enter()
+    //     .append("button")
+    //     .merge(buttonDiv);
+    //
+    // buttonDiv.attr("type","button")
+    //     .attr("class","btn btn-default btn-md but")
+    //     .attr('id',function (d) {
+    //         return d;
+    //     });
+    //
+    // divButton.select('#previous')
+    //     .append('span')
+    //     .attr('class','glyphicon glyphicon-chevron-left')
+    //     .text(function (d){
+    //     return d;
+    // });
+    //
+    // divButton.select('#next')
+    //     .text(function (d){
+    //         return d;
+    //     })
+    //     .append('span')
+    //     .attr('class','glyphicon glyphicon-chevron-right');
 
     if(pageNumber== 1){
         d3.select('#previous').classed('disabled',true);
     }else{
-        d3.select('#previous').classed('enabled',true);
+        d3.select('#previous').classed('disabled',false);
     }
+    var previousBtn = d3.select('#previous');
+        previousBtn.on('click', loadPrevious);
 
-    d3.select('#previous').on('click',loadPrevious);
-    d3.select('#next').on('click',loadNext);
+    var nextBtn = d3.select('#next');
+        nextBtn.on('click',loadNext);
 
 
 }

@@ -78,46 +78,31 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div id="track-length">
+                        <div id="track-length" class="col-md-12">
                         </div>
                     </div>
                     <div class="row">
-                        <div id="table-chart">
+                        <div id="table-chart" class="col-md-12" >
                             <h2>Artist-Track-Record Table</h2>
-                            <!--<table id="recordTable" >-->
-                                <!--<thead>-->
-                                <!--<tr>-->
-                                    <!--&lt;!&ndash;<th>Album</th>&ndash;&gt;-->
-                                    <!--<th><span>Album</span><span onclick="sort()" class="glyphicon glyphicon-sort"></span></th>-->
-                                    <!--<th><span>Artist</span><span onclick="sort()" class="glyphicon glyphicon-sort"></span></th>-->
-                                    <!--<th><span>Artist Gender</span><span onclick="sort()" class="glyphicon glyphicon-sort"></span></th>-->
-                                    <!--<th><span>Track</span><span onclick="sort()" class="glyphicon glyphicon-sort"></span></th>-->
-                                    <!--<th><span>Track Length</span><span onclick="sort()" class="glyphicon glyphicon-sort"></span></th>-->
-                                    <!--<th><span>Year</span><span onclick="sort()" class="glyphicon glyphicon-sort"></span></th>-->
-                                    <!--<th><span>Language</span><span onclick="sort()" class="glyphicon glyphicon-sort"></span></th>-->
-                                <!--</tr>-->
-                                <!--</thead>-->
-                                <!--<tbody>-->
-                                <!--<tr>-->
-                                    <!--<td>A1</td>-->
-                                    <!--<td>A2</td>-->
-                                    <!--<td>A3</td>-->
-                                    <!--<td>A4</td>-->
-                                    <!--<td>A5</td>-->
-                                    <!--<td>A6</td>-->
-                                    <!--<td>A7</td>-->
-                                <!--</tr>-->
-                            <!--</tbody>-->
-                            <!--</table>-->
+                            <table width="100%" height="100%">
+                                <thead>
+                                    <tr></tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
 
                         </div>
-                        <div class="container" align="right" id="page-button">
-                            <!--<button onclick="loadPrevious()" type="button" class="btn btn-default btn-md but" >-->
-                                <!--<span class="glyphicon glyphicon-chevron-left"></span> previous-->
-                            <!--</button>-->
-                            <!--<button onclick="loadNext()" type="button" class="btn btn-default btn-md but">-->
-                                <!--next <span class="glyphicon glyphicon-chevron-right"></span>-->
-                            <!--</button>-->
+                        <div class="pagination_btns" align="right" id="page-button">
+                            <div type="button" class="btn btn-default btn-md but" id="previous">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                                previous
+                            </div>
+                            <div type="button" class="btn btn-default btn-md but" id="next">
+                                next
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -136,8 +121,8 @@
 </div>
 <script type="application/javascript" src="public/js/tracklength.js"></script>
 <script type="application/javascript" src="public/js/yearchart.js"></script>
-<script type="application/javascript" src="public/js/tablechart.js"></script>
 <script type="application/javascript" src="public/js/choroplethmap.js"></script>
+<script type="application/javascript" src="public/js/tablechart.js"></script>
 <script type="application/javascript" src="public/js/wordcloud.js"></script>
 <script type="application/javascript" src="public/js/main.js"></script>
 
