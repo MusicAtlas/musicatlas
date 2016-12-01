@@ -16,6 +16,7 @@
         $('#collapseTwo').collapse('show');
         var yearChart = new YearChart();
         var trackLength = new TrackLength();
+        var wordCloud = new WordCloud();
         $('#collapseTwo').collapse('hide');
 
         d3.queue()

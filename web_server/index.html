@@ -6,6 +6,8 @@
     <title>Music Atlas</title>
     <script src="public/js/jquery-3.1.1.min.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="public/js/d3_v3.js"></script>
+    <script src="public/js/d3_v3.layout.cloud.js"></script>
     <script src="public/js/topojson.js"></script>
     <script src="public/js/colorbrewer.js"></script>
 
@@ -72,7 +74,7 @@
             <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
                 <div class="card-block">
                     <div class="row">
-                        <div id="year-chart">
+                        <div id="year-chart" class="col-md-12">
                         </div>
                     </div>
                     <div class="row">
@@ -80,17 +82,18 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-9">
+                        <div class="col-md-12">
                             Table
                         </div>
-                        <div class="col-md-3">
-                            Wordtag
+
+                    </div>
+                    <div class="row">
+                        <div id="wordcloud"  class="col-md-12" >
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -101,7 +104,10 @@
 <script type="application/javascript" src="public/js/tracklength.js"></script>
 <script type="application/javascript" src="public/js/yearchart.js"></script>
 <script type="application/javascript" src="public/js/choroplethmap.js"></script>
+<script type="application/javascript" src="public/js/wordcloud.js"></script>
 <script type="application/javascript" src="public/js/main.js"></script>
+
+
 
 <script>
     function toggleChevron(e) {
