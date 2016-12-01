@@ -221,8 +221,9 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.42857;
-  color: #333333;
-  background-color: #fff; }
+  /*color: #333333;*/
+  /*background-color: #fff;*/
+}
 
 input, button, select, textarea {
   font-family: inherit;
@@ -1718,14 +1719,15 @@ textarea.input-lg, .input-group-lg > textarea.form-control, .input-group-lg > te
 
 .btn {
   display: inline-block;
-  margin-bottom: 0;
+  margin-bottom: 5px;
   font-weight: normal;
   text-align: center;
   vertical-align: middle;
   touch-action: manipulation;
   cursor: pointer;
   background-image: none;
-  border: 1px solid transparent;
+  /*border: 1px solid transparent;*/
+  border: 1px solid black;
   white-space: nowrap;
   padding: 14px 12px;
   font-size: 14px;
@@ -4363,7 +4365,8 @@ body {
   font-weight: 300;
   font-size: 15px;
   line-height: 26px;
-  color: #818892; }
+  /*color: #818892; */
+}
 
 a {
   -webkit-transition: 0.5s;
@@ -4596,18 +4599,26 @@ pre {
 
 /* Buttons */
 .btn {
-  border-bottom: none !important;
+  /*border-bottom: none !important;*/
   text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 20px;
+  letter-spacing: 1px;
+  /*margin-bottom: 20px;*/
+  /*margin-bottom: 10px;*/
+  /*margin-top: 10px;*/
+  /*margin-bottom: 10px;*/
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   -ms-border-radius: 5px;
   -o-border-radius: 5px;
   border-radius: 5px;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-right: 10px; }
+  padding:10px;
+  /*padding-left: 20px;*/
+  /*padding-left: 10px;*/
+  /*!*padding-right: 20px;*!*/
+  /*padding-right: 10px;*/
+  margin-right: 10px;
+}
+
 .btn:hover, .btn:focus, .btn:active {
   box-shadow: none;
   outline: none !important;
@@ -4615,8 +4626,11 @@ pre {
 .btn.fh5co-btn-icon {
   text-transform: none !important;
   letter-spacing: normal !important;
-  padding-left: 15px;
-  padding-right: 15px; }
+  /*padding-left: 15px;*/
+  /*padding-right: 15px;*/
+  padding-left: 5px;
+  padding-right: 5px;
+}
 
 .btn-outline {
   border: 2px solid #ccc !important;

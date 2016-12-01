@@ -7,11 +7,13 @@
  *
  * @param
  */
-function ChoroplethMap(yearChart,track_data,world,names){
+function ChoroplethMap(yearChart,tableChart,track_data,world,names){
+// function ChoroplethMap(yearChart,track_data,world,names){
 
     var self = this;
     self.track_data = track_data;
     self.yearChart = yearChart;
+    self.tableChart = tableChart;
     self.init();
     self.world = world;
     self.names = names;
@@ -166,6 +168,13 @@ ChoroplethMap.prototype.update = function(){
 
                     self.yearChart.update(data,t.count);
                 });
+
+                d3.json("http://db03.cs.utah.edu:8181/api/country_track_record/"+t.id+"?limit =50&offset=0",function(error,data){
+                    if(error) throw error;
+                    // console.log(data);
+                    self.tableChart.createTable(data,t.id);
+                });
+
                 $('#collapseOne').collapse('hide');
                 $('#collapseTwo').collapse('show');
             });
