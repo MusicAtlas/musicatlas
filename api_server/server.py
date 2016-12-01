@@ -175,7 +175,7 @@ def country_length_per_year(country_id):
                 temp["max_length"] = item[1]
                 temp["year"] = item[2]
                 temp["country_id"] = country_id
-                temp["year"] = item[3]
+                temp["country"] = item[3]
                 results.append(temp)
 
         return ujson.dumps(results)
@@ -220,7 +220,7 @@ def country_track_record(country_id):
 @app.route('/api/artist_tags/<country_id>/<start_year>/<end_year>', methods=['GET'])
 def artist_tags(country_id, start_year, end_year):
     """ ARTIST TRACK INFORMATION
-    GET /api/artist_tagse
+    GET /api/artist_tags
     """
     if request.method == 'GET':
         limit = int(request.args.get('limit', 500))
@@ -337,7 +337,7 @@ def country_track_year_range_length(country_id, start_year, end_year, min_length
                 temp["year"] = item[8]
                 temp["country"] = item[9]
                 temp["country_id"] = country_id
-                temp["language"] = item[10]
+                temp["language"] = item[11]
                 results.append(temp)
 
         return ujson.dumps(results)
