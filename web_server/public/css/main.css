@@ -105,12 +105,15 @@ th {
     color: black;
 }
 tr, th{
+    font-size: 12px;
     border: 1px solid #eeeeee;
     text-align: center;
-    padding: 8px;
+    padding: 1px;
 }
 td{
-    padding: 0px 0px 3px 5px;
+    font-family: "Montserrat", arial, sans-serif;
+    font-size: 10px;
+    padding: 0px 0px 0px 5px;
     text-align: center;
     vertical-align: middle;
     margin:0px;
