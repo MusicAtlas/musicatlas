@@ -32,16 +32,18 @@ WordCloud.prototype.init = function(){
         .timeInterval(Infinity)
         .size([self.svgWidth, self.svgHeight])
         .fontSize(function(d) {
-            return self.fontSize(+d.value);
+            return self.fontSize(+d.count);
         })
         .text(function(d) {
-            return d.key;
+            return d.artist_name;
         })
         .on("end", function(tags,bounds){
             self.draw(tags,bounds);
         });
 
-    d3_v3.json("public/data/tags.json",function(error, tags) {
+    //"/api/artist_tags/<country_id>/<start_year>/<end_year>?limit=500&offset=0"
+
+    d3_v3.json("http://db03.cs.utah.edu:8181/api/artist_tags/222/2008/2012?limit=100&offset=0",function(error, tags) {
         if (error) throw error;
 
         self.update(tags);
@@ -113,7 +115,7 @@ WordCloud.prototype.update = function(tags){
     self.layout.font('impact').spiral('archimedean');
     self.fontSize = d3_v3.scale["sqrt"]().range([10, 100]);
     if (tags.length){
-        self.fontSize.domain([+tags[tags.length - 1].value || 1, +tags[0].value]);
+        self.fontSize.domain([+tags[tags.length - 1].count || 1, +tags[0].count]);
     }
     self.layout.stop().words(tags).start();
 
