@@ -456,6 +456,6 @@ def artist_releasegroup():
 
 if __name__ == '__main__':
     from gevent.wsgi import WSGIServer
-    http_server = WSGIServer(('db03.cs.utah.edu', 8181), app)
+    http_server = WSGIServer(('db03.cs.utah.edu', 8181), app,keyfile='ssl/musicatlas_github.key', certfile='ssl/musicatlas.crt')
     http_server.serve_forever()
 
