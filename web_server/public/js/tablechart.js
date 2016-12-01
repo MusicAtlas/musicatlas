@@ -232,8 +232,12 @@ function update(){
 };
 
 function loadPrevious(){
-    var offset = (pageNumber-1) * recordPerPage;
-    pageNumber--;
+    var offset = 0;
+    if (pageNumber>0) {
+      offset = (pageNumber - 1) * recordPerPage;
+        pageNumber--;
+    }
+
     // viewdata = data.slice((page-1)*recordPerPage,page*recordPerPage);
 
     d3.json("http://db03.cs.utah.edu:8181/api/country_track_record/"+country_id+"?limit=20&offset="+offset,function(error,data){
@@ -248,6 +252,7 @@ function loadNext(){
     d3.select('#previous').classed('disabled',false);
     pageNumber++;
     // viewdata = data.slice((page-1)*recordPerPage,page*recordPerPage);
+    console.log(pageNumber);
 
     d3.json("http://db03.cs.utah.edu:8181/api/country_track_record/"+country_id+"?limit=20&offset="+offset,function(error,data){
         if(error) throw error;
@@ -296,9 +301,11 @@ function createButtons() {
     }else{
         d3.select('#previous').classed('disabled',false);
     }
+    var previousBtn = d3.select('#previous');
+        previousBtn.on('click', loadPrevious);
 
-    d3.select('#previous').on('click',loadPrevious);
-    d3.select('#next').on('click',loadNext);
+    var nextBtn = d3.select('#next');
+        nextBtn.on('click',loadNext);
 
 
 }
