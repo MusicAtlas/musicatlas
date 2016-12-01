@@ -240,7 +240,7 @@ function loadPrevious(){
 
     // viewdata = data.slice((page-1)*recordPerPage,page*recordPerPage);
 
-    d3.json("http://db03.cs.utah.edu:8181/api/country_track_record/"+country_id+"?limit=20&offset="+offset,function(error,data){
+    d3.json("https://db03.cs.utah.edu:8181/api/country_track_record/"+country_id+"?limit=20&offset="+offset,function(error,data){
         if(error) throw error;
         tableElements = data;
         update();
@@ -254,7 +254,7 @@ function loadNext(){
     // viewdata = data.slice((page-1)*recordPerPage,page*recordPerPage);
     console.log(pageNumber);
 
-    d3.json("http://db03.cs.utah.edu:8181/api/country_track_record/"+country_id+"?limit=20&offset="+offset,function(error,data){
+    d3.json("https://db03.cs.utah.edu:8181/api/country_track_record/"+country_id+"?limit=20&offset="+offset,function(error,data){
         if(error) throw error;
         tableElements = data;
         update();
