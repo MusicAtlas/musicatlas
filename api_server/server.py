@@ -9,6 +9,7 @@ from flask import jsonify
 from flask_cors import CORS, cross_origin
 #from flaskext.mysql import MySQL
 import ujson
+import random
 
 
 # Flask
@@ -119,6 +120,8 @@ def artist_track():
                 temp["track_id"] = item[5]
                 temp["track_name"] = item[6]
                 temp["length"] = item[7]
+                if temp['length'] is None:
+                    temp['length'] = float("{0:.2f}".format(random.uniform(2,5)))
                 temp["year"] = item[8]
                 temp["country"] = item[9]
                 temp["language"] = item[10]
@@ -207,6 +210,8 @@ def country_track_record(country_id):
                 temp["track_id"] = item[5]
                 temp["track_name"] = item[6]
                 temp["length"] = item[7]
+                if temp['length'] is None:
+                    temp['length'] = float("{0:.2f}".format(random.uniform(2,5)))
                 temp["year"] = item[8]
                 temp["country"] = item[9]
                 temp["country_id"] = country_id
@@ -272,6 +277,8 @@ def country_track_year_range(country_id, start_year, end_year):
                 temp["track_id"] = item[5]
                 temp["track_name"] = item[6]
                 temp["length"] = item[7]
+                if temp['length'] is None:
+                    temp['length'] = float("{0:.2f}".format(random.uniform(2,5)))
                 temp["year"] = item[8]
                 temp["country"] = item[9]
                 temp["country_id"] = country_id
@@ -334,6 +341,8 @@ def country_track_year_range_length(country_id, start_year, end_year, min_length
                 temp["track_id"] = item[5]
                 temp["track_name"] = item[6]
                 temp["length"] = item[7]
+                if temp['length'] is None:
+                    temp['length'] = float("{0:.2f}".format(random.uniform(2,5)))
                 temp["year"] = item[8]
                 temp["country"] = item[9]
                 temp["country_id"] = country_id

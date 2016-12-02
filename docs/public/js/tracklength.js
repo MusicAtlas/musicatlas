@@ -5,8 +5,9 @@
  * Constructor for the Track Length
  *
  */
-function TrackLength() {
+function TrackLength(tableChart) {
     var self = this;
+    self.tableChart = tableChart;
 
     self.init();
 };
@@ -32,6 +33,9 @@ TrackLength.prototype.init = function(){
         .attr("width",self.svgWidth)
         .attr("height",self.svgHeight);
 
+    self.start_year = 0;
+    self.end_year = 0;
+    self.country = '';
 };
 
 /**
@@ -40,16 +44,21 @@ TrackLength.prototype.init = function(){
 TrackLength.prototype.update = function(length_data){
     var self = this;
 
-    //console.log(length_data);
+    console.log('track length '+ self.start_year);
+    console.log('track length '+ self.end_year);
+    console.log('country '+ self.country);
+
     var max = d3.max(length_data,function(d){ return parseFloat(d.max_length); });
     var min = d3.min(length_data,function(d){ return parseFloat(d.min_length); });
 
-    //console.log(max);
-    //console.log(min);
+    // console.log(min);
+    // console.log(max);
 
+    self.min_length = min;
+    self.max_length = max;
 
     //https://bl.ocks.org/mbostock/6452972
-    var lengthScale = d3.scaleLinear()
+    self.lengthScale = d3.scaleLinear()
                         .domain([min,max])
                         .range([self.margin.left,self.svgWidth-20])
                         .clamp(true);
@@ -68,8 +77,8 @@ TrackLength.prototype.update = function(length_data){
 
     line = line.enter().append("line").classed("length",true).merge(line);
 
-    line.attr("x1", lengthScale.range()[0])
-        .attr("x2", lengthScale.range()[1]);
+    line.attr("x1", self.lengthScale.range()[0])
+        .attr("x2", self.lengthScale.range()[1]);
 
     var line_inset = slider.selectAll(".length-inset").data([1]);
 
@@ -77,8 +86,8 @@ TrackLength.prototype.update = function(length_data){
 
     line_inset = line_inset.enter().append("line").classed("length-inset",true).merge(line_inset);
 
-    line_inset.attr("x1", lengthScale.range()[0])
-        .attr("x2", lengthScale.range()[1]);
+    line_inset.attr("x1", self.lengthScale.range()[0])
+        .attr("x2", self.lengthScale.range()[1]);
 
     var line_overlay = slider.selectAll(".length-overlay").data([1]);
 
@@ -86,8 +95,8 @@ TrackLength.prototype.update = function(length_data){
 
     line_overlay = line_overlay.enter().append("line").classed("length-overlay",true).merge(line_overlay);
 
-    line_overlay.attr("x1", lengthScale.range()[0])
-        .attr("x2", lengthScale.range()[1]);
+    line_overlay.attr("x1", self.lengthScale.range()[0])
+        .attr("x2", self.lengthScale.range()[1]);
 
     var handle = slider.selectAll(".track-slider").data([min,max]);
 
@@ -96,19 +105,55 @@ TrackLength.prototype.update = function(length_data){
     handle = handle.enter().append("circle").classed("track-slider",true).merge(handle);
 
     handle.attr("cx",function(d){
-       return lengthScale(d);
-    })
+           return self.lengthScale(d);
+        }).attr('id',function (d) {
+            if(d == max)
+                return 'max';
+            return 'min';
+        })
         .attr("r", 9)
         .call(d3.drag()
-            //.on("start.interrupt", function() { slider.interrupt(); })
+        //.on("start.interrupt", function() { slider.interrupt(); })
             .on("start drag", function() {
                 var selection = d3.select(this);
 
-                setpos(selection,lengthScale.invert(d3.event.x));
-            }));
+                self.setpos(selection,self.lengthScale.invert(d3.event.x));
+                // var display = lengthScale.invert(d3.event.x).toFixed(2);
+                // console.log('min '+display);
+            })
+                .on('end', updateTable)
+            // self.updateTable();
 
-    function setpos(selection,pos) {
-        selection.attr("cx", lengthScale(pos));
+        );
+
+    function updateTable(){
+        var req = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length;
+
+        console.log(req);
+
+        d3.queue().defer(d3.json,req).await(function(error,year_track_table_data){
+            if(error)
+                throw error;
+            // console.log('here '+req);
+            self.tableChart.update(year_track_table_data, self.country);
+        });
     }
 
 };
+
+TrackLength.prototype.setpos = function(selection,pos) {
+    var self = this;
+
+    selection.attr("cx", self.lengthScale(pos));
+    var display = pos.toFixed(2);
+    // console.log(display);
+    var selectedId = selection['_groups'][0][0].id;
+    // console.log(selectedId);
+    if(selectedId == 'max'){
+        self.max_length = display;
+    }else{
+        self.min_length = display;
+    }
+    console.log(self.min_length);
+    console.log(self.max_length);
+}
