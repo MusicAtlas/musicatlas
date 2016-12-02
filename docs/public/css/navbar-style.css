@@ -4048,10 +4048,11 @@ button.close {
 
 .carousel-control {
   position: absolute;
-  top: 0;
+  top: 150px;
+  height:60px;
   left: 0;
   bottom: 0;
-  width: 15%;
+  width: 5%;
   opacity: 0.5;
   filter: alpha(opacity=50);
   font-size: 20px;

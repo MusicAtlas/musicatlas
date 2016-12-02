@@ -41,13 +41,20 @@ body {
     overflow: hidden;
 }
 
-#wordcloud{
+#wordcloud {
     width: 100%;
     min-height: 350px;
     overflow: hidden;
     padding-left: 20px;
 }
 
+
+#extrasvg{
+    width: 100%;
+    min-height: 450px;
+    overflow: hidden;
+    padding-left: 20px;
+}
 .filter-header{
     text-transform: uppercase;
     font-family: "Montserrat", arial, sans-serif;
