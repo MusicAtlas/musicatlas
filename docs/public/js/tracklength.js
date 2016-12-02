@@ -141,8 +141,13 @@ TrackLength.prototype.update = function(length_data){
     ticks = ticks.enter().append("text").merge(ticks);
 
     ticks.attr("x", self.lengthScale)
-        .attr("y","18")
+        .attr("y",function(d,i){
+            if(i%2 == 0)
+                return "18";
+            return "-13";
+        })
         .attr("text-anchor", "middle")
+        .attr("font-size","12px")
         .text(function(d) { return d; });
 
 };
