@@ -170,5 +170,5 @@ tr, td {
 .track-slider {
     pointer-events: stroke;
     stroke-width: 50px;
-    cursor: crosshair;
+    cursor: pointer;
 }

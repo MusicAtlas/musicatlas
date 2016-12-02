@@ -116,7 +116,7 @@ TrackLength.prototype.update = function(length_data){
 
             })
                 .on('end', function(){
-                    var req = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length;
+                    var req = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length+"?limit=500&offset=0";
 
                     d3.json(req,function(error,year_track_table_data){
                         if(error) throw error;
@@ -125,6 +125,23 @@ TrackLength.prototype.update = function(length_data){
                     });
                 })
         );
+
+    var slider_ticks = slider.selectAll(".ticks").data([1]);
+
+    slider_ticks.exit().remove();
+
+    slider_ticks = slider_ticks.enter().append("g").classed("ticks",true).merge(slider_ticks);
+
+    var ticks = slider_ticks.selectAll("text").data(self.lengthScale.ticks(20));
+
+    ticks.exit().remove();
+
+    ticks = ticks.enter().append("text").merge(ticks);
+
+    ticks.attr("x", self.lengthScale)
+        .attr("y","18")
+        .attr("text-anchor", "middle")
+        .text(function(d) { return d; });
 
 };
 

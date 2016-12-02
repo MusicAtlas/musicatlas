@@ -123,7 +123,7 @@ YearChart.prototype.update = function(year_data){
         self.scaleSlider.country = year_data[0].country_id;
 
         var req1 = "https://db03.cs.utah.edu:8181/api/country_length_per_year_range/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year;
-        var req2 = "https://db03.cs.utah.edu:8181/api/country_track_year_range/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year;
+        var req2 = "https://db03.cs.utah.edu:8181/api/country_track_year_range/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year+"?limit=500&offset=0";
 
         d3.queue()
             .defer(d3.json,req1)
