@@ -215,11 +215,16 @@ TableChart.prototype.tableRowCreate = function(data){
             return d + self.getWikiLink(d);
         }
 
+        if (i==2){
+            console.log(d,i);
+            return d + self.getLastFMLink(d);
+        }
+
         return d;
     });
 
 
-}
+};
 
 TableChart.prototype.replaceAll = function(str, find, replace) {
     self = this;
@@ -240,7 +245,15 @@ TableChart.prototype.getYoutubeLink = function(content) {
     var link = "https://www.youtube.com/results?search_query="+self.replaceAll(content," ","+");
     html = "<span style='float: right; margin-right: 40px;'><a href='"+link + "' target='_blank'>  Youtube  </a></span>";
     return html;
-}
+};
+
+TableChart.prototype.getLastFMLink = function(content) {
+    self = this;
+    var html ='';
+    var link = "http://www.last.fm/search?q="+self.replaceAll(content," ","+");
+    html = "<span style='float: right; margin-right: 20px;'><a href='"+link + "' target='_blank'>  last.fm  </a></span>";
+    return html;
+};
 
 TableChart.prototype.update = function(table_data, country){
     var self = this;
