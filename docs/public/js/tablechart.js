@@ -2,11 +2,8 @@
  * Created by shweta on 11/29/16.
  */
 
-var cellBuffer = 3;
-
 function TableChart() {
     var self = this;
-
     self.init();
 };
 
@@ -15,10 +12,14 @@ function TableChart() {
  */
 TableChart.prototype.init = function(){
     var self = this;
-    var sortHeaderAscending = true;
+
+    self.offset = 0;
+    self.pageNumber = 1;
+    self.recordPerPage = 20;
 
     self.row = '';
     self.order = 'ascending';
+
     self.artist = 'artist_name',
     self.album = 'release_name',
     self.gender = 'gender',
@@ -27,8 +28,43 @@ TableChart.prototype.init = function(){
     self.year = 'year',
     self.language = 'language';
 
-    self.pageNumber = 1;
-    self.recordPerPage = 20;
+    self.country = '';
+    // self.numTracks = 0;
+
+    self.columns =['Track','Artist','Album', 'Length', 'Year', 'Language'];
+
+    //button layer hidden
+    self.pageButton = d3.selectAll(".pagination_btns");
+    self.pageButton.attr("visibility", "hidden");
+
+    /*Table creation*/
+    self.divtableChart = d3.select("#table-chart");
+    var thead = self.divtableChart.select('table').select('thead');
+
+    var thVar = thead.select('tr')
+        .selectAll('th')
+        .data(self.columns);
+
+    var thVarEnter = thVar.enter()
+        .append("th");
+
+    thVar.exit().remove();
+
+    thVar = thVarEnter.merge(thVar);
+
+    thVar.text(function (d) {
+            return d;
+        })
+        .append('span')
+        .classed('glyphicon glyphicon-sort',true);
+
+    d3.selectAll("th")
+        .on("click",function(){
+            self.sortTable(this.innerText);
+        });
+
+    //button on-click
+    self.buttonAction();
 };
 
 TableChart.prototype.descending = function(row_name){
@@ -139,51 +175,10 @@ TableChart.prototype.sortTable = function(row_name){
     self.update(data);
 }
 
-TableChart.prototype.createTable = function(table_data, country){
-
-    var self = this;
-    self.tableElements = table_data;
-    self.country = country;
-    // console.log(tableElements);
-
-    var divtableChart = d3.select("#table-chart");
-
-    var thead = divtableChart.select('table').select('thead');
-
-    var columns =['Track','Artist','Album', 'Length', 'Year', 'Language'];
-
-    var thVar = thead.select('tr')
-            .selectAll('th')
-            .data(columns);
-
-    var thVarEnter = thVar.enter()
-        .append("th");
-
-    thVar.exit().remove();
-
-    thVar = thVarEnter.merge(thVar);
-
-    thVar.text(function (d) {
-            return d;
-        })
-        .append('span')
-        .classed('glyphicon glyphicon-sort',true);
-
-    var data = self.tableElements.slice((self.pageNumber-1)*self.recordPerPage,self.pageNumber*self.recordPerPage);
-    // console.log(data.length);
-    // console.log(tableElements.length);
-    self.update(data);
-    d3.selectAll("th")
-        .on("click",function(){
-            self.sortTable(this.innerText);
-        });
-    self.createButtons();
-}
-
-TableChart.prototype.update = function(data){
-    // tableElements = table_data\;
+TableChart.prototype.tableRowCreate = function(data){
     var self = this;
 
+    //Data rows created
     var trow = d3.select("tbody").selectAll("tr")
         .data(data);
 
@@ -204,68 +199,109 @@ TableChart.prototype.update = function(data){
         .append("td")
         .merge(cell);
 
+
     cell.text(function(d,i){
         // console.log(d);
+
+        //search link to artist and track
+
         // if (i==1)
         //     //search artist in wiki
         //     //return html ref content eg: https://en.wikipedia.org/wiki/Chris_Martin(each space should replace with _ in artist name)
         // if (i==3)
-            //search track in youtube
-            // return html ref content eg: https://www.youtube.com/results?search_query=jis+desh+me(each word in title with space replaced with +)
+        //search track in youtube
+        // return html ref content eg: https://www.youtube.com/results?search_query=jis+desh+me(each word in title with space replaced with +)
         return d;
     });
-    // sortTable(artist);
+}
+
+
+TableChart.prototype.update = function(table_data, country){
+    var self = this;
+    self.tableElements = table_data;
+    self.country = country;
+
+    // console.log('data length '+ self.tableElements.length);
+    // console.log('current initial page '+ self.pageNumber-1);
+
+    var data = self.tableElements.slice((self.pageNumber-1)*self.recordPerPage,self.pageNumber*self.recordPerPage);
+
+    // console.log('data slice length '+ data.length);
+
+    self.tableRowCreate(data);
+
+    self.pageButton.attr('visibility','visible');
+    if(self.pageNumber == 1) {
+        self.pageButton.select('#previous').attr('visibility', 'hidden');
+    }
 
 };
 
 TableChart.prototype.loadPrevious = function() {
     var self = this;
-    var offset = 0;
+
     if (self.pageNumber > 0) {
         self.offset = (self.pageNumber - 1) * self.recordPerPage;
         self.pageNumber--;
     }
 
-    if (offset == 0) {
-        d3.select('#previous').classed('disabled', true);
+    if(self.pageNumber ==1){
+        self.pageButton.select('#previous')
+            .attr('visibility','hidden');
     }
-    if (offset > self.recordPerPage){
-        var data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.pageNumber * self.recordPerPage);
-        self.update(data);
-    }
+
+    // console.log('offset previous ' +self.offset);
+    // console.log(self.pageNumber);
+
+    var data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.pageNumber * self.recordPerPage);
+    self.tableRowCreate(data);
 }
 
 TableChart.prototype.loadNext = function(){
     var self = this;
-    var offset = (self.pageNumber) * self.recordPerPage;
+    self.offset = (self.pageNumber) * self.recordPerPage;
+
+    // console.log('offset ' +self.offset);
     // console.log(self.pageNumber);
     // console.log(self.recordPerPage);
-    d3.select('#previous').classed('disabled',false);
+
     self.pageNumber++;
-    if(offset >= self.tableElements.length) {
 
-        d3.json("http://db03.cs.utah.edu:8181/api/country_track_record/" + self.country + "?limit=500&offset=" + offset, function (error, data) {
+    if(self.pageNumber > 1) {
+        self.pageButton.select('#previous')
+        // .classed('disabled',false)
+            .attr('visibility', 'visible');
+    }
+
+    if(self.offset >= self.tableElements.length) {
+        d3.json("https://db03.cs.utah.edu:8181/api/country_track_record/" + self.country + "?limit=500&offset=" + self.offset, function (error, data) {
             if (error) throw error;
-            // tableElements = data;
             self.tableElements.push(data);
-
         });
     }
-    var data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.pageNumber * self.recordPerPage);
-    self.update(data);
+
+    var data = 0;
+    // if(self.pageNumber * self.recordPerPage <= self.numTracks) {
+        data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.pageNumber * self.recordPerPage);
+    // }else{
+    //     data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.tableElements.length-1);
+    // }
+    self.tableRowCreate(data);
 
 }
 
 
-TableChart.prototype.createButtons = function() {
-
+TableChart.prototype.buttonAction = function() {
     var self = this;
-    console.log(self.recordPerPage);
+
+    // console.log(self.recordPerPage);
+
     if(self.pageNumber== 1){
         d3.select('#previous').classed('disabled',true);
     }else{
         d3.select('#previous').classed('disabled',false);
     }
+
     var previousBtn = d3.select('#previous');
         previousBtn.on('click', function(){
             self.loadPrevious();
