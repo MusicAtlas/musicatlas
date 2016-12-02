@@ -116,7 +116,7 @@ TrackLength.prototype.update = function(length_data){
 
             })
                 .on('end', function(){
-                    var req = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length;
+                    var req = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length+"?limit=500&offset=0";
 
                     d3.json(req,function(error,year_track_table_data){
                         if(error) throw error;
