@@ -80,9 +80,14 @@ YearChart.prototype.update = function(year_data){
 
     self.trackLength.start_year = year_data[0].year;
     self.trackLength.end_year = year_data[year_data.length-1].year;
+
     self.scaleSlider.start_year = year_data[0].year;
     self.scaleSlider.end_year = year_data[year_data.length-1].year;
     self.scaleSlider.country = year_data[0].country_id;
+
+    self.wordCloud.start_year = year_data[0].year;
+    self.wordCloud.end_year = year_data[year_data.length-1].year;
+    self.wordCloud.country = year_data[0].country_id;
 
     var stackedbar = self.svg.selectAll(".yearbar").data(year_data);
 
@@ -117,25 +122,46 @@ YearChart.prototype.update = function(year_data){
             return self.colorScale(parseInt(d.count));
         });
 
-    var textData = [year_data[0].year, year_data[year_data.length-1].year];
+    // var textData = [year_data[0].year, year_data[year_data.length-1].year];
 
-    var stackedText = self.svg.selectAll(".yeartext").data(textData);
+    var stackedText = self.svg.selectAll(".yeartext").data(year_data);
 
     stackedText.exit().remove();
 
+    var width_till_now = 0;
+    var prev = 0;
+
     stackedText = stackedText.enter().append("text").merge(stackedText);
 
-    stackedText.attr("y",self.svgHeight/2-20)
+    stackedText.attr("y",self.svgHeight/2-10)
         .classed('yeartext',true)
         .text(function(d){
-            return d;
+            console.log(d.year);
+            return d.year;
         })
         .attr("x",function(d,i) {
-            if(i == 0)
+            // if(i == 0)
+            //     return 0;
+            // else
+            //     return self.svgWidth - self.svgTextPadding;
+            var w = self.svgWidth/year_data.length;
+
+            if(width_till_now == 0) {
+                width_till_now += w;
                 return 0;
-            else
-                return self.svgWidth - self.svgTextPadding;
-        });
+            }
+            else{
+                width_till_now += prev ;
+                prev = w;
+                return width_till_now;
+            }
+        // })
+        // .attr('transform', function(d,i){
+        //     return "rotate(-45)";
+
+        })
+        .attr("dy", ".35em");
+        // .attr("transform", "rotate(-45)");
 
 
     //http://bl.ocks.org/mbostock/34f08d5e11952a80609169b7917d4172
@@ -161,9 +187,14 @@ YearChart.prototype.update = function(year_data){
 
         self.trackLength.start_year = start_year;
         self.trackLength.end_year = end_year;
+
         self.scaleSlider.start_year = start_year;
         self.scaleSlider.end_year = end_year;
         self.scaleSlider.country = year_data[0].country_id;
+
+        self.wordCloud.start_year = start_year;
+        self.wordCloud.end_year = end_year;
+        self.wordCloud.country = year_data[0].country_id;
 
         var req1 = "https://db03.cs.utah.edu:8181/api/country_length_per_year_range/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year;
         var req2 = "https://db03.cs.utah.edu:8181/api/country_track_year_range/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year+"?limit=500&offset=0";
