@@ -56,6 +56,29 @@ YearChart.prototype.update = function(year_data){
         return d3.ascending(parseInt(a.year),parseInt(b.year));
     });
 
+
+    var year_data_map ={};
+    var min= year_data[0].year;
+    var max = year_data[year_data.length-1].year;
+
+    year_data.forEach(function(d){
+        year_data_map[+d.year] = d;
+    });
+
+
+    for (var i =min; i <= max; i++){
+        console.log(year_data_map[i]);
+        if (year_data_map[i] == undefined){
+            year_data_map[i] = {"count":0,"country":year_data[0].country,"country_id":year_data[0].country_id,"year":i};
+        }
+    }
+
+    year_data =d3.values(year_data_map);
+
+    year_data.sort(function(a,b){
+        return d3.ascending(parseInt(a.year),parseInt(b.year));
+    });
+
     self.trackLength.start_year = year_data[0].year;
     self.trackLength.end_year = year_data[year_data.length-1].year;
     self.scaleSlider.start_year = year_data[0].year;
