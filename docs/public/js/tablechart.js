@@ -35,6 +35,7 @@ TableChart.prototype.init = function(){
 
     //button layer hidden
     self.pageButton = d3.selectAll(".pagination_btns");
+
     self.pageButton.style("visibility", 'hidden');
 
     /*Table creation*/
@@ -229,6 +230,7 @@ TableChart.prototype.update = function(table_data, country){
     if(self.pageNumber == 1) {
         self.pageButton.select('#previous')
             .style('visibility', 'hidden');
+
     }
 
 };

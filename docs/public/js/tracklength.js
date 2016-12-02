@@ -126,6 +126,23 @@ TrackLength.prototype.update = function(length_data){
                 })
         );
 
+    var slider_ticks = slider.selectAll(".ticks").data([1]);
+
+    slider_ticks.exit().remove();
+
+    slider_ticks = slider_ticks.enter().append("g").classed("ticks",true).merge(slider_ticks);
+
+    var ticks = slider_ticks.selectAll("text").data(self.lengthScale.ticks(20));
+
+    ticks.exit().remove();
+
+    ticks = ticks.enter().append("text").merge(ticks);
+
+    ticks.attr("x", self.lengthScale)
+        .attr("y","18")
+        .attr("text-anchor", "middle")
+        .text(function(d) { return d; });
+
 };
 
 TrackLength.prototype.setpos = function(selection,pos) {
