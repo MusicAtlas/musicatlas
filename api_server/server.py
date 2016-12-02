@@ -81,7 +81,9 @@ def country_track():
         with app.app_context():
             conn = get_db().cursor()
             #query = "select count(*), C.id, C.name from musicbrainz.track A, musicbrainz.release_country B, musicbrainz.area C  where A.medium=B.release and B.country=C.id group by C.id "
-            query = "select track_count, id, name from country_track_group"
+            query = "select track_count, country_id, name from country_track_group"
+            #query = "select count(distinct(track_id)) , country_id, country from country_track group by country_id,country"
+
             conn.execute(query)
             data = conn.fetchall()
             for item in data:
@@ -221,6 +223,37 @@ def country_track_record(country_id):
         return ujson.dumps(results)
     else:
         return ujson.dumps({"status":"error"})
+
+
+@app.route('/api/artist_tags/<country_id>', methods=['GET'])
+def artist_tags_all(country_id):
+    """ ARTIST TRACK INFORMATION
+    GET /api/artist_tags
+    """
+    if request.method == 'GET':
+        limit = int(request.args.get('limit', 500))
+        offset= int(request.args.get('offset', 0))
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor()
+            query = "select sum(count), artist_name, country from artist_country_year_group where country_id =" + str(country_id) + " group by artist_name, country order by sum(count)  desc limit "+ str(limit) +" offset "+ str(offset);
+
+            
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                temp = {}
+                temp["count"] = item[0]
+                temp["artist_name"] = item[1]
+                temp["country"] = item[2]
+                temp["country_id"] = country_id
+                results.append(temp)
+
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
+
+
 
 @app.route('/api/artist_tags/<country_id>/<start_year>/<end_year>', methods=['GET'])
 def artist_tags(country_id, start_year, end_year):
