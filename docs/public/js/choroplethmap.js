@@ -166,6 +166,7 @@ ChoroplethMap.prototype.update = function(){
                     .style("opacity", 0);
             })
             .on("click",function(){
+                self.trackLength.country = t.id;
                 d3.queue()
                     .defer(d3.json,"https://db03.cs.utah.edu:8181/api/country_track_year/"+t.id)
                     .defer(d3.json,"https://db03.cs.utah.edu:8181/api/country_length_per_year/"+t.id)
@@ -173,9 +174,9 @@ ChoroplethMap.prototype.update = function(){
                     .defer(d3.json,"https://db03.cs.utah.edu:8181/api/artist_tags/"+ t.id + "?limit=100&offset=0")
                     .await(function(error,year_data,length_data,table_data,cloud_data){
                         if(error) throw error;
+
                         self.yearChart.update(year_data);
                         self.trackLength.update(length_data);
-                        // self.tableChart.createTable(table_data,t.id);
                         self.tableChart.update(table_data, t.id);
                         self.scaleSlider.update(cloud_data);
                         self.wordCloud.update(cloud_data, d3.max(cloud_data, function(d){return d.count; }) );

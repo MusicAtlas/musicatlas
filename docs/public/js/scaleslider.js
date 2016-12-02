@@ -5,9 +5,9 @@
  * Constructor for the Track Length
  *
  */
-function ScaleSlider() {
+function ScaleSlider(wordCloud) {
     var self = this;
-
+    self.wordCloud = wordCloud;
     self.init();
 };
 
@@ -49,7 +49,7 @@ ScaleSlider.prototype.update = function(cloud_data){
 
 
     //https://bl.ocks.org/mbostock/6452972
-    var lengthScale = d3.scaleLinear()
+    self.lengthScale = d3.scaleLinear()
                         .domain([min,max])
                         .range([self.margin.left,self.svgWidth-20])
                         .clamp(true);
@@ -68,8 +68,8 @@ ScaleSlider.prototype.update = function(cloud_data){
 
     line = line.enter().append("line").classed("length",true).merge(line);
 
-    line.attr("x1", lengthScale.range()[0])
-        .attr("x2", lengthScale.range()[1]);
+    line.attr("x1", self.lengthScale.range()[0])
+        .attr("x2", self.lengthScale.range()[1]);
 
     var line_inset = slider.selectAll(".length-inset").data([1]);
 
@@ -77,8 +77,8 @@ ScaleSlider.prototype.update = function(cloud_data){
 
     line_inset = line_inset.enter().append("line").classed("length-inset",true).merge(line_inset);
 
-    line_inset.attr("x1", lengthScale.range()[0])
-        .attr("x2", lengthScale.range()[1]);
+    line_inset.attr("x1", self.lengthScale.range()[0])
+        .attr("x2", self.lengthScale.range()[1]);
 
     var line_overlay = slider.selectAll(".length-overlay").data([1]);
 
@@ -86,8 +86,8 @@ ScaleSlider.prototype.update = function(cloud_data){
 
     line_overlay = line_overlay.enter().append("line").classed("length-overlay",true).merge(line_overlay);
 
-    line_overlay.attr("x1", lengthScale.range()[0])
-        .attr("x2", lengthScale.range()[1]);
+    line_overlay.attr("x1", self.lengthScale.range()[0])
+        .attr("x2", self.lengthScale.range()[1]);
 
     var handle = slider.selectAll(".track-slider").data([max]);
 
@@ -96,7 +96,7 @@ ScaleSlider.prototype.update = function(cloud_data){
     handle = handle.enter().append("circle").classed("track-slider",true).merge(handle);
 
     handle.attr("cx",function(d){
-       return lengthScale(d);
+       return self.lengthScale(d);
     })
         .attr("r", 9)
         .call(d3.drag()
@@ -104,11 +104,29 @@ ScaleSlider.prototype.update = function(cloud_data){
             .on("start drag", function() {
                 var selection = d3.select(this);
 
-                setpos(selection,lengthScale.invert(d3.event.x));
-            }));
+                self.setpos(selection,self.lengthScale.invert(d3.event.x));
+            })
+            .on('end', function(){
 
-    function setpos(selection,pos) {
-        selection.attr("cx", lengthScale(pos));
-    }
+                self.wordCloud.updateScale( self.pos);
+
+                //var req = "https://db03.cs.utah.edu:8181/api/artist_tags/"+self.country+"/"+self.start_year+"/"+self.end_year+"?limit=100&offset=0";
+                //
+                //d3.json(req,function(error,year_track_table_data){
+                //    if(error) throw error;
+                //
+                //    self.wordCloud.update(year_track_table_data, self.pos);
+                //});
+            })
+        );
+
+};
+
+
+ScaleSlider.prototype.setpos = function(selection,pos) {
+    var self = this;
+
+    selection.attr("cx", self.lengthScale(pos));
+    self.pos = pos;
 
 };
