@@ -33,6 +33,7 @@ YearChart.prototype.init = function(){
     self.svgBounds = divyearChart.node().getBoundingClientRect();
     self.svgWidth = self.svgBounds.width - self.margin.right - self.margin.left;
     self.svgHeight = 80;
+    self.svgTextPadding = 40;
 
     //creates svg element within the div
     self.svg = divyearChart.append("svg")
@@ -95,12 +96,10 @@ YearChart.prototype.update = function(year_data){
         .classed("yearbar",true)
         .merge(stackedbar);
 
-
     var width_till_now = 0;
     var prev = 0;
 
     stackedbar.attr("x",function(d){
-
         var w = self.svgWidth/year_data.length;
 
         if(width_till_now == 0) {
@@ -118,6 +117,26 @@ YearChart.prototype.update = function(year_data){
         })
         .style("fill",function(d){
             return self.colorScale(parseInt(d.count));
+        });
+
+    var textData = [year_data[0].year, year_data[year_data.length-1].year];
+
+    var stackedText = self.svg.selectAll(".yeartext").data(textData);
+
+    stackedText.exit().remove();
+
+    stackedText = stackedText.enter().append("text").merge(stackedText);
+
+    stackedText.attr("y",self.svgHeight/2-20)
+        .classed('yeartext',true)
+        .text(function(d){
+            return d;
+        })
+        .attr("x",function(d,i) {
+            if(i == 0)
+                return 0;
+            else
+                return self.svgWidth - self.svgTextPadding;
         });
 
 

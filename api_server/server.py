@@ -30,6 +30,12 @@ def get_db():
     return db
 
 
+def parseInt(val):
+    try:
+        return int(val)
+    except:
+        return None
+
 @app.teardown_appcontext
 def close_connection(exception):
     db = getattr(g, '_database', None)
@@ -87,11 +93,12 @@ def country_track():
             conn.execute(query)
             data = conn.fetchall()
             for item in data:
-                temp = {}
-                temp["count"] = item[0]
-                temp["id"] = item[1]
-                temp["country"] = item[2]
-                results.append(temp)
+                if int(item[0]) > 0:
+                    temp = {}
+                    temp["count"] = item[0]
+                    temp["id"] = item[1]
+                    temp["country"] = item[2]
+                    results.append(temp)
 
         return ujson.dumps(results)
     else:
@@ -149,12 +156,14 @@ def country_track_year(country_id):
             conn.execute(query)
             data = conn.fetchall()
             for item in data:
-                temp = {}
-                temp["count"] = item[0]
-                temp["year"] = item[1]
-                temp["country_id"] = country_id
-                temp["country"] = item[2]
-                results.append(temp)
+                year = parseInt(item[1])
+                if year != None:
+                    temp = {}
+                    temp["count"] = item[0]
+                    temp["year"] = year
+                    temp["country_id"] = country_id
+                    temp["country"] = item[2]
+                    results.append(temp)
 
         return ujson.dumps(results)
     else:
@@ -175,13 +184,15 @@ def country_length_per_year(country_id):
             conn.execute(query)
             data = conn.fetchall()
             for item in data:
-                temp = {}
-                temp["min_length"] = item[0]
-                temp["max_length"] = item[1]
-                temp["year"] = item[2]
-                temp["country_id"] = country_id
-                temp["country"] = item[3]
-                results.append(temp)
+                year = parseInt(item[2])
+                if year != None:
+                    temp = {}
+                    temp["min_length"] = item[0]
+                    temp["max_length"] = item[1]
+                    temp["year"] = year
+                    temp["country_id"] = country_id
+                    temp["country"] = item[3]
+                    results.append(temp)
 
         return ujson.dumps(results)
     else:
