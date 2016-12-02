@@ -224,12 +224,12 @@ TableChart.prototype.tableRowCreate = function(data){
 };
 
 TableChart.prototype.replaceAll = function(str, find, replace) {
-    self = this;
+    var self = this;
     return str.replace(new RegExp(find, 'g'), replace);
 };
 
 TableChart.prototype.getWikiLink = function(content) {
-    self = this;
+    var self = this;
     var html ='';
     var link = "https://en.wikipedia.org/wiki/"+self.replaceAll(content," ","_");
     html = "<span style='float: right; margin-right: 20px;'><a href='"+link + "' target='_blank'>  Wiki  </a></span>";
@@ -237,7 +237,7 @@ return html;
 };
 
 TableChart.prototype.getYoutubeLink = function(content) {
-    self = this;
+    var self = this;
     var html ='';
     var link = "https://www.youtube.com/results?search_query="+self.replaceAll(content," ","+");
     html = "<span style='float: right; margin-right: 40px;'><a href='"+link + "' target='_blank'>  Youtube  </a></span>";
@@ -245,7 +245,7 @@ TableChart.prototype.getYoutubeLink = function(content) {
 };
 
 TableChart.prototype.getLastFMLink = function(content) {
-    self = this;
+    var self = this;
     var html ='';
     var link = "http://www.last.fm/search?q="+self.replaceAll(content," ","+");
     html = "<span style='float: right; margin-right: 20px;'><a href='"+link + "' target='_blank'>  last.fm  </a></span>";
