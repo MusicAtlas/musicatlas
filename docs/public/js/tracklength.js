@@ -59,7 +59,7 @@ TrackLength.prototype.update = function(length_data){
     self.lengthScale = d3.scaleLinear()
                         .domain([min,max])
                         .range([self.margin.left,self.svgWidth-20])
-                        .clamp(true);
+                        .nice([0.2,1.0]);
 
     var slider = self.svg.selectAll(".slider").data([1]);
 
@@ -148,7 +148,11 @@ TrackLength.prototype.update = function(length_data){
         })
         .attr("text-anchor", "middle")
         .attr("font-size","12px")
-        .text(function(d) { return d; });
+        .text(function(d) {
+            if(Number(d) === d && d % 1 === 0)
+                return d;
+            return d.toFixed(1);
+        });
 
 };
 
