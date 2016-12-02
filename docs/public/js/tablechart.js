@@ -172,8 +172,8 @@ TableChart.prototype.sortTable = function(row_name){
         self.order = "descending";
         self.descending(row_name);
     }
-    var data = self.tableElements.slice((self.pageNumber-1)*self.recordPerPage,self.pageNumber*self.recordPerPage);
-    self.update(data, self.country);
+    //var data = self.tableElements.slice((self.pageNumber-1)*self.recordPerPage,self.pageNumber*self.recordPerPage);
+    self.update(self.tableElements,self.country);
 }
 
 TableChart.prototype.tableRowCreate = function(data){
