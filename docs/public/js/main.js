@@ -16,8 +16,10 @@
         $('#collapseTwo').collapse('show');
         var tableChart = new TableChart();
         var trackLength = new TrackLength(tableChart);
-        var yearChart = new YearChart(trackLength,tableChart);
         var wordCloud = new WordCloud();
+        var scaleSlider = new ScaleSlider(wordCloud);
+        var yearChart = new YearChart(trackLength,tableChart, scaleSlider);
+
         $('#collapseTwo').collapse('hide');
 
         d3.queue()
@@ -28,7 +30,7 @@
             .await(function(error,world,names,track_data){
                 if(error) throw error;
 
-                var choroplethmap = new ChoroplethMap(track_data,world,names,yearChart,trackLength,tableChart);
+                var choroplethmap = new ChoroplethMap(track_data,world,names,yearChart,trackLength,tableChart,scaleSlider, wordCloud);
                 choroplethmap.update();
             });
     }

@@ -5,11 +5,12 @@
  * Constructor for the Year Chart
  *
  */
-function YearChart(trackLength,tableChart) {
+function YearChart(trackLength,tableChart, scaleSlider) {
     var self = this;
 
     self.tableChart = tableChart;
     self.trackLength = trackLength;
+    self.scaleSlider = scaleSlider;
 
     self.init();
 };
@@ -56,6 +57,9 @@ YearChart.prototype.update = function(year_data){
 
     self.trackLength.start_year = year_data[0].year;
     self.trackLength.end_year = year_data[year_data.length-1].year;
+    self.scaleSlider.start_year = year_data[0].year;
+    self.scaleSlider.end_year = year_data[year_data.length-1].year;
+    self.scaleSlider.country = year_data[0].country_id;
 
     var stackedbar = self.svg.selectAll(".yearbar").data(year_data);
 
@@ -116,6 +120,9 @@ YearChart.prototype.update = function(year_data){
 
         self.trackLength.start_year = start_year;
         self.trackLength.end_year = end_year;
+        self.scaleSlider.start_year = start_year;
+        self.scaleSlider.end_year = end_year;
+        self.scaleSlider.country = year_data[0].country_id;
 
         var req1 = "https://db03.cs.utah.edu:8181/api/country_length_per_year_range/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year;
         var req2 = "https://db03.cs.utah.edu:8181/api/country_track_year_range/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year+"?limit=500&offset=0";

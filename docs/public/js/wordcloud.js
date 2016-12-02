@@ -2,10 +2,11 @@
  * Created by deb on 11/30/16.
  */
 
-function WordCloud() {
+function WordCloud(scaleSlider) {
     var self = this;
-
+    self.scaleSlider = scaleSlider;
     self.init();
+
 };
 
 /**
@@ -37,17 +38,12 @@ WordCloud.prototype.init = function(){
         .text(function(d) {
             return d.artist_name;
         })
+        .rotate(function(d){
+            return (~~(Math.random() * 6) - 3) * 0;
+        })
         .on("end", function(tags,bounds){
             self.draw(tags,bounds);
         });
-
-    //"/api/artist_tags/<country_id>/<start_year>/<end_year>?limit=500&offset=0"
-
-    d3_v3.json("https://db03.cs.utah.edu:8181/api/artist_tags/222/2008/2012?limit=100&offset=0",function(error, tags) {
-        if (error) throw error;
-
-        self.update(tags);
-    });
 
 };
 
@@ -70,6 +66,8 @@ WordCloud.prototype.draw = function(data, bounds) {
         .data(data, function(d) {
             return d.text.toLowerCase();
         });
+
+
     text.transition()
         .duration(1000)
         .attr("transform", function(d) {
@@ -78,8 +76,13 @@ WordCloud.prototype.draw = function(data, bounds) {
         .style("font-size", function(d) {
             return d.size + "px";
         });
-    text.enter().append("text")
-        .attr("text-anchor", "middle")
+    var textEnter = text.enter().append("text");
+
+    text.exit().remove();
+
+    //text = textEnter.merge(text);
+
+    textEnter.attr("text-anchor", "middle")
         .attr("transform", function(d) {
             return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
         })
@@ -90,6 +93,8 @@ WordCloud.prototype.draw = function(data, bounds) {
         .transition()
         .duration(1000)
         .style("opacity", 1);
+
+
     text.style("font-family", function(d) {
             return d.font;
         })
@@ -108,14 +113,34 @@ WordCloud.prototype.draw = function(data, bounds) {
 /**
  * Creates a chart with rectangles representing each year
  */
-WordCloud.prototype.update = function(tags){
+WordCloud.prototype.update = function(tags, max_value){
 
     var self = this;
+    self.tags = tags;
 
     self.layout.font('impact').spiral('archimedean');
-    self.fontSize = d3_v3.scale["sqrt"]().range([10, 100]);
+    self.fontSize = d3_v3.scale["sqrt"]().range([8, 60, 8]);
     if (tags.length){
-        self.fontSize.domain([+tags[tags.length - 1].count || 1, +tags[0].count]);
+        self.fontSize.domain([+tags[tags.length - 1].count || 1, max_value, +tags[0].count]);
+    }
+    self.layout.stop().words(tags).start();
+
+};
+
+
+WordCloud.prototype.updateScale = function(max_value){
+
+    var self = this;
+    tags = self.tags;
+
+
+    max_value =Math.ceil(max_value);
+    console.log(max_value);
+
+    self.layout.font('impact').spiral('archimedean');
+    self.fontSize = d3_v3.scale["linear"]().range([10, 60, 5]);
+    if (tags.length){
+        self.fontSize.domain([+tags[tags.length - 1].count || 10, max_value, +tags[0].count]);
     }
     self.layout.stop().words(tags).start();
 

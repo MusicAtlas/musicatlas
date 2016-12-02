@@ -7564,6 +7564,12 @@
   d3_v3.scale.sqrt = function() {
     return d3_v3.scale.pow().exponent(.5);
   };
+
+
+  d3_v3.scale.gaussian = function() {
+    return d3_v3.scale.pow().exponent(.5);
+  };
+
   d3_v3.scale.ordinal = function() {
     return d3_v3_scale_ordinal([], {
       t: "range",

@@ -5,55 +5,48 @@
  * Constructor for the Track Length
  *
  */
-function TrackLength(tableChart) {
+function ScaleSlider(wordCloud) {
     var self = this;
-    self.tableChart = tableChart;
-
+    self.wordCloud = wordCloud;
     self.init();
 };
 
 /**
  * Initializes the svg elements required for this chart
  */
-TrackLength.prototype.init = function(){
+ScaleSlider.prototype.init = function(){
 
     var self = this;
     self.margin = {top: 10, right: 20, bottom: 30, left: 20};
-    var divtrackLength = d3.select("#track-length");
+    var divscaleSlider = d3.select("#scale-slider");
 
     //self.colorScale = d3.scaleLinear().range(colorbrewer.RdBu["11"]);
 
     //Gets access to the div element created for this chart from HTML
-    self.svgBounds = divtrackLength.node().getBoundingClientRect();
+    self.svgBounds = divscaleSlider.node().getBoundingClientRect();
     self.svgWidth = self.svgBounds.width - self.margin.right - self.margin.left;
     self.svgHeight = 50;
 
-    divtrackLength.append('h2').text('Track Length Filter');
-
     //creates svg element within the div
-    self.svg = divtrackLength.append("svg")
+    self.svg = divscaleSlider.append("svg")
         .attr("width",self.svgWidth)
         .attr("height",self.svgHeight);
 
-    self.start_year = 0;
-    self.end_year = 0;
-    self.country = '';
 };
 
 /**
  * Creates a chart with circles representing min and max slider
  */
-TrackLength.prototype.update = function(length_data){
+ScaleSlider.prototype.update = function(cloud_data){
     var self = this;
 
-    var max = d3.max(length_data,function(d){ return parseFloat(d.max_length); });
-    var min = d3.min(length_data,function(d){ return parseFloat(d.min_length); });
+    //console.log(length_data);
+    var max = d3.max(cloud_data,function(d){ return parseFloat(d.count); });
+    var min = d3.min(cloud_data,function(d){ return parseFloat(d.count); });
 
-    // console.log(min);
-    // console.log(max);
+    //console.log(max);
+    //console.log(min);
 
-    self.min_length = min;
-    self.max_length = max;
 
     //https://bl.ocks.org/mbostock/6452972
     self.lengthScale = d3.scaleLinear()
@@ -96,68 +89,44 @@ TrackLength.prototype.update = function(length_data){
     line_overlay.attr("x1", self.lengthScale.range()[0])
         .attr("x2", self.lengthScale.range()[1]);
 
-    var handle = slider.selectAll(".track-slider").data([min,max]);
+    var handle = slider.selectAll(".track-slider").data([max]);
 
     handle.exit().remove();
 
     handle = handle.enter().append("circle").classed("track-slider",true).merge(handle);
 
     handle.attr("cx",function(d){
-           return self.lengthScale(d);
-        }).attr('id',function (d) {
-            if(d == max)
-                return 'max';
-            return 'min';
-        })
+       return self.lengthScale(d);
+    })
         .attr("r", 9)
         .call(d3.drag()
+            //.on("start.interrupt", function() { slider.interrupt(); })
             .on("start drag", function() {
                 var selection = d3.select(this);
 
                 self.setpos(selection,self.lengthScale.invert(d3.event.x));
-
             })
-                .on('end', function(){
-                    var req = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length+"?limit=500&offset=0";
+            .on('end', function(){
 
-                    d3.json(req,function(error,year_track_table_data){
-                        if(error) throw error;
+                self.wordCloud.updateScale( self.pos);
 
-                        self.tableChart.update(year_track_table_data, self.country);
-                    });
-                })
+                //var req = "https://db03.cs.utah.edu:8181/api/artist_tags/"+self.country+"/"+self.start_year+"/"+self.end_year+"?limit=100&offset=0";
+                //
+                //d3.json(req,function(error,year_track_table_data){
+                //    if(error) throw error;
+                //
+                //    self.wordCloud.update(year_track_table_data, self.pos);
+                //});
+            })
         );
-
-    var slider_ticks = slider.selectAll(".ticks").data([1]);
-
-    slider_ticks.exit().remove();
-
-    slider_ticks = slider_ticks.enter().append("g").classed("ticks",true).merge(slider_ticks);
-
-    var ticks = slider_ticks.selectAll("text").data(self.lengthScale.ticks(20));
-
-    ticks.exit().remove();
-
-    ticks = ticks.enter().append("text").merge(ticks);
-
-    ticks.attr("x", self.lengthScale)
-        .attr("y","18")
-        .attr("text-anchor", "middle")
-        .text(function(d) { return d; });
 
 };
 
-TrackLength.prototype.setpos = function(selection,pos) {
+
+ScaleSlider.prototype.setpos = function(selection,pos) {
     var self = this;
 
     selection.attr("cx", self.lengthScale(pos));
-    var display = pos.toFixed(2);
+    self.pos = pos;
 
-    var selectedId = selection['_groups'][0][0].id;
-
-    if(selectedId == 'max'){
-        self.max_length = display;
-    }else{
-        self.min_length = display;
-    }
 };

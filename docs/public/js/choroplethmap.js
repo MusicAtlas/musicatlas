@@ -8,13 +8,15 @@
  * @param
  */
 
-function ChoroplethMap(track_data,world,names,yearChart,trackLength,tableChart){
+function ChoroplethMap(track_data,world,names,yearChart,trackLength,tableChart, scaleSlider, wordCloud){
 
     var self = this;
     self.track_data = track_data;
     self.yearChart = yearChart;
     self.tableChart = tableChart;
     self.trackLength = trackLength;
+    self.scaleSlider=scaleSlider;
+    self.wordCloud=wordCloud;
     self.init();
     self.world = world;
     self.names = names;
@@ -47,7 +49,7 @@ ChoroplethMap.prototype.init = function(){
 
 ChoroplethMap.prototype.redraw = function() {
     self.svg.select("g").attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-}
+};
 
 ChoroplethMap.prototype.drawMap =  function() {
 
@@ -169,11 +171,15 @@ ChoroplethMap.prototype.update = function(){
                     .defer(d3.json,"https://db03.cs.utah.edu:8181/api/country_track_year/"+t.id)
                     .defer(d3.json,"https://db03.cs.utah.edu:8181/api/country_length_per_year/"+t.id)
                     .defer(d3.json,"https://db03.cs.utah.edu:8181/api/country_track_record/"+t.id+"?limit=500&offset=0")
-                    .await(function(error,year_data,length_data,table_data){
+                    .defer(d3.json,"https://db03.cs.utah.edu:8181/api/artist_tags/"+ t.id + "?limit=100&offset=0")
+                    .await(function(error,year_data,length_data,table_data,cloud_data){
                         if(error) throw error;
+
                         self.yearChart.update(year_data);
                         self.trackLength.update(length_data);
                         self.tableChart.update(table_data, t.id);
+                        self.scaleSlider.update(cloud_data);
+                        self.wordCloud.update(cloud_data, d3.max(cloud_data, function(d){return d.count; }) );
                         self.tableChart.numTracks = t.count;
                     });
 
