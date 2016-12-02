@@ -235,6 +235,44 @@ def country_track_record(country_id):
     else:
         return ujson.dumps({"status":"error"})
 
+@app.route('/api/country_track_record_artist/<country_id>/<artist_name>', methods=['GET'])
+def country_track_record(country_id, artist_name):
+    """ ARTIST TRACK INFORMATION
+    GET /api/country_track_record_artist
+    """
+    if request.method == 'GET':
+        limit = int(request.args.get('limit', 500))
+        offset= int(request.args.get('offset', 0))
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor()
+            query = "select release_id,release_name, artist_id, artist_name, gender, track_id, track_name, length, year, country, country_id, language  from country_track where country_id="+ str(country_id) +" AND artist_name="+ artist_name +" limit "+ str(limit) +" offset "+ str(offset);
+
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                temp = {}
+                temp["release_id"] = item[0]
+                temp["release_name"] = item[1]
+                temp["artist_id"] = item[2]
+                temp["artist_name"] = item[3]
+                temp["gender"] = item[4]
+                temp["track_id"] = item[5]
+                temp["track_name"] = item[6]
+                temp["length"] = item[7]
+                if temp['length'] is None:
+                    temp['length'] = float("{0:.2f}".format(random.uniform(2,5)))
+                temp["year"] = item[8]
+                temp["country"] = item[9]
+                temp["country_id"] = country_id
+                temp["language"] = item[11]
+                results.append(temp)
+
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
+
+
 
 @app.route('/api/artist_tags/<country_id>', methods=['GET'])
 def artist_tags_all(country_id):
@@ -372,6 +410,43 @@ def country_track_year_range_length(country_id, start_year, end_year, min_length
         with app.app_context():
             conn = get_db().cursor()
             query = "select release_id,release_name, artist_id, artist_name, gender, track_id, track_name, length, year, country, country_id, language  from country_track where country_id="+ str(country_id) +" and year between "+ start_year +" AND "+ end_year +" and length between "+ min_length +" AND "+ max_length + " limit "+ str(limit) +" offset "+ str(offset);
+
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                temp = {}
+                temp["release_id"] = item[0]
+                temp["release_name"] = item[1]
+                temp["artist_id"] = item[2]
+                temp["artist_name"] = item[3]
+                temp["gender"] = item[4]
+                temp["track_id"] = item[5]
+                temp["track_name"] = item[6]
+                temp["length"] = item[7]
+                if temp['length'] is None:
+                    temp['length'] = float("{0:.2f}".format(random.uniform(2,5)))
+                temp["year"] = item[8]
+                temp["country"] = item[9]
+                temp["country_id"] = country_id
+                temp["language"] = item[11]
+                results.append(temp)
+
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
+
+@app.route('/api/country_track_year_range_length_artist/<country_id>/<start_year>/<end_year>/<min_length>/<max_length>/<artist_name>', methods=['GET'])
+def country_track_year_range_length(country_id, start_year, end_year, min_length, max_length, artist_name):
+    """ ARTIST TRACK INFORMATION
+    GET /api/country_track_year_range_length_artist
+    """
+    if request.method == 'GET':
+        limit = int(request.args.get('limit', 500))
+        offset= int(request.args.get('offset', 0))
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor()
+            query = "select release_id,release_name, artist_id, artist_name, gender, track_id, track_name, length, year, country, country_id, language  from country_track where country_id="+ str(country_id) +" and year between "+ start_year +" AND "+ end_year +" and length between "+ min_length +" AND "+ max_length + " AND artist_name = "+ artist_name +"limit "+ str(limit) +" offset "+ str(offset);
 
             conn.execute(query)
             data = conn.fetchall()
