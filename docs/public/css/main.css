@@ -1,3 +1,11 @@
+body {
+    font-family: "Roboto", arial, sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 20px;
+    /*color: #818892; */
+}
+
 .margin-top-lg{
     margin-top:65px;
 }
@@ -19,10 +27,18 @@
 }
 
 #year-chart{
+    top:-30px;
     width: 100%;
     min-height: 50px;
     overflow: hidden;
     padding-left: 20px;
+}
+
+#track-length{
+    top:-40px;
+    width: 100%;
+    min-height: 50px;
+    overflow: hidden;
 }
 
 #wordcloud{
@@ -30,6 +46,16 @@
     min-height: 350px;
     overflow: hidden;
     padding-left: 20px;
+}
+
+.filter-header{
+    text-transform: uppercase;
+    font-family: "Montserrat", arial, sans-serif;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.1;
+
 }
 
 .tooltip {
@@ -63,11 +89,11 @@
     font-weight: normal;
     font-family: "Montserrat", arial, sans-serif;
     text-align: center;
-    padding: .25rem .25rem;
+    padding: .01rem .25rem;
     margin-bottom: 0;
     background-color: #f5f5f5;
     color: #000;
-    border-bottom: 1px solid rgba(0,0,0,.125);
+    border-bottom: 1px solid rgba(0,0,0,.225);
     z-index: 100;
 }
 
@@ -78,7 +104,6 @@
 .card-header a:hover{
     color:steelblue;
 }
-
 
 .container-fluid  .btn-group-vertical > .btn {
     margin-bottom: 5px;

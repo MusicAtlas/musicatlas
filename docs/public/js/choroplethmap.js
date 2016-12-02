@@ -182,7 +182,7 @@ ChoroplethMap.prototype.update = function(){
                         self.wordCloud.update(cloud_data, d3.max(cloud_data, function(d){return d.count; }) );
                         self.tableChart.numTracks = t.count;
                     });
-
+                $('#dashboard_label').html(t.country + " Dashboard");
                 $('#collapseOne').collapse('hide');
                 $('#collapseTwo').collapse('show');
             });

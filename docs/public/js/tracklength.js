@@ -28,8 +28,6 @@ TrackLength.prototype.init = function(){
     self.svgWidth = self.svgBounds.width - self.margin.right - self.margin.left;
     self.svgHeight = 50;
 
-    divtrackLength.append('h2').text('Track Length Filter');
-
     //creates svg element within the div
     self.svg = divtrackLength.append("svg")
         .attr("width",self.svgWidth)

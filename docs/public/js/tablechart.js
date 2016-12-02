@@ -40,6 +40,7 @@ TableChart.prototype.init = function(){
 
     /*Table creation*/
     self.divtableChart = d3.select("#table-chart");
+
     var thead = self.divtableChart.select('table').select('thead');
 
     var thVar = thead.select('tr')

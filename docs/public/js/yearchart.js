@@ -28,7 +28,6 @@ YearChart.prototype.init = function(){
     self.colorScale = d3.scaleLinear().range(colorbrewer.RdBu["11"]);
 
     //Gets access to the div element created for this chart from HTML
-    var divHeader = divyearChart.append('h2').text('Year Range Filter');
     
     self.svgBounds = divyearChart.node().getBoundingClientRect();
     self.svgWidth = self.svgBounds.width - self.margin.right - self.margin.left;
@@ -68,7 +67,6 @@ YearChart.prototype.update = function(year_data){
 
 
     for (var i =min; i <= max; i++){
-        console.log(year_data_map[i]);
         if (year_data_map[i] == undefined){
             year_data_map[i] = {"count":0,"country":year_data[0].country,"country_id":year_data[0].country_id,"year":i};
         }
