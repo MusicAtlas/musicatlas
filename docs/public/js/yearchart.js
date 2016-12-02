@@ -5,8 +5,11 @@
  * Constructor for the Year Chart
  *
  */
-function YearChart() {
+function YearChart(trackLength,tableChart) {
     var self = this;
+
+    self.tableChart = tableChart;
+    self.trackLength = trackLength;
 
     self.init();
 };
@@ -40,35 +43,16 @@ YearChart.prototype.init = function(){
 YearChart.prototype.update = function(year_data){
     var self = this;
 
-    //console.log(year_data);
-
     var max_count = d3.max(year_data,function(d,i){
         return parseInt(d.count);
     });
 
     self.colorScale.domain([0,max_count]);
 
-    // var total = d3.sum(year_data,function(d,i){
-    //     //console.log((i+1)+","+d.count);
-    //     return parseInt(d.count);
-    // });
-
-    // var widthScale = d3.scaleLinear()
-    //     .domain([0,total])
-    //     .rangeRound([0,self.svgWidth-self.margin.left]);
-
     year_data.sort(function(a,b){
         return d3.ascending(parseInt(a.year),parseInt(b.year));
     });
 
-
-    //console.log(year_data);
-
-    // var group = self.svg.selectAll(".yeargroup").data([1]);
-    //
-    // group = group.enter().append("g").classed(".yeargroup",true).merge(group);
-    //
-    // group.attr("transform","translate("+self.margin.left+",0)");
 
     var stackedbar = self.svg.selectAll(".yearbar").data(year_data);
 
@@ -83,31 +67,6 @@ YearChart.prototype.update = function(year_data){
 
     var width_till_now = 0;
     var prev = 0;
-
-    // stackedbar.attr("x",function(d){
-    //
-    //     var w = widthScale(parseInt(d.count));
-    //
-    //     if(width_till_now == 0) {
-    //         width_till_now += w;
-    //         return 0;
-    //     }
-    //     else{
-    //         width_till_now += prev ;
-    //         prev = w;
-    //         return width_till_now;
-    //     }
-    // })
-    //     .attr("width", function(d){
-    //         var w = widthScale(parseInt(d.count));
-    //
-    //         if(w == 0)
-    //             return 0;
-    //         return w-1;
-    //     })
-    //     .style("fill",function(d){
-    //         return "grey";
-    //     });
 
     stackedbar.attr("x",function(d){
 
@@ -127,7 +86,6 @@ YearChart.prototype.update = function(year_data){
             return (self.svgWidth/year_data.length)-1;
         })
         .style("fill",function(d){
-            //console.log(self.colorScale(parseInt(d.count)));
             return self.colorScale(parseInt(d.count));
         });
 
@@ -149,6 +107,19 @@ YearChart.prototype.update = function(year_data){
             if(s[0] <= prev && value <= s[1])
                 selected_year.push(d);
         }
+
+        var req1 = "http://db03.cs.utah.edu:8181/api/country_length_per_year_range/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year;
+        var req2 = "http://db03.cs.utah.edu:8181/api/country_track_year_range/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year;
+
+        d3.queue()
+            .defer(d3.json,req1)
+            .defer(d3.json,req2)
+            .await(function(error,length_year_range_data,year_range_table_data){
+                if(error) throw error;
+
+                self.trackLength.update(length_year_range_data);
+                self.tableChart.createTable(year_range_table_data);
+            });
     }
 
     var width = self.svgWidth;

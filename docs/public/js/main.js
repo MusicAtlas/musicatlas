@@ -14,9 +14,9 @@
     function init() {
         //Creating instances for each visualization
         $('#collapseTwo').collapse('show');
-        var yearChart = new YearChart();
         var tableChart = new TableChart();
         var trackLength = new TrackLength();
+        var yearChart = new YearChart(trackLength,tableChart);
         var wordCloud = new WordCloud();
         $('#collapseTwo').collapse('hide');
 
@@ -30,21 +30,6 @@
                 var choroplethmap = new ChoroplethMap(track_data,world,names,yearChart,trackLength,tableChart);
                 choroplethmap.update();
             });
-/*
-        d3.json("public/data/world.json",function(error,world) {
-            if (error) throw error;
-            d3.tsv("public/data/world-country-names.tsv", function (error, names, world) {
-                if(error) throw error;
-
-                d3.json("public/data/country_track.json", function (error,track_data,names,world) {
-                    if (error) throw error;
-                    var choroplethmap = new ChoroplethMap(track_data,names,world);
-                    choroplethmap.update();
-                });
-            });
-        });
-*/
-
     }
 
     /**

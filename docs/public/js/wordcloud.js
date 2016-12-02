@@ -54,7 +54,7 @@ WordCloud.prototype.init = function(){
 
 WordCloud.prototype.draw = function(data, bounds) {
     var self = this;
-    console.log(self);
+    //console.log(self);
 
     self.fill = d3_v3.scale.category20b();
 
@@ -65,7 +65,7 @@ WordCloud.prototype.draw = function(data, bounds) {
         self.svgHeight / Math.abs(bounds[0].y - self.svgHeight / 2)) / 2 : 1;
 
 
-    console.log(self.viz);
+    //console.log(self.viz);
     var text = self.viz.selectAll("text")
         .data(data, function(d) {
             return d.text.toLowerCase();
