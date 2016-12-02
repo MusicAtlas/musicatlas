@@ -46,22 +46,11 @@ YearChart.prototype.update = function(year_data){
         return parseInt(d.count);
     });
 
-    // console.log(d3.min(year_data,function(d,i){
-    //     return parseInt(d);
-    // }));
-    //
-    // console.log(d3.max(year_data,function(d,i){
-    //     return parseInt(d);
-    // }));
-
     self.colorScale.domain([0,max_count]);
 
     year_data.sort(function(a,b){
         return d3.ascending(parseInt(a.year),parseInt(b.year));
     });
-
-    // console.log('year data '+ year_data[0].year);
-    // console.log('year data '+ year_data[year_data.length-1].year);
 
     self.trackLength.start_year = year_data[0].year;
     self.trackLength.end_year = year_data[year_data.length-1].year;
@@ -127,7 +116,7 @@ YearChart.prototype.update = function(year_data){
         self.trackLength.end_year = end_year;
 
         var req1 = "https://db03.cs.utah.edu:8181/api/country_length_per_year_range/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year;
-        var req2 = "https://db03.cs.utah.edu:8181/api/country_track_year_range/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year;
+        var req2 = "https://db03.cs.utah.edu:8181/api/country_track_year_range/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year+"?limit=500&offset=0";
 
         d3.queue()
             .defer(d3.json,req1)

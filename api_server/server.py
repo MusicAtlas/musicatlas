@@ -81,7 +81,9 @@ def country_track():
         with app.app_context():
             conn = get_db().cursor()
             #query = "select count(*), C.id, C.name from musicbrainz.track A, musicbrainz.release_country B, musicbrainz.area C  where A.medium=B.release and B.country=C.id group by C.id "
-            query = "select track_count, id, name from country_track_group"
+            #query = "select track_count, id, name from country_track_group"
+            query = "select count(distinct(track_id)) , country_id, country from country_track group by country_id,country;
+
             conn.execute(query)
             data = conn.fetchall()
             for item in data:
