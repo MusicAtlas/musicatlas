@@ -18,7 +18,7 @@
         var trackLength = new TrackLength(tableChart);
         var wordCloud = new WordCloud();
         var scaleSlider = new ScaleSlider(wordCloud);
-        var yearChart = new YearChart(trackLength,tableChart, scaleSlider);
+        var yearChart = new YearChart(trackLength,tableChart, scaleSlider, wordCloud);
 
         $('#collapseTwo').collapse('hide');
 
