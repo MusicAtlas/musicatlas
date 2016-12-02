@@ -2,10 +2,11 @@
  * Created by deb on 11/30/16.
  */
 
-function WordCloud() {
+function WordCloud(scaleSlider) {
     var self = this;
-
+    self.scaleSlider = scaleSlider;
     self.init();
+
 };
 
 /**
@@ -43,11 +44,11 @@ WordCloud.prototype.init = function(){
 
     //"/api/artist_tags/<country_id>/<start_year>/<end_year>?limit=500&offset=0"
 
-    d3_v3.json("https://db03.cs.utah.edu:8181/api/artist_tags/222/2008/2012?limit=100&offset=0",function(error, tags) {
-        if (error) throw error;
-
-        self.update(tags);
-    });
+    //d3_v3.json("https://db03.cs.utah.edu:8181/api/artist_tags/222/2008/2012?limit=100&offset=0",function(error, tags) {
+    //    if (error) throw error;
+    //
+    //    self.update(tags,500 );
+    //});
 
 };
 
@@ -108,14 +109,14 @@ WordCloud.prototype.draw = function(data, bounds) {
 /**
  * Creates a chart with rectangles representing each year
  */
-WordCloud.prototype.update = function(tags){
+WordCloud.prototype.update = function(tags, max_value){
 
     var self = this;
 
     self.layout.font('impact').spiral('archimedean');
-    self.fontSize = d3_v3.scale["sqrt"]().range([10, 100]);
+    self.fontSize = d3_v3.scale["sqrt"]().range([10, 100, 10]);
     if (tags.length){
-        self.fontSize.domain([+tags[tags.length - 1].count || 1, +tags[0].count]);
+        self.fontSize.domain([+tags[tags.length - 1].count || 1, max_value, +tags[0].count]);
     }
     self.layout.stop().words(tags).start();
 

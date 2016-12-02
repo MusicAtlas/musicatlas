@@ -17,6 +17,7 @@
         var tableChart = new TableChart();
         var trackLength = new TrackLength();
         var yearChart = new YearChart(trackLength,tableChart);
+        var scaleSlider = new ScaleSlider();
         var wordCloud = new WordCloud();
         $('#collapseTwo').collapse('hide');
 
@@ -27,7 +28,7 @@
             .await(function(error,world,names,track_data){
                 if(error) throw error;
 
-                var choroplethmap = new ChoroplethMap(track_data,world,names,yearChart,trackLength,tableChart);
+                var choroplethmap = new ChoroplethMap(track_data,world,names,yearChart,trackLength,tableChart,scaleSlider, wordCloud);
                 choroplethmap.update();
             });
     }
