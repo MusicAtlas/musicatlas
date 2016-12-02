@@ -174,6 +174,7 @@ ChoroplethMap.prototype.update = function(){
                         self.yearChart.update(year_data);
                         self.trackLength.update(length_data);
                         self.tableChart.update(table_data, t.id);
+                        self.tableChart.numTracks = t.count;
                     });
 
                 $('#collapseOne').collapse('hide');

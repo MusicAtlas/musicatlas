@@ -29,13 +29,13 @@ TableChart.prototype.init = function(){
     self.language = 'language';
 
     self.country = '';
-    // self.numTracks = 0;
+    self.numTracks = 0;
 
     self.columns =['Track','Artist','Album', 'Length', 'Year', 'Language'];
 
     //button layer hidden
     self.pageButton = d3.selectAll(".pagination_btns");
-    self.pageButton.attr("visibility", "hidden");
+    self.pageButton.style("visibility", 'hidden');
 
     /*Table creation*/
     self.divtableChart = d3.select("#table-chart");
@@ -63,7 +63,6 @@ TableChart.prototype.init = function(){
             self.sortTable(this.innerText);
         });
 
-    //button on-click
     self.buttonAction();
 };
 
@@ -221,19 +220,15 @@ TableChart.prototype.update = function(table_data, country){
     self.tableElements = table_data;
     self.country = country;
 
-    // console.log(self.country);
-    // console.log('data length '+ self.tableElements.length);
-    // console.log('current initial page '+ self.pageNumber-1);
-
     var data = self.tableElements.slice((self.pageNumber-1)*self.recordPerPage,self.pageNumber*self.recordPerPage);
-
-    // console.log('data slice length '+ data.length);
 
     self.tableRowCreate(data);
 
-    self.pageButton.attr('visibility','visible');
+    self.pageButton.style('visibility','visible');
+
     if(self.pageNumber == 1) {
-        self.pageButton.select('#previous').attr('visibility', 'hidden');
+        self.pageButton.select('#previous')
+            .style('visibility', 'hidden');
     }
 
 };
@@ -248,11 +243,9 @@ TableChart.prototype.loadPrevious = function() {
 
     if(self.pageNumber ==1){
         self.pageButton.select('#previous')
-            .attr('visibility','hidden');
+            .style('visibility','hidden');
     }
-
-    // console.log('offset previous ' +self.offset);
-    // console.log(self.pageNumber);
+    self.pageButton.select("#next").style('visibility','visible');
 
     var data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.pageNumber * self.recordPerPage);
     self.tableRowCreate(data);
@@ -262,21 +255,16 @@ TableChart.prototype.loadNext = function(){
     var self = this;
     self.offset = (self.pageNumber) * self.recordPerPage;
 
-    // console.log('offset ' +self.offset);
-    // console.log(self.pageNumber);
-    // console.log(self.recordPerPage);
-
     self.pageNumber++;
 
     if(self.pageNumber > 1) {
         self.pageButton.select('#previous')
-        // .classed('disabled',false)
-            .attr('visibility', 'visible');
+            .style('visibility', 'visible');
     }
 
     if(self.offset >= self.tableElements.length) {
         var req  = "https://db03.cs.utah.edu:8181/api/country_track_record/" + self.country + "?limit=500&offset=" + self.offset;
-        // console.log('req '+req)
+
         d3.json(req, function (error, data) {
             if (error) throw error;
             self.tableElements.push(data);
@@ -284,11 +272,13 @@ TableChart.prototype.loadNext = function(){
     }
 
     var data;
-    // if(self.pageNumber * self.recordPerPage <= self.numTracks) {
+
+    if((self.pageNumber) * self.recordPerPage <= self.numTracks) {
         data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.pageNumber * self.recordPerPage);
-    // }else{
-    //     data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.tableElements.length-1);
-    // }
+    }else{
+        data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.tableElements.length);
+        self.pageButton.select("#next").style('visibility','hidden');
+    }
     self.tableRowCreate(data);
 
 }
@@ -296,14 +286,6 @@ TableChart.prototype.loadNext = function(){
 
 TableChart.prototype.buttonAction = function() {
     var self = this;
-
-    // console.log(self.recordPerPage);
-
-    if(self.pageNumber== 1){
-        d3.select('#previous').classed('disabled',true);
-    }else{
-        d3.select('#previous').classed('disabled',false);
-    }
 
     var previousBtn = d3.select('#previous');
         previousBtn.on('click', function(){
@@ -314,5 +296,4 @@ TableChart.prototype.buttonAction = function() {
         nextBtn.on('click',function(){
             self.loadNext();
         });
-
 }
