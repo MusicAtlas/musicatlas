@@ -26,9 +26,11 @@ YearChart.prototype.init = function(){
     self.colorScale = d3.scaleLinear().range(colorbrewer.RdBu["11"]);
 
     //Gets access to the div element created for this chart from HTML
+    var divHeader = divyearChart.append('h2').text('Year Range Filter');
+    
     self.svgBounds = divyearChart.node().getBoundingClientRect();
     self.svgWidth = self.svgBounds.width - self.margin.right - self.margin.left;
-    self.svgHeight = 100;
+    self.svgHeight = 80;
 
     //creates svg element within the div
     self.svg = divyearChart.append("svg")
