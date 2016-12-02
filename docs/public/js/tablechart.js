@@ -173,7 +173,7 @@ TableChart.prototype.sortTable = function(row_name){
         self.descending(row_name);
     }
     var data = self.tableElements.slice((self.pageNumber-1)*self.recordPerPage,self.pageNumber*self.recordPerPage);
-    self.update(data);
+    self.update(data, self.country);
 }
 
 TableChart.prototype.tableRowCreate = function(data){
@@ -209,14 +209,11 @@ TableChart.prototype.tableRowCreate = function(data){
         if (i==0){
             return d + self.getYoutubeLink(d);
         }
-
         if (i==1){
-            console.log(d,i);
             return d + self.getWikiLink(d);
         }
 
         if (i==2){
-            console.log(d,i);
             return d + self.getLastFMLink(d);
         }
 
