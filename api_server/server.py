@@ -245,10 +245,11 @@ def country_track_record_artist(country_id, artist_name):
     if request.method == 'GET':
         limit = int(request.args.get('limit', 500))
         offset= int(request.args.get('offset', 0))
+        artist_name = artist_name.strip()
         results=[]
         with app.app_context():
             conn = get_db().cursor()
-            query = "select release_id,release_name, artist_id, artist_name, gender, track_id, track_name, length, year, country, country_id, language  from country_track where country_id="+ str(country_id) +" AND artist_name="+ artist_name +" limit "+ str(limit) +" offset "+ str(offset);
+            query = "select release_id,release_name, artist_id, artist_name, gender, track_id, track_name, length, year, country, country_id, language  from country_track where country_id="+ str(country_id) +" AND artist_name='"+ artist_name +"' limit "+ str(limit) +" offset "+ str(offset);
 
             conn.execute(query)
             data = conn.fetchall()
@@ -451,10 +452,11 @@ def country_track_year_range_length_artist(country_id, start_year, end_year, min
     if request.method == 'GET':
         limit = int(request.args.get('limit', 500))
         offset= int(request.args.get('offset', 0))
+        artist_name = artist_name.strip()
         results=[]
         with app.app_context():
             conn = get_db().cursor()
-            query = "select release_id,release_name, artist_id, artist_name, gender, track_id, track_name, length, year, country, country_id, language  from country_track where country_id="+ str(country_id) +" and year between "+ start_year +" AND "+ end_year +" and length between "+ min_length +" AND "+ max_length + " AND artist_name = "+ artist_name +"limit "+ str(limit) +" offset "+ str(offset);
+            query = "select release_id,release_name, artist_id, artist_name, gender, track_id, track_name, length, year, country, country_id, language  from country_track where country_id="+ str(country_id) +" and year between "+ start_year +" AND "+ end_year +" and length between "+ min_length +" AND "+ max_length + " AND artist_name = '"+ artist_name +"' limit "+ str(limit) +" offset "+ str(offset);
 
             conn.execute(query)
             data = conn.fetchall()
