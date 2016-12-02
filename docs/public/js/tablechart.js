@@ -36,6 +36,13 @@ TableChart.prototype.init = function(){
     //button layer hidden
     self.pageButton = d3.selectAll(".pagination_btns");
 
+    self.pagenumupdate = self.pageButton.selectAll("#page-num").append("rect");
+
+    self.pagenumupdate.attr("width",10)
+        .attr("height",40)
+        .text("1");
+
+
     self.pageButton.style("visibility", 'hidden');
 
     /*Table creation*/
@@ -220,7 +227,7 @@ TableChart.prototype.tableRowCreate = function(data){
         return d;
     });
 
-
+    self.pagenumupdate.text(self.pageNumber);
 };
 
 TableChart.prototype.replaceAll = function(str, find, replace) {
