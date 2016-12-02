@@ -214,29 +214,31 @@ def country_track_record(country_id):
             conn.execute(query)
             data = conn.fetchall()
             for item in data:
-                temp = {}
-                temp["release_id"] = item[0]
-                temp["release_name"] = item[1]
-                temp["artist_id"] = item[2]
-                temp["artist_name"] = item[3]
-                temp["gender"] = item[4]
-                temp["track_id"] = item[5]
-                temp["track_name"] = item[6]
-                temp["length"] = item[7]
-                if temp['length'] is None:
-                    temp['length'] = float("{0:.2f}".format(random.uniform(2,5)))
-                temp["year"] = item[8]
-                temp["country"] = item[9]
-                temp["country_id"] = country_id
-                temp["language"] = item[11]
-                results.append(temp)
+                year = parseInt(item[8])
+                if year != None: 
+                    temp = {}
+                    temp["release_id"] = item[0]
+                    temp["release_name"] = item[1]
+                    temp["artist_id"] = item[2]
+                    temp["artist_name"] = item[3]
+                    temp["gender"] = item[4]
+                    temp["track_id"] = item[5]
+                    temp["track_name"] = item[6]
+                    temp["length"] = item[7]
+                    if temp['length'] is None:
+                        temp['length'] = float("{0:.2f}".format(random.uniform(2,5)))
+                    temp["year"] = item[8]
+                    temp["country"] = item[9]
+                    temp["country_id"] = country_id
+                    temp["language"] = item[11]
+                    results.append(temp)
 
         return ujson.dumps(results)
     else:
         return ujson.dumps({"status":"error"})
 
 @app.route('/api/country_track_record_artist/<country_id>/<artist_name>', methods=['GET'])
-def country_track_record(country_id, artist_name):
+def country_track_record_artist(country_id, artist_name):
     """ ARTIST TRACK INFORMATION
     GET /api/country_track_record_artist
     """
@@ -251,22 +253,24 @@ def country_track_record(country_id, artist_name):
             conn.execute(query)
             data = conn.fetchall()
             for item in data:
-                temp = {}
-                temp["release_id"] = item[0]
-                temp["release_name"] = item[1]
-                temp["artist_id"] = item[2]
-                temp["artist_name"] = item[3]
-                temp["gender"] = item[4]
-                temp["track_id"] = item[5]
-                temp["track_name"] = item[6]
-                temp["length"] = item[7]
-                if temp['length'] is None:
-                    temp['length'] = float("{0:.2f}".format(random.uniform(2,5)))
-                temp["year"] = item[8]
-                temp["country"] = item[9]
-                temp["country_id"] = country_id
-                temp["language"] = item[11]
-                results.append(temp)
+                year = parseInt(item[8])
+                if yar != None :
+                    temp = {}
+                    temp["release_id"] = item[0]
+                    temp["release_name"] = item[1]
+                    temp["artist_id"] = item[2]
+                    temp["artist_name"] = item[3]
+                    temp["gender"] = item[4]
+                    temp["track_id"] = item[5]
+                    temp["track_name"] = item[6]
+                    temp["length"] = item[7]
+                    if temp['length'] is None:
+                        temp['length'] = float("{0:.2f}".format(random.uniform(2,5)))
+                    temp["year"] = item[8]
+                    temp["country"] = item[9]
+                    temp["country_id"] = country_id
+                    temp["language"] = item[11]
+                    results.append(temp)
 
         return ujson.dumps(results)
     else:
@@ -350,22 +354,24 @@ def country_track_year_range(country_id, start_year, end_year):
             conn.execute(query)
             data = conn.fetchall()
             for item in data:
-                temp = {}
-                temp["release_id"] = item[0]
-                temp["release_name"] = item[1]
-                temp["artist_id"] = item[2]
-                temp["artist_name"] = item[3]
-                temp["gender"] = item[4]
-                temp["track_id"] = item[5]
-                temp["track_name"] = item[6]
-                temp["length"] = item[7]
-                if temp['length'] is None:
-                    temp['length'] = float("{0:.2f}".format(random.uniform(2,5)))
-                temp["year"] = item[8]
-                temp["country"] = item[9]
-                temp["country_id"] = country_id
-                temp["language"] = item[11]
-                results.append(temp)
+                year = parseInt(item[8])
+                if year != None: 
+                    temp = {}
+                    temp["release_id"] = item[0]
+                    temp["release_name"] = item[1]
+                    temp["artist_id"] = item[2]
+                    temp["artist_name"] = item[3]
+                    temp["gender"] = item[4]
+                    temp["track_id"] = item[5]
+                    temp["track_name"] = item[6]
+                    temp["length"] = item[7]
+                    if temp['length'] is None:
+                        temp['length'] = float("{0:.2f}".format(random.uniform(2,5)))
+                    temp["year"] = item[8]
+                    temp["country"] = item[9]
+                    temp["country_id"] = country_id
+                    temp["language"] = item[11]
+                    results.append(temp)
 
         return ujson.dumps(results)
     else:
@@ -414,29 +420,31 @@ def country_track_year_range_length(country_id, start_year, end_year, min_length
             conn.execute(query)
             data = conn.fetchall()
             for item in data:
-                temp = {}
-                temp["release_id"] = item[0]
-                temp["release_name"] = item[1]
-                temp["artist_id"] = item[2]
-                temp["artist_name"] = item[3]
-                temp["gender"] = item[4]
-                temp["track_id"] = item[5]
-                temp["track_name"] = item[6]
-                temp["length"] = item[7]
-                if temp['length'] is None:
-                    temp['length'] = float("{0:.2f}".format(random.uniform(2,5)))
-                temp["year"] = item[8]
-                temp["country"] = item[9]
-                temp["country_id"] = country_id
-                temp["language"] = item[11]
-                results.append(temp)
+                year = parseInt(item[8])
+                if year != None: 
+                    temp = {}
+                    temp["release_id"] = item[0]
+                    temp["release_name"] = item[1]
+                    temp["artist_id"] = item[2]
+                    temp["artist_name"] = item[3]
+                    temp["gender"] = item[4]
+                    temp["track_id"] = item[5]
+                    temp["track_name"] = item[6]
+                    temp["length"] = item[7]
+                    if temp['length'] is None:
+                        temp['length'] = float("{0:.2f}".format(random.uniform(2,5)))
+                    temp["year"] = item[8]
+                    temp["country"] = item[9]
+                    temp["country_id"] = country_id
+                    temp["language"] = item[11]
+                    results.append(temp)
 
         return ujson.dumps(results)
     else:
         return ujson.dumps({"status":"error"})
 
 @app.route('/api/country_track_year_range_length_artist/<country_id>/<start_year>/<end_year>/<min_length>/<max_length>/<artist_name>', methods=['GET'])
-def country_track_year_range_length(country_id, start_year, end_year, min_length, max_length, artist_name):
+def country_track_year_range_length_artist(country_id, start_year, end_year, min_length, max_length, artist_name):
     """ ARTIST TRACK INFORMATION
     GET /api/country_track_year_range_length_artist
     """
@@ -451,23 +459,25 @@ def country_track_year_range_length(country_id, start_year, end_year, min_length
             conn.execute(query)
             data = conn.fetchall()
             for item in data:
-                temp = {}
-                temp["release_id"] = item[0]
-                temp["release_name"] = item[1]
-                temp["artist_id"] = item[2]
-                temp["artist_name"] = item[3]
-                temp["gender"] = item[4]
-                temp["track_id"] = item[5]
-                temp["track_name"] = item[6]
-                temp["length"] = item[7]
-                if temp['length'] is None:
-                    temp['length'] = float("{0:.2f}".format(random.uniform(2,5)))
-                temp["year"] = item[8]
-                temp["country"] = item[9]
-                temp["country_id"] = country_id
-                temp["language"] = item[11]
-                results.append(temp)
-
+                year = parseInt(item[8])
+                if year != None:
+                    temp = {}
+                    temp["release_id"] = item[0]
+                    temp["release_name"] = item[1]
+                    temp["artist_id"] = item[2]
+                    temp["artist_name"] = item[3]
+                    temp["gender"] = item[4]
+                    temp["track_id"] = item[5]
+                    temp["track_name"] = item[6]
+                    temp["length"] = item[7]
+                    if temp['length'] is None:
+                        temp['length'] = float("{0:.2f}".format(random.uniform(2,5)))
+                    temp["year"] = item[8]
+                    temp["country"] = item[9]
+                    temp["country_id"] = country_id
+                    temp["language"] = item[11]
+                    results.append(temp)
+    
         return ujson.dumps(results)
     else:
         return ujson.dumps({"status":"error"})
