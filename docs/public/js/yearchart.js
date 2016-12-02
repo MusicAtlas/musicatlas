@@ -25,14 +25,14 @@ YearChart.prototype.init = function(){
     self.margin = {top: 10, right: 20, bottom: 30, left: 20};
     var divyearChart = d3.select("#year-chart");
 
-    self.colorScale = d3.scaleLinear().range(colorbrewer.RdBu["11"]);
+    self.colorScale = d3.scaleLinear().range(colorbrewer.Dark2["8"]);
 
     //Gets access to the div element created for this chart from HTML
     
     self.svgBounds = divyearChart.node().getBoundingClientRect();
     self.svgWidth = self.svgBounds.width - self.margin.right - self.margin.left;
     self.svgHeight = 80;
-    self.svgTextPadding = 40;
+    self.svgTextPadding = 30;
 
     //creates svg element within the div
     self.svg = divyearChart.append("svg")
@@ -50,7 +50,7 @@ YearChart.prototype.update = function(year_data){
         return parseInt(d.count);
     });
 
-    self.colorScale.domain([0,max_count]);
+    self.colorScale.domain([max_count,0]);
 
     year_data.sort(function(a,b){
         return d3.ascending(parseInt(a.year),parseInt(b.year));
@@ -117,6 +117,7 @@ YearChart.prototype.update = function(year_data){
             return self.colorScale(parseInt(d.count));
         });
 
+
     var textData = [year_data[0].year, year_data[year_data.length-1].year];
 
     var stackedText = self.svg.selectAll(".yeartext").data(textData);
@@ -155,32 +156,35 @@ YearChart.prototype.update = function(year_data){
             if(s[0] <= prev && value <= s[1])
                 selected_year.push(d);
         }
+        if(selected_year.length > 0) {
+            var start_year = selected_year[0].year;
+            var end_year = selected_year[selected_year.length - 1].year;
 
-        var start_year = selected_year[0].year;
-        var end_year = selected_year[selected_year.length-1].year;
+            self.trackLength.start_year = start_year;
+            self.trackLength.end_year = end_year;
+            self.scaleSlider.start_year = start_year;
+            self.scaleSlider.end_year = end_year;
+            self.scaleSlider.country = year_data[0].country_id;
 
-        self.trackLength.start_year = start_year;
-        self.trackLength.end_year = end_year;
-        self.scaleSlider.start_year = start_year;
-        self.scaleSlider.end_year = end_year;
-        self.scaleSlider.country = year_data[0].country_id;
+            var req1 = "https://db03.cs.utah.edu:8181/api/country_length_per_year_range/" + selected_year[0].country_id + "/" + selected_year[0].year + "/" + selected_year[selected_year.length - 1].year;
+            var req2 = "https://db03.cs.utah.edu:8181/api/country_track_year_range/" + selected_year[0].country_id + "/" + selected_year[0].year + "/" + selected_year[selected_year.length - 1].year + "?limit=500&offset=0";
+            var req3 = "https://db03.cs.utah.edu:8181/api/artist_tags/" + selected_year[0].country_id + "/" + selected_year[0].year + "/" + selected_year[selected_year.length - 1].year + "?limit=100&offset=0";
 
-        var req1 = "https://db03.cs.utah.edu:8181/api/country_length_per_year_range/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year;
-        var req2 = "https://db03.cs.utah.edu:8181/api/country_track_year_range/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year+"?limit=500&offset=0";
-        var req3 = "https://db03.cs.utah.edu:8181/api/artist_tags/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year+"?limit=100&offset=0";
+            d3.queue()
+                .defer(d3.json, req1)
+                .defer(d3.json, req2)
+                .defer(d3.json, req3)
+                .await(function (error, length_year_range_data, year_range_table_data, cloud_data) {
+                    if (error) throw error;
 
-        d3.queue()
-            .defer(d3.json,req1)
-            .defer(d3.json,req2)
-            .defer(d3.json,req3)
-            .await(function(error,length_year_range_data,year_range_table_data, cloud_data){
-                if(error) throw error;
-
-                self.trackLength.update(length_year_range_data);
-                self.tableChart.update(year_range_table_data, selected_year[0].country_id);
-                self.scaleSlider.update(cloud_data);
-                self.wordCloud.update(cloud_data, d3.max(cloud_data, function(d){return d.count; }) );
-            });
+                    self.trackLength.update(length_year_range_data);
+                    self.tableChart.update(year_range_table_data, selected_year[0].country_id);
+                    self.scaleSlider.update(cloud_data);
+                    self.wordCloud.update(cloud_data, d3.max(cloud_data, function (d) {
+                        return d.count;
+                    }));
+                });
+        }
     }
 
     var width = self.svgWidth;
