@@ -46,22 +46,11 @@ YearChart.prototype.update = function(year_data){
         return parseInt(d.count);
     });
 
-    // console.log(d3.min(year_data,function(d,i){
-    //     return parseInt(d);
-    // }));
-    //
-    // console.log(d3.max(year_data,function(d,i){
-    //     return parseInt(d);
-    // }));
-
     self.colorScale.domain([0,max_count]);
 
     year_data.sort(function(a,b){
         return d3.ascending(parseInt(a.year),parseInt(b.year));
     });
-
-    // console.log('year data '+ year_data[0].year);
-    // console.log('year data '+ year_data[year_data.length-1].year);
 
     self.trackLength.start_year = year_data[0].year;
     self.trackLength.end_year = year_data[year_data.length-1].year;

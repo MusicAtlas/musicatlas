@@ -44,10 +44,6 @@ TrackLength.prototype.init = function(){
 TrackLength.prototype.update = function(length_data){
     var self = this;
 
-    console.log('track length '+ self.start_year);
-    console.log('track length '+ self.end_year);
-    console.log('country '+ self.country);
-
     var max = d3.max(length_data,function(d){ return parseFloat(d.max_length); });
     var min = d3.min(length_data,function(d){ return parseFloat(d.min_length); });
 
@@ -113,31 +109,22 @@ TrackLength.prototype.update = function(length_data){
         })
         .attr("r", 9)
         .call(d3.drag()
-        //.on("start.interrupt", function() { slider.interrupt(); })
             .on("start drag", function() {
                 var selection = d3.select(this);
 
                 self.setpos(selection,self.lengthScale.invert(d3.event.x));
-                // var display = lengthScale.invert(d3.event.x).toFixed(2);
-                // console.log('min '+display);
+
             })
-                .on('end', updateTable)
-            // self.updateTable();
+                .on('end', function(){
+                    var req = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length;
 
+                    d3.json(req,function(error,year_track_table_data){
+                        if(error) throw error;
+
+                        self.tableChart.update(year_track_table_data, self.country);
+                    });
+                })
         );
-
-    function updateTable(){
-        var req = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length;
-
-        console.log(req);
-
-        d3.queue().defer(d3.json,req).await(function(error,year_track_table_data){
-            if(error)
-                throw error;
-            // console.log('here '+req);
-            self.tableChart.update(year_track_table_data, self.country);
-        });
-    }
 
 };
 
@@ -146,14 +133,12 @@ TrackLength.prototype.setpos = function(selection,pos) {
 
     selection.attr("cx", self.lengthScale(pos));
     var display = pos.toFixed(2);
-    // console.log(display);
+
     var selectedId = selection['_groups'][0][0].id;
-    // console.log(selectedId);
+
     if(selectedId == 'max'){
         self.max_length = display;
     }else{
         self.min_length = display;
     }
-    console.log(self.min_length);
-    console.log(self.max_length);
 }
