@@ -201,21 +201,46 @@ TableChart.prototype.tableRowCreate = function(data){
         .merge(cell);
 
 
-    cell.text(function(d,i){
+    cell.html(function(d,i){
         // console.log(d);
 
         //search link to artist and track
 
-        // if (i==1)
-        //     //search artist in wiki
-        //     //return html ref content eg: https://en.wikipedia.org/wiki/Chris_Martin(each space should replace with _ in artist name)
-        // if (i==3)
-        //search track in youtube
-        // return html ref content eg: https://www.youtube.com/results?search_query=jis+desh+me(each word in title with space replaced with +)
+        if (i==0){
+            return d + self.getYoutubeLink(d);
+        }
+
+        if (i==1){
+            console.log(d,i);
+            return d + self.getWikiLink(d);
+        }
+
         return d;
     });
+
+
 }
 
+TableChart.prototype.replaceAll = function(str, find, replace) {
+    self = this;
+    return str.replace(new RegExp(find, 'g'), replace);
+};
+
+TableChart.prototype.getWikiLink = function(content) {
+    self = this;
+    var html ='';
+    var link = "https://en.wikipedia.org/wiki/"+self.replaceAll(content," ","_");
+    html = "<span style='float: right; margin-right: 20px;'><a href='"+link + "' target='_blank'>  Wiki  </a></span>";
+return html;
+};
+
+TableChart.prototype.getYoutubeLink = function(content) {
+    self = this;
+    var html ='';
+    var link = "https://www.youtube.com/results?search_query="+self.replaceAll(content," ","+");
+    html = "<span style='float: right; margin-right: 40px;'><a href='"+link + "' target='_blank'>  Youtube  </a></span>";
+    return html;
+}
 
 TableChart.prototype.update = function(table_data, country){
     var self = this;
