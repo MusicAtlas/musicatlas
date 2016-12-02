@@ -110,15 +110,30 @@ ScaleSlider.prototype.update = function(cloud_data){
 
                 self.wordCloud.updateScale( self.pos);
 
-                //var req = "https://db03.cs.utah.edu:8181/api/artist_tags/"+self.country+"/"+self.start_year+"/"+self.end_year+"?limit=100&offset=0";
-                //
-                //d3.json(req,function(error,year_track_table_data){
-                //    if(error) throw error;
-                //
-                //    self.wordCloud.update(year_track_table_data, self.pos);
-                //});
             })
         );
+
+    var slider_ticks = slider.selectAll(".ticks").data([1]);
+
+    slider_ticks.exit().remove();
+
+    slider_ticks = slider_ticks.enter().append("g").classed("ticks",true).merge(slider_ticks);
+
+    var ticks = slider_ticks.selectAll("text").data(self.lengthScale.ticks(20));
+
+    ticks.exit().remove();
+
+    ticks = ticks.enter().append("text").merge(ticks);
+
+    ticks.attr("x", self.lengthScale)
+        .attr("y",function(d,i){
+            if(i%2 == 0)
+                return "18";
+            return "-13";
+        })
+        .attr("text-anchor", "middle")
+        .attr("font-size","12px")
+        .text(function(d) { return d; });
 
 };
 
