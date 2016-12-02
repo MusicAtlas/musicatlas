@@ -25,14 +25,14 @@ YearChart.prototype.init = function(){
     self.margin = {top: 10, right: 20, bottom: 30, left: 20};
     var divyearChart = d3.select("#year-chart");
 
-    self.colorScale = d3.scaleLinear().range(colorbrewer.RdBu["11"]);
+    self.colorScale = d3.scaleLinear().range(colorbrewer.Dark2["8"]);
 
     //Gets access to the div element created for this chart from HTML
     
     self.svgBounds = divyearChart.node().getBoundingClientRect();
     self.svgWidth = self.svgBounds.width - self.margin.right - self.margin.left;
     self.svgHeight = 80;
-    self.svgTextPadding = 40;
+    self.svgTextPadding = 30;
 
     //creates svg element within the div
     self.svg = divyearChart.append("svg")
@@ -50,7 +50,7 @@ YearChart.prototype.update = function(year_data){
         return parseInt(d.count);
     });
 
-    self.colorScale.domain([0,max_count]);
+    self.colorScale.domain([max_count,0]);
 
     year_data.sort(function(a,b){
         return d3.ascending(parseInt(a.year),parseInt(b.year));
@@ -123,6 +123,7 @@ YearChart.prototype.update = function(year_data){
         });
 
     // var textData = [year_data[0].year, year_data[year_data.length-1].year];
+
 
     var stackedText = self.svg.selectAll(".yeartext").data(year_data);
 
