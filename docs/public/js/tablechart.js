@@ -4,6 +4,7 @@
 
 function TableChart() {
     var self = this;
+    // self.wordCloud = wordCloud;
     self.init();
 };
 
@@ -30,11 +31,19 @@ TableChart.prototype.init = function(){
 
     self.country = '';
     self.numTracks = 0;
+    self.artist_name = '';
 
     self.columns =['Track','Artist','Album', 'Length', 'Year', 'Language'];
 
     //button layer hidden
     self.pageButton = d3.selectAll(".pagination_btns");
+
+    self.pagenumupdate = self.pageButton.selectAll("#page-num").append("rect");
+
+    self.pagenumupdate.attr("width",10)
+        .attr("height",40)
+        .text("1");
+
 
     self.pageButton.style("visibility", 'hidden');
 
@@ -66,6 +75,7 @@ TableChart.prototype.init = function(){
         });
 
     self.buttonAction();
+
 };
 
 TableChart.prototype.descending = function(row_name){
@@ -202,8 +212,6 @@ TableChart.prototype.tableRowCreate = function(data){
 
 
     cell.html(function(d,i){
-        // console.log(d);
-
         //search link to artist and track
 
         if (i==0){
@@ -220,16 +228,16 @@ TableChart.prototype.tableRowCreate = function(data){
         return d;
     });
 
-
+    self.pagenumupdate.text(self.pageNumber);
 };
 
 TableChart.prototype.replaceAll = function(str, find, replace) {
-    self = this;
+    var self = this;
     return str.replace(new RegExp(find, 'g'), replace);
 };
 
 TableChart.prototype.getWikiLink = function(content) {
-    self = this;
+    var self = this;
     var html ='';
     var link = "https://en.wikipedia.org/wiki/"+self.replaceAll(content," ","_");
     html = "<span style='float: right; margin-right: 20px;'><a href='"+link + "' target='_blank'>  Wiki  </a></span>";
@@ -237,7 +245,7 @@ return html;
 };
 
 TableChart.prototype.getYoutubeLink = function(content) {
-    self = this;
+    var self = this;
     var html ='';
     var link = "https://www.youtube.com/results?search_query="+self.replaceAll(content," ","+");
     html = "<span style='float: right; margin-right: 40px;'><a href='"+link + "' target='_blank'>  Youtube  </a></span>";
@@ -245,7 +253,7 @@ TableChart.prototype.getYoutubeLink = function(content) {
 };
 
 TableChart.prototype.getLastFMLink = function(content) {
-    self = this;
+    var self = this;
     var html ='';
     var link = "http://www.last.fm/search?q="+self.replaceAll(content," ","+");
     html = "<span style='float: right; margin-right: 20px;'><a href='"+link + "' target='_blank'>  last.fm  </a></span>";
@@ -301,7 +309,11 @@ TableChart.prototype.loadNext = function(){
     }
 
     if(self.offset >= self.tableElements.length) {
-        var req  = "https://db03.cs.utah.edu:8181/api/country_track_record/" + self.country + "?limit=500&offset=" + self.offset;
+        var req;
+        if(self.artist_name == '')
+            req  = "https://db03.cs.utah.edu:8181/api/country_track_record/" + self.country + "?limit=500&offset=" + self.offset;
+        else
+            req  = "https://db03.cs.utah.edu:8181/api/country_track_record_artist/" + self.country + "/"+self.artist_name+"?limit=500&offset=" + self.offset;
 
         d3.json(req, function (error, data) {
             if (error) throw error;

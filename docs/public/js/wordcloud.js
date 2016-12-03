@@ -2,9 +2,9 @@
  * Created by deb on 11/30/16.
  */
 
-function WordCloud(scaleSlider) {
+function WordCloud(tableChart) {
     var self = this;
-    self.scaleSlider = scaleSlider;
+    self.tableChart = tableChart;
     self.init();
 
 };
@@ -45,8 +45,12 @@ WordCloud.prototype.init = function(){
             self.draw(tags,bounds);
         });
 
+    self.start_year = 0;
+    self.end_year = 0;
+    self.country = '';
+    self.min_length = 0;
+    self.max_length = 0;
 };
-
 
 WordCloud.prototype.draw = function(data, bounds) {
     var self = this;
@@ -102,7 +106,24 @@ WordCloud.prototype.draw = function(data, bounds) {
             return self.fill(d.text.toLowerCase());
         })
         .text(function(d) {
+            //console.log(d.text);
             return d.text;
+        })
+        .on("click",function(d){
+            var artist_name = d.text;
+
+            self.tableChart.artist_name = artist_name;
+
+            var req  = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length_artist/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length+"/"+artist_name+"?limit=500";
+
+            d3.json(req, function (error, table_data) {
+                if (error) throw error;
+                self.tableChart.update(table_data, self.country);
+            });
+
+
+            // $('#collapseOne').collapse('hide');
+            // $('#collapseTwo').collapse('show');
         });
 
     self.viz.transition().attr("transform", "translate(" + [self.svgWidth >> 1, self.svgHeight >> 1] + ")scale(" + self.scale + ")");
@@ -127,7 +148,6 @@ WordCloud.prototype.update = function(tags, max_value){
 
 };
 
-
 WordCloud.prototype.updateScale = function(max_value){
 
     var self = this;
@@ -135,7 +155,7 @@ WordCloud.prototype.updateScale = function(max_value){
 
 
     max_value =Math.ceil(max_value);
-    console.log(max_value);
+    //console.log(max_value);
 
     self.layout.font('impact').spiral('archimedean');
     self.fontSize = d3_v3.scale["linear"]().range([10, 60, 5]);
@@ -145,7 +165,3 @@ WordCloud.prototype.updateScale = function(max_value){
     self.layout.stop().words(tags).start();
 
 };
-
-
-
-

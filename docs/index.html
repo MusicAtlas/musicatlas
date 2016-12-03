@@ -40,7 +40,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li class="active"><a href="index.html"><span>Home <span class="border"></span></span></a></li>
                     <li><a href="process_book.html"><span>Process Book <span class="border"></span></span></a></li>
-                    <li><a href="description.html"><span>Description<span class="border"></span></span></a></li>
+                    <li><a href="screencast.html"><span>Screencast<span class="border"></span></span></a></li>
                     <li><a href="about.html"><span>About <span class="border"></span></span></a></li>
                 </ul>
             </div>
@@ -60,6 +60,7 @@
             <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
                 <div class="row">
                     <div id="choropleth"></div>
+                    <p>*click on the country to display dashboard containing details of music.</p>
                 </div>
             </div>
         </div>
@@ -80,13 +81,14 @@
                     <div class="row">
                         <h2 class="filter-header">Year Range Filter</h2>
                         <div id="year-chart" class="col-md-12">
+                            <p>*drag brush to select year range to populate table.</p>
                         </div>
                     </div>
                     <div class="row">
-
                         <div id="track-length" class="col-md-12">
                             <h2 class="filter-header">Track Length Filter</h2>
                         </div>
+                        <p>*slide the circles to select length(in mins) range of track to populate table.</p>
                     </div>
                     <div class="row">
                         <div id="table-chart" class="col-md-12" >
@@ -106,21 +108,15 @@
                                 <span class="glyphicon glyphicon-chevron-left"></span>
                                 previous
                             </div>
+                            <div type="button" class="btn btn-default btn-md but" style="width:50px;background-color: rgb(68, 68, 68); color:white;" id="page-num">
+                            </div>
                             <div type="button" class="btn btn-default btn-md but" id="next">
                                 next
                                 <span class="glyphicon glyphicon-chevron-right"></span>
                             </div>
                         </div>
+                        <p>*table(cols sortable) shows music details for selected year and length range and also based on artist as filters.</p>
                     </div>
-                    <!--<div class="row">-->
-                        <!--<div id="scale-slider" class="col-md-12">-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="row">-->
-                        <!--<div id="wordcloud"  class="col-md-12" >-->
-                        <!--</div>-->
-                    <!--</div>-->
-
 
                     <div class="row">
                         <!--Carousel start-->
@@ -137,13 +133,8 @@
                                         <div id="wordcloud"  class="col-md-12" >
                                         </div>
                                     </div>
+                                    <p>*artist word cloud where size is scaled on track count and click updates table.</p>
                                 </div>
-                                <!--<div class=item">-->
-                                    <!--<div class="row">-->
-                                        <!--<div id="genrecloud"  class="col-md-12" >-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
                                 <div class="item">
                                     <div class="row">
                                         <div id="extrasvg"  class="col-md-12" >
@@ -164,15 +155,7 @@
                             </a>
                         </div>
                         <!-- Carousel End-->
-
-
-
                     </div>
-
-
-
-
-
                 </div>
             </div>
         </div>

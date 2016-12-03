@@ -245,6 +245,7 @@ def country_track_record_artist(country_id, artist_name):
     if request.method == 'GET':
         limit = int(request.args.get('limit', 500))
         offset= int(request.args.get('offset', 0))
+        artist_name = artist_name.strip()
         results=[]
         with app.app_context():
             conn = get_db().cursor()
@@ -451,6 +452,7 @@ def country_track_year_range_length_artist(country_id, start_year, end_year, min
     if request.method == 'GET':
         limit = int(request.args.get('limit', 500))
         offset= int(request.args.get('offset', 0))
+        artist_name = artist_name.strip()
         results=[]
         with app.app_context():
             conn = get_db().cursor()

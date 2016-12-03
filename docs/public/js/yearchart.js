@@ -31,7 +31,7 @@ YearChart.prototype.init = function(){
     
     self.svgBounds = divyearChart.node().getBoundingClientRect();
     self.svgWidth = self.svgBounds.width - self.margin.right - self.margin.left;
-    self.svgHeight = 80;
+    self.svgHeight = 110;
     self.svgTextPadding = 30;
 
     //creates svg element within the div
@@ -119,13 +119,22 @@ YearChart.prototype.update = function(year_data){
             return (self.svgWidth/year_data.length)-1;
         })
         .style("fill",function(d){
+            if(d.count == 0)
+                return "lightgrey";
             return self.colorScale(parseInt(d.count));
         });
 
-    // var textData = [year_data[0].year, year_data[year_data.length-1].year];
+    var flag = year_data.length > 50 ? 1 : 0;
 
+    var stackedTextGroup = self.svg.selectAll(".yeartext").data([1]);
 
-    var stackedText = self.svg.selectAll(".yeartext").data(year_data);
+    stackedTextGroup.exit().remove();
+
+    stackedTextGroup = stackedTextGroup.enter().append("g").classed("yeartext",true).merge(stackedTextGroup);
+
+    stackedTextGroup.attr("transform","translate(0,"+(self.svgHeight/2-10)+")");
+
+    var stackedText = stackedTextGroup.selectAll("text").data(year_data);
 
     stackedText.exit().remove();
 
@@ -134,35 +143,32 @@ YearChart.prototype.update = function(year_data){
 
     stackedText = stackedText.enter().append("text").merge(stackedText);
 
-    stackedText.attr("y",self.svgHeight/2-10)
-        .classed('yeartext',true)
-        .text(function(d){
-            console.log(d.year);
-            return d.year;
+    stackedText.text(function(d,i){
+            if(flag){
+                if(i%2 == 0)
+                    return d.year;
+            }
+            else{
+                return d.year;
+            }
+
         })
-        .attr("x",function(d,i) {
-            // if(i == 0)
-            //     return 0;
-            // else
-            //     return self.svgWidth - self.svgTextPadding;
+        .attr("transform",function() {
             var w = self.svgWidth/year_data.length;
 
             if(width_till_now == 0) {
                 width_till_now += w;
-                return 0;
+                return "translate("+(w/2)+",0) rotate(-75)";
             }
             else{
                 width_till_now += prev ;
                 prev = w;
-                return width_till_now;
+                return "translate("+(width_till_now+(w/2))+",0) rotate(-75)";
             }
-        // })
-        // .attr('transform', function(d,i){
-        //     return "rotate(-45)";
-
         })
-        .attr("dy", ".35em");
-        // .attr("transform", "rotate(-45)");
+        .attr("dy", ".35em")
+        .attr("dx","-.65em")
+        .style("font-size","10px");
 
 
     //http://bl.ocks.org/mbostock/34f08d5e11952a80609169b7917d4172
