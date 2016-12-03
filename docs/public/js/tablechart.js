@@ -186,7 +186,6 @@ TableChart.prototype.sortTable = function(row_name){
 
 
 TableChart.prototype.tableRowCreate = function(data){
-    console.log('here');
     var self = this;
 
     //Data rows created

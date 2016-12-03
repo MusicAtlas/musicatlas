@@ -112,16 +112,13 @@ WordCloud.prototype.draw = function(data, bounds) {
 
             var req  = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length_artist/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length+"/"+artist_name+"?limit=500";
 
-            console.log(req);
+            //console.log(req);
 
             d3.json(req, function (error, table_data) {
                 if (error) throw error;
                 self.tableChart.update(table_data, self.country);
             });
 
-
-            // $('#collapseOne').collapse('hide');
-            // $('#collapseTwo').collapse('show');
         });
 
     self.viz.transition().attr("transform", "translate(" + [self.svgWidth >> 1, self.svgHeight >> 1] + ")scale(" + self.scale + ")");
