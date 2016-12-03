@@ -31,13 +31,26 @@ function ChoroplethMap(track_data,world,names,yearChart,trackLength,tableChart, 
 ChoroplethMap.prototype.init = function(){
     var self = this;
     self.margin = {top:30, right: 20, bottom: 30, left: 50};
-    self.colorScale = d3.scaleLog().range(colorbrewer.Spectral["8"]);
+
+    self.colorScale = d3.scaleLog().range(chroma.scale(['#fc8d59','#a8ddb5','#4eb3d3','#fdae61','#fee090','#e0f3f8','#abd9e9','#74add1','#4575b4','#f13695']).mode('lch').colors(800));
 
     //Gets access to the div element created for this chart from HTML
     var divchoropleth = d3.select("#choropleth");
+
+    var legend = d3.select("#legend").classed("legendclass",true);
+
+
+
+
     self.svgBounds = divchoropleth.node().getBoundingClientRect();
     self.svgWidth = self.svgBounds.width - self.margin.left - self.margin.right;
     self.svgHeight = self.svgBounds.height;
+
+    //var legendHeight = 60;
+    //self.legendSvg = legend.append("svg")
+    //    .attr("width",self.svgWidth)
+    //    .attr("height",legendHeight)
+    //    .attr("transform", "translate(" + self.margin.left + ",0)");
 
     //creates svg element within the div
     self.svg = divchoropleth.append("svg")
@@ -141,11 +154,26 @@ ChoroplethMap.prototype.buildTooltip = function(d){
 ChoroplethMap.prototype.update = function(){
     var self = this;
 
+    //
+    //self.legendSvg.append("g")
+    //    .attr("class", "legendQuantile");
+    //
+    //var legendQuantile = d3.legendColor()
+    //    .shapeWidth(2)
+    //    .cells(1000)
+    //    .orient('horizontal')
+    //    .scale(self.colorScale);
+    //
+    //self.legendSvg.select(".legendQuantile")
+    //    .call(legendQuantile);
+
+
+
     var countries =  self.svg.selectAll(".countries");
     var colorMin = d3.min(self.track_data,function(d){ return d.count;});
     var colorMax = d3.max(self.track_data,function(d){ return d.count;});
 
-    var colorDomain = self.colorDomainArray(colorMin,colorMax,8);
+    var colorDomain = self.colorDomainArray(colorMin,colorMax/5,500);
 
     self.colorScale.domain(colorDomain);
 

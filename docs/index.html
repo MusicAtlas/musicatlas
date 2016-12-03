@@ -6,10 +6,12 @@
     <title>Music Atlas</title>
     <script src="public/js/jquery-3.1.1.min.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script type="text/javascript" src="public/js/d3-legend.js"></script>
     <script src="public/js/d3_v3.js"></script>
     <script src="public/js/d3_v3.layout.cloud.js"></script>
     <script src="public/js/topojson.js"></script>
     <script src="public/js/colorbrewer.js"></script>
+    <script src="public/js/chroma.min.js"></script>
 
     <!-- BOOTSTRAP -->
     <link href="public/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -60,6 +62,7 @@
             <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
                 <div class="row">
                     <div id="choropleth"></div>
+                    <div id="legend"></div>
                     <p>*click on the country to display dashboard containing details of music.</p>
                 </div>
             </div>

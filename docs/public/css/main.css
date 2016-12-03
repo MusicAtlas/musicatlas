@@ -25,6 +25,12 @@ p{
     min-height: 450px;
 }
 
+
+.legendclass {
+    display: inline-block;
+    width: 70%;
+}
+
 .svg-content{
     display: inline-block;
     position: absolute;
