@@ -110,6 +110,7 @@ WordCloud.prototype.draw = function(data, bounds) {
         .style("fill", function(d) {
             return self.fill(d.text.toLowerCase());
         })
+        .style( 'cursor', 'pointer' )
         .text(function(d) {
             return d.text;
         })
