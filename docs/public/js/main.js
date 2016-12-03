@@ -15,8 +15,8 @@
         //Creating instances for each visualization
         $('#collapseTwo').collapse('show');
         var tableChart = new TableChart();
-        var trackLength = new TrackLength(tableChart);
-        var wordCloud = new WordCloud();
+        var wordCloud = new WordCloud(tableChart);
+        var trackLength = new TrackLength(tableChart, wordCloud);
         var scaleSlider = new ScaleSlider(wordCloud);
         var yearChart = new YearChart(trackLength,tableChart, scaleSlider, wordCloud);
 

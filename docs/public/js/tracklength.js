@@ -5,9 +5,10 @@
  * Constructor for the Track Length
  *
  */
-function TrackLength(tableChart) {
+function TrackLength(tableChart, wordCloud) {
     var self = this;
     self.tableChart = tableChart;
+    self.wordCloud  = wordCloud;
 
     self.init();
 };
@@ -52,6 +53,9 @@ TrackLength.prototype.update = function(length_data){
 
     self.min_length = min;
     self.max_length = max;
+
+    self.wordCloud.min_length = min;
+    self.wordCloud.max_length = max;
 
     //https://bl.ocks.org/mbostock/6452972
     self.lengthScale = d3.scaleLinear()
@@ -116,12 +120,16 @@ TrackLength.prototype.update = function(length_data){
 
             })
                 .on('end', function(){
+                    self.wordCloud.min_length = self.min_length;
+                    self.wordCloud.max_length = self.max_length;
+
                     var req = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length+"?limit=500&offset=0";
 
                     d3.json(req,function(error,year_track_table_data){
                         if(error) throw error;
 
                         self.tableChart.update(year_track_table_data, self.country);
+
                     });
                 })
         );

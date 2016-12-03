@@ -4,6 +4,7 @@
 
 function TableChart() {
     var self = this;
+    // self.wordCloud = wordCloud;
     self.init();
 };
 
@@ -30,6 +31,7 @@ TableChart.prototype.init = function(){
 
     self.country = '';
     self.numTracks = 0;
+    self.artist_name = '';
 
     self.columns =['Track','Artist','Album', 'Length', 'Year', 'Language'];
 
@@ -73,6 +75,7 @@ TableChart.prototype.init = function(){
         });
 
     self.buttonAction();
+
 };
 
 TableChart.prototype.descending = function(row_name){
@@ -209,8 +212,6 @@ TableChart.prototype.tableRowCreate = function(data){
 
 
     cell.html(function(d,i){
-        // console.log(d);
-
         //search link to artist and track
 
         if (i==0){
@@ -308,7 +309,11 @@ TableChart.prototype.loadNext = function(){
     }
 
     if(self.offset >= self.tableElements.length) {
-        var req  = "https://db03.cs.utah.edu:8181/api/country_track_record/" + self.country + "?limit=500&offset=" + self.offset;
+        var req;
+        if(self.artist_name == '')
+            req  = "https://db03.cs.utah.edu:8181/api/country_track_record/" + self.country + "?limit=500&offset=" + self.offset;
+        else
+            req  = "https://db03.cs.utah.edu:8181/api/country_track_record_artist/" + self.country + "/"+self.artist_name+"?limit=500&offset=" + self.offset;
 
         d3.json(req, function (error, data) {
             if (error) throw error;
