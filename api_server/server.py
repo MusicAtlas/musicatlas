@@ -337,6 +337,64 @@ def artist_tags(country_id, start_year, end_year):
     else:
         return ujson.dumps({"status":"error"})
 
+@app.route('/api/genre_tags/<country_id>', methods=['GET'])
+def genre_tags_all(country_id):
+    """ ARTIST TRACK INFORMATION
+    GET /api/genre_tags
+    """
+    if request.method == 'GET':
+        limit = int(request.args.get('limit', 500))
+        offset= int(request.args.get('offset', 0))
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor()
+            query = "select sum(count), genre, country from genre_country_year_group where country_id =" + str(country_id) + " group by genre, country order by sum(count)  desc limit "+ str(limit) +" offset "+ str(offset);
+
+            
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                temp = {}
+                temp["count"] = item[0]
+                temp["genre"] = item[1]
+                temp["country"] = item[2]
+                temp["country_id"] = country_id
+                results.append(temp)
+
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
+
+
+
+@app.route('/api/genre_tags/<country_id>/<start_year>/<end_year>', methods=['GET'])
+def genre_tags(country_id, start_year, end_year):
+    """ ARTIST TRACK INFORMATION
+    GET /api/artist_tags
+    """
+    if request.method == 'GET':
+        limit = int(request.args.get('limit', 500))
+        offset= int(request.args.get('offset', 0))
+        results=[]
+        with app.app_context():
+            conn = get_db().cursor()
+            query = "select sum(count), genre, country from genre_country_year_group where year between "+ str(start_year) +" and "+ str(end_year) + " and country_id =" + str(country_id) + " group by genre, country order by sum(count)  desc limit "+ str(limit) +" offset "+ str(offset);
+
+            
+            conn.execute(query)
+            data = conn.fetchall()
+            for item in data:
+                temp = {}
+                temp["count"] = item[0]
+                temp["genre"] = item[1]
+                temp["country"] = item[2]
+                temp["country_id"] = country_id
+                results.append(temp)
+
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
+
 
 
 @app.route('/api/country_track_year_range/<country_id>/<start_year>/<end_year>', methods=['GET'])
