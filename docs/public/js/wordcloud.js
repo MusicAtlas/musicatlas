@@ -106,7 +106,7 @@ WordCloud.prototype.draw = function(data, bounds) {
             return self.fill(d.text.toLowerCase());
         })
         .text(function(d) {
-            console.log(d.text);
+            //console.log(d.text);
             return d.text;
         })
         .on("click",function(d){
@@ -155,7 +155,7 @@ WordCloud.prototype.updateScale = function(max_value){
 
 
     max_value =Math.ceil(max_value);
-    console.log(max_value);
+    //console.log(max_value);
 
     self.layout.font('impact').spiral('archimedean');
     self.fontSize = d3_v3.scale["linear"]().range([10, 60, 5]);
