@@ -55,9 +55,9 @@ p{
 }
 
 
-#extrasvg{
+#genrecloud{
     width: 100%;
-    min-height: 450px;
+    min-height: 410px;
     overflow: hidden;
     padding-left: 20px;
 }

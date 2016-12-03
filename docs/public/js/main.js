@@ -15,10 +15,16 @@
         //Creating instances for each visualization
         $('#collapseTwo').collapse('show');
         var tableChart = new TableChart();
+
         var wordCloud = new WordCloud(tableChart);
         var trackLength = new TrackLength(tableChart, wordCloud);
+
+        $('.carousel').carousel(1);
+        var genreCloud = new GenreWordCloud();
+        $('.carousel').carousel(0);
+
         var scaleSlider = new ScaleSlider(wordCloud);
-        var yearChart = new YearChart(trackLength,tableChart, scaleSlider, wordCloud);
+        var yearChart = new YearChart(trackLength,tableChart, scaleSlider, wordCloud, genreCloud);
 
         $('#collapseTwo').collapse('hide');
 
@@ -30,7 +36,7 @@
             .await(function(error,world,names,track_data){
                 if(error) throw error;
 
-                var choroplethmap = new ChoroplethMap(track_data,world,names,yearChart,trackLength,tableChart,scaleSlider, wordCloud);
+                var choroplethmap = new ChoroplethMap(track_data,world,names,yearChart,trackLength,tableChart,scaleSlider, wordCloud, genreCloud);
                 choroplethmap.update();
             });
     }

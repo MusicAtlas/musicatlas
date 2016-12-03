@@ -5,7 +5,7 @@
  * Constructor for the Year Chart
  *
  */
-function YearChart(trackLength,tableChart, scaleSlider, wordCloud) {
+function YearChart(trackLength,tableChart, scaleSlider, wordCloud, genreCloud) {
     var self = this;
 
     self.tableChart = tableChart;
@@ -13,6 +13,7 @@ function YearChart(trackLength,tableChart, scaleSlider, wordCloud) {
     self.scaleSlider = scaleSlider;
     self.wordCloud= wordCloud;
     self.numTracks = 0;
+    self.genreCloud = genreCloud;
 
     self.init();
 };
@@ -89,6 +90,10 @@ YearChart.prototype.update = function(year_data){
     self.wordCloud.start_year = year_data[0].year;
     self.wordCloud.end_year = year_data[year_data.length-1].year;
     self.wordCloud.country = year_data[0].country_id;
+
+    self.genreCloud.start_year = year_data[0].year;
+    self.genreCloud.end_year = year_data[year_data.length-1].year;
+    self.genreCloud.country = year_data[0].country_id;
 
     var stackedbar = self.svg.selectAll(".yearbar").data(year_data);
 
@@ -204,21 +209,30 @@ YearChart.prototype.update = function(year_data){
         self.wordCloud.end_year = end_year;
         self.wordCloud.country = year_data[0].country_id;
 
+        self.genreCloud.start_year = start_year;
+        self.genreCloud.end_year = end_year;
+        self.genreCloud.country = year_data[0].country_id;
+
         var req1 = "https://db03.cs.utah.edu:8181/api/country_length_per_year_range/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year;
         var req2 = "https://db03.cs.utah.edu:8181/api/country_track_year_range/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year+"?limit=1000&offset=0";
         var req3 = "https://db03.cs.utah.edu:8181/api/artist_tags/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year+"?limit=100&offset=0";
+        var req4 = "https://db03.cs.utah.edu:8181/api/genre_tags/"+selected_year[0].country_id+"/"+selected_year[0].year+"/"+selected_year[selected_year.length-1].year+"?limit=100&offset=0";
 
         d3.queue()
             .defer(d3.json,req1)
             .defer(d3.json,req2)
             .defer(d3.json,req3)
-            .await(function(error,length_year_range_data,year_range_table_data, cloud_data){
+            .defer(d3.json,req4)
+            .await(function(error,length_year_range_data,year_range_table_data, cloud_data, genre_data){
                 if(error) throw error;
                 self.tableChart.numTracks = year_range_table_data.length;
                 self.trackLength.update(length_year_range_data);
                 self.tableChart.update(year_range_table_data, selected_year[0].country_id);
                 self.scaleSlider.update(cloud_data);
                 self.wordCloud.update(cloud_data, d3.max(cloud_data, function(d){return d.count; }) );
+                if (genre_data.length > 0) {
+                    self.genreCloud.update(genre_data);
+                }
             });
     }
 
