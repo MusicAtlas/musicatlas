@@ -1,10 +1,13 @@
 /**
  * Created by deb on 11/30/16.
  */
-
+/**
+ * Constructor for the Genre Word Cloud
+ *
+ */
 function GenreWordCloud() {
     var self = this;
-    //self.scaleSlider = scaleSlider;
+
     self.init();
 
 };
@@ -47,11 +50,15 @@ GenreWordCloud.prototype.init = function(){
 
 };
 
-
+/**
+ * Draw the genre word cloud
+ * @param data
+ * @param bounds
+ */
 GenreWordCloud.prototype.draw = function(data, bounds) {
     var self = this;
-    //console.log(self);
 
+    //scale for word cloud
     self.fill = d3_v3.scale.category20b();
 
     self.scale = bounds ? Math.min(
@@ -60,8 +67,7 @@ GenreWordCloud.prototype.draw = function(data, bounds) {
         self.svgHeight / Math.abs(bounds[1].y - self.svgHeight / 2),
         self.svgHeight / Math.abs(bounds[0].y - self.svgHeight / 2)) / 2 : 1;
 
-
-    //console.log(self.viz);
+    //selection to enter text in layout
     var text = self.viz.selectAll("text")
         .data(data, function(d) {
             if (d.text == undefined) {
@@ -83,7 +89,6 @@ GenreWordCloud.prototype.draw = function(data, bounds) {
 
     text.exit().remove();
 
-    //text = textEnter.merge(text);
 
     textEnter.attr("text-anchor", "middle")
         .attr("transform", function(d) {
@@ -130,7 +135,10 @@ GenreWordCloud.prototype.update = function(tags){
 
 };
 
-
+/**
+ * Update scaling factor for word cloud
+ * @param max_value
+ */
 GenreWordCloud.prototype.updateScale = function(max_value){
 
     var self = this;
