@@ -6,6 +6,12 @@ body {
     /*color: #818892; */
 }
 
+p{
+    font-style : italic;
+    font-size : 12px;
+    float : right;
+    margin-right : 40px;
+}
 .margin-top-lg{
     margin-top:65px;
 }
