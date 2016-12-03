@@ -11,6 +11,8 @@
 function ChoroplethMap(track_data,world,names,yearChart,trackLength,tableChart, scaleSlider, wordCloud, genreCloud){
 
     var self = this;
+
+    //initialize variables
     self.track_data = track_data;
     self.yearChart = yearChart;
     self.tableChart = tableChart;
@@ -18,7 +20,9 @@ function ChoroplethMap(track_data,world,names,yearChart,trackLength,tableChart, 
     self.scaleSlider=scaleSlider;
     self.wordCloud=wordCloud;
     self.genreCloud=genreCloud;
+
     self.init();
+
     self.world = world;
     self.names = names;
 
@@ -58,19 +62,20 @@ ChoroplethMap.prototype.init = function(){
         .classed("svg-content",true)
         .attr("preserveAspectRatio","xMinYMin");
 
+    //initialize tooltip
     self.tooltip = divchoropleth.append("div").classed("tooltip",true);
 };
 
-ChoroplethMap.prototype.redraw = function() {
-    self.svg.select("g").attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-};
-
+/**
+ * Initializes Map required for interaction
+ */
 ChoroplethMap.prototype.drawMap =  function() {
 
     var self = this;
 
     var topmargin = 10;
 
+    //create map projection
     var projection = d3.geoEquirectangular()
         .translate([self.svgWidth/2,self.svgHeight/2 + topmargin])
         .scale(self.svgWidth/9);
@@ -85,6 +90,7 @@ ChoroplethMap.prototype.drawMap =  function() {
     self.svg.append("g")
         .classed("map",true);
 
+    //create map
     var map = self.svg.select(".map");
 
      map.append("path")
@@ -93,9 +99,10 @@ ChoroplethMap.prototype.drawMap =  function() {
          .attr("fill","none")
          .attr("d", path);
 
+    //extract geo data to create map
     var countries = topojson.object(self.world, self.world.objects.countries).geometries;
 
-    
+    //create country boundaries
     for(var i = 0; i<countries.length; i++) {
         if (countries[i].id == 10){
             continue;
@@ -120,7 +127,13 @@ ChoroplethMap.prototype.drawMap =  function() {
     }
 };
 
-
+/**
+ * Creates an array of values for color domain
+ * @param min
+ * @param max
+ * @param n - Length of array required
+ * @returns {Array of values for domain}
+ */
 ChoroplethMap.prototype.colorDomainArray = function(min, max, n) {
     var result = [];
     if (min > max ){
@@ -135,13 +148,21 @@ ChoroplethMap.prototype.colorDomainArray = function(min, max, n) {
     return result;
 };
 
-
+/**
+ * Create text html for tooltip
+ * @param d
+ * @returns {string}
+ */
 ChoroplethMap.prototype.tooltipText = function(d){
     var html =  "<h3>" + d.name + "</h3>" +
         "<p>Track Count: " + d.count + "</p>";
     return html
 };
 
+/**
+ * Build the tooltip
+ * @param d
+ */
 ChoroplethMap.prototype.buildTooltip = function(d){
     var self = this;
     self.tooltip.transition()
@@ -151,6 +172,9 @@ ChoroplethMap.prototype.buildTooltip = function(d){
     self.tooltip.html( self.tooltipText(d) );
 };
 
+/**
+ * Perform all the interactions needed for the chart and others
+ */
 ChoroplethMap.prototype.update = function(){
     var self = this;
 
@@ -179,9 +203,11 @@ ChoroplethMap.prototype.update = function(){
 
     self.track_data.forEach(function(t){
 
+        //make tag html search worthy
         var name = "#"+t.country.replace(/('|\.|\]|\[| )/g,"\\$1").trim();
         var country = d3.selectAll(name);
 
+        //attach interactions to all country selections
         country.style("fill",function(){
             return self.colorScale(t.count);
         })
@@ -196,6 +222,8 @@ ChoroplethMap.prototype.update = function(){
             })
             .on("click",function(){
                 self.trackLength.country = t.id;
+
+                //load all data needed for other charts
                 d3.queue()
                     .defer(d3.json,"https://db03.cs.utah.edu:8181/api/country_track_year/"+t.id)
                     .defer(d3.json,"https://db03.cs.utah.edu:8181/api/country_length_per_year/"+t.id)
