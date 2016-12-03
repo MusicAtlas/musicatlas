@@ -5,6 +5,10 @@ musicatlas is an interactive visualization to explore the music of the world.
   - Website - https://musicatlas.github.io
   - Screencast - https://youtu.be/afVEXWe9Xfg
 
+##Important Notice
+
+The application first requires you to accept SSL certificate. For that initially when you open the website link, open console and click on the db03.cs.utah.edu link and accept the certificate. Once this is done the rest will work smoothly.
+
 ##Source Files
 
 The source files are placed in the docs folder. Each different type of file is present in a subdirectory public. e.g. public/js conatins javascript files.
