@@ -25,12 +25,12 @@ YearChart.prototype.init = function(){
 
     var self = this;
     self.margin = {top: 10, right: 20, bottom: 30, left: 20};
-    var divyearChart = d3.select("#year-chart");
 
+    //color scale for year chart
     self.colorScale = d3.scaleLinear().range(colorbrewer.Dark2["8"]);
 
     //Gets access to the div element created for this chart from HTML
-    
+    var divyearChart = d3.select("#year-chart");
     self.svgBounds = divyearChart.node().getBoundingClientRect();
     self.svgWidth = self.svgBounds.width - self.margin.right - self.margin.left;
     self.svgHeight = 110;
@@ -58,7 +58,7 @@ YearChart.prototype.update = function(year_data){
         return d3.ascending(parseInt(a.year),parseInt(b.year));
     });
 
-
+    //sanitize data to include all years in the range
     var year_data_map ={};
     var min= year_data[0].year;
     var max = year_data[year_data.length-1].year;
@@ -80,6 +80,7 @@ YearChart.prototype.update = function(year_data){
         return d3.ascending(parseInt(a.year),parseInt(b.year));
     });
 
+    //necessary variables for all other charts
     self.trackLength.start_year = year_data[0].year;
     self.trackLength.end_year = year_data[year_data.length-1].year;
 
@@ -95,6 +96,7 @@ YearChart.prototype.update = function(year_data){
     self.genreCloud.end_year = year_data[year_data.length-1].year;
     self.genreCloud.country = year_data[0].country_id;
 
+    //create stacked bar chart
     var stackedbar = self.svg.selectAll(".yearbar").data(year_data);
 
     stackedbar.exit().remove();
@@ -132,6 +134,7 @@ YearChart.prototype.update = function(year_data){
 
     var flag = year_data.length > 50 ? 1 : 0;
 
+    //create ticks for the chart
     var stackedTextGroup = self.svg.selectAll(".yeartext").data([1]);
 
     stackedTextGroup.exit().remove();
@@ -176,7 +179,7 @@ YearChart.prototype.update = function(year_data){
         .attr("dx","-.65em")
         .style("font-size","10px");
 
-
+    //brush to get year range
     //http://bl.ocks.org/mbostock/34f08d5e11952a80609169b7917d4172
     function brushed(){
         //on work if there is an event or a selection

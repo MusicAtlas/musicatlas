@@ -1,18 +1,23 @@
 /**
  * Created by shweta on 11/29/16.
  */
-
+/**
+ * Constructor for the Table Chart
+ *
+ */
 function TableChart() {
     var self = this;
+
     self.init();
 };
 
 /**
- * Initializes the svg elements required for this chart
+ * Initializes the table elements required for this chart
  */
 TableChart.prototype.init = function(){
     var self = this;
 
+    //set variable for creating and manipulating table
     self.offset = 0;
     self.pageNumber = 1;
     self.recordPerPage = 20;
@@ -32,6 +37,7 @@ TableChart.prototype.init = function(){
     self.numTracks = 0;
     self.artist_name = '';
 
+    //column headers
     self.columns =['Track','Artist','Album', 'Length', 'Year', 'Language'];
 
     //button layer hidden
@@ -77,6 +83,10 @@ TableChart.prototype.init = function(){
 
 };
 
+/**
+ * Sort the data in descending order
+ * @param row_name
+ */
 TableChart.prototype.descending = function(row_name){
     var self = this;
     switch(row_name) {
@@ -121,6 +131,10 @@ TableChart.prototype.descending = function(row_name){
 
 }
 
+/**
+ * Sort the data in ascending order
+ * @param row_name
+ */
 TableChart.prototype.ascending = function(row_name){
     var self = this;
     switch(row_name) {
@@ -164,6 +178,10 @@ TableChart.prototype.ascending = function(row_name){
     }
 }
 
+/**
+ * Sort the data based on the column clicked and handle toggle
+ * @param row_name
+ */
 TableChart.prototype.sortTable = function(row_name){
     var self = this;
     if(self.row == row_name){
@@ -184,7 +202,10 @@ TableChart.prototype.sortTable = function(row_name){
     self.update(self.tableElements,self.country);
 }
 
-
+/**
+ * Create table based on data refresh
+ * @param data
+ */
 TableChart.prototype.tableRowCreate = function(data){
     var self = this;
 
@@ -209,7 +230,7 @@ TableChart.prototype.tableRowCreate = function(data){
         .append("td")
         .merge(cell);
 
-
+    //add links for artist, album and tracks for user to interact
     cell.html(function(d,i){
         //search link to artist and track
 
@@ -230,13 +251,23 @@ TableChart.prototype.tableRowCreate = function(data){
     self.pagenumupdate.text(self.pageNumber);
 };
 
-
+/**
+ * Replace string
+ * @param str
+ * @param find
+ * @param replace
+ * @returns {void|string|XML}
+ */
 TableChart.prototype.replaceAll = function(str, find, replace) {
     var self = this;
     return str.replace(new RegExp(find, 'g'), replace);
 };
 
-
+/**
+ * Create Wiki link for the content
+ * @param content
+ * @returns {string}
+ */
 TableChart.prototype.getWikiLink = function(content) {
     var self = this;
     var html ='';
@@ -245,7 +276,11 @@ TableChart.prototype.getWikiLink = function(content) {
 return html;
 };
 
-
+/**
+ * Craete Youtube link for the content
+ * @param content
+ * @returns {string}
+ */
 TableChart.prototype.getYoutubeLink = function(content) {
     var self = this;
     var html ='';
@@ -254,7 +289,11 @@ TableChart.prototype.getYoutubeLink = function(content) {
     return html;
 };
 
-
+/**
+ * Create LastFM link for the content
+ * @param content
+ * @returns {string}
+ */
 TableChart.prototype.getLastFMLink = function(content) {
     var self = this;
     var html ='';
@@ -263,11 +302,16 @@ TableChart.prototype.getLastFMLink = function(content) {
     return html;
 };
 
-
+/**
+ * Update date based on data received and handle pagination
+ * @param table_data
+ * @param country
+ */
 TableChart.prototype.update = function(table_data, country){
     var self = this;
     self.tableElements = table_data;
 
+    //slice data to show few records at a time
     self.country = country;
     var data = self.tableElements.slice((self.pageNumber-1)*self.recordPerPage,self.pageNumber*self.recordPerPage);
 
@@ -293,7 +337,9 @@ TableChart.prototype.update = function(table_data, country){
 
 };
 
-
+/**
+ * Handle previous button click
+ */
 TableChart.prototype.loadPrevious = function() {
     var self = this;
 
@@ -313,7 +359,9 @@ TableChart.prototype.loadPrevious = function() {
         self.tableRowCreate(data);
 }
 
-
+/**
+ * Handle next button click
+ */
 TableChart.prototype.loadNext = function(){
     var self = this;
     self.offset = (self.pageNumber) * self.recordPerPage;
@@ -351,7 +399,9 @@ TableChart.prototype.loadNext = function(){
 
 }
 
-
+/**
+ * Set the action for nect and previous buttons
+ */
 TableChart.prototype.buttonAction = function() {
     var self = this;
 

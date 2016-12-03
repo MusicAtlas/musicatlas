@@ -18,11 +18,9 @@ ScaleSlider.prototype.init = function(){
 
     var self = this;
     self.margin = {top: 10, right: 20, bottom: 30, left: 20};
-    var divscaleSlider = d3.select("#scale-slider");
-
-    //self.colorScale = d3.scaleLinear().range(colorbrewer.RdBu["11"]);
 
     //Gets access to the div element created for this chart from HTML
+    var divscaleSlider = d3.select("#scale-slider");
     self.svgBounds = divscaleSlider.node().getBoundingClientRect();
     self.svgWidth = self.svgBounds.width - self.margin.right - self.margin.left;
     self.svgHeight = 50;
@@ -35,17 +33,14 @@ ScaleSlider.prototype.init = function(){
 };
 
 /**
- * Creates a chart with circles representing min and max slider
+ * Creates a chart with circle as slider
  */
 ScaleSlider.prototype.update = function(cloud_data){
     var self = this;
 
-    //console.log(length_data);
+    //get min and max of artict track count
     var max = d3.max(cloud_data,function(d){ return parseFloat(d.count); });
     var min = d3.min(cloud_data,function(d){ return parseFloat(d.count); });
-
-    //console.log(max);
-    //console.log(min);
 
 
     //https://bl.ocks.org/mbostock/6452972
@@ -54,6 +49,7 @@ ScaleSlider.prototype.update = function(cloud_data){
                         .range([self.margin.left,self.svgWidth-20])
                         .clamp(true);
 
+    //create slider layout
     var slider = self.svg.selectAll(".slider").data([1]);
 
     slider.exit().remove();
@@ -89,6 +85,8 @@ ScaleSlider.prototype.update = function(cloud_data){
     line_overlay.attr("x1", self.lengthScale.range()[0])
         .attr("x2", self.lengthScale.range()[1]);
 
+
+    //create circle to slide over range
     var handle = slider.selectAll(".track-slider").data([max]);
 
     handle.exit().remove();
@@ -113,6 +111,7 @@ ScaleSlider.prototype.update = function(cloud_data){
             })
         );
 
+    //create ticks for slider
     var slider_ticks = slider.selectAll(".ticks").data([1]);
 
     slider_ticks.exit().remove();
@@ -137,7 +136,11 @@ ScaleSlider.prototype.update = function(cloud_data){
 
 };
 
-
+/**
+ * Set position for slider when dragged
+ * @param selection
+ * @param pos
+ */
 ScaleSlider.prototype.setpos = function(selection,pos) {
     var self = this;
 

@@ -21,11 +21,9 @@ TrackLength.prototype.init = function(){
 
     var self = this;
     self.margin = {top: 10, right: 20, bottom: 30, left: 20};
-    var divtrackLength = d3.select("#track-length");
-
-    //self.colorScale = d3.scaleLinear().range(colorbrewer.RdBu["11"]);
 
     //Gets access to the div element created for this chart from HTML
+    var divtrackLength = d3.select("#track-length");
     self.svgBounds = divtrackLength.node().getBoundingClientRect();
     self.svgWidth = self.svgBounds.width - self.margin.right - self.margin.left;
     self.svgHeight = 50;
@@ -48,6 +46,7 @@ TrackLength.prototype.init = function(){
 TrackLength.prototype.update = function(length_data){
     var self = this;
 
+    //min and max track length
     var max = d3.max(length_data,function(d){ return parseFloat(d.max_length); });
     var min = d3.min(length_data,function(d){ return parseFloat(d.min_length); });
 
@@ -60,9 +59,9 @@ TrackLength.prototype.update = function(length_data){
     //https://bl.ocks.org/mbostock/6452972
     self.lengthScale = d3.scaleLinear()
                         .domain([min,max])
-                        .range([self.margin.left,self.svgWidth-20])
-                        .nice([0.2,1.0]);
+                        .range([self.margin.left,self.svgWidth-20]);
 
+    //create slider layout
     var slider = self.svg.selectAll(".slider").data([1]);
 
     slider.exit().remove();
@@ -98,6 +97,7 @@ TrackLength.prototype.update = function(length_data){
     line_overlay.attr("x1", self.lengthScale.range()[0])
         .attr("x2", self.lengthScale.range()[1]);
 
+    //create handle to get range of track length
     var handle = slider.selectAll(".track-slider").data([min,max]);
 
     handle.exit().remove();
@@ -135,6 +135,7 @@ TrackLength.prototype.update = function(length_data){
                 })
         );
 
+    //create ticks for slider
     var slider_ticks = slider.selectAll(".ticks").data([1]);
 
     slider_ticks.exit().remove();
@@ -163,7 +164,11 @@ TrackLength.prototype.update = function(length_data){
 
 };
 
-
+/**
+ * Sets the position of the handle and also the range
+ * @param selection
+ * @param pos
+ */
 TrackLength.prototype.setpos = function(selection,pos) {
     var self = this;
 

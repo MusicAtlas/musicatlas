@@ -28,10 +28,10 @@
 
         $('#collapseTwo').collapse('hide');
 
+        //load multiple files neede to create map and provide initial interaction
         d3.queue()
             .defer(d3.json,"public/data/world.json")
             .defer(d3.tsv,"public/data/world-country-names.tsv")
-            // .defer(d3.json,"public/data/country_track.json")
             .defer(d3.json,"https://db03.cs.utah.edu:8181/api/country_track")
             .await(function(error,world,names,track_data){
                 if(error) throw error;
