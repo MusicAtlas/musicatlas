@@ -177,10 +177,13 @@ ChoroplethMap.prototype.update = function(){
 
                         self.yearChart.update(year_data);
                         self.trackLength.update(length_data);
+                        self.tableChart.numTracks = t.count;
+                        self.yearChart.numTracks = t.count;
+                        self.trackLength.numTracks = t.count;
                         self.tableChart.update(table_data, t.id);
                         self.scaleSlider.update(cloud_data);
                         self.wordCloud.update(cloud_data, d3.max(cloud_data, function(d){return d.count; }) );
-                        self.tableChart.numTracks = t.count;
+
                     });
                 $('#dashboard_label').html(t.country + " Dashboard");
                 $('#collapseOne').collapse('hide');

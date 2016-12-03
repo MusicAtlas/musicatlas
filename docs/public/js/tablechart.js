@@ -4,7 +4,6 @@
 
 function TableChart() {
     var self = this;
-    // self.wordCloud = wordCloud;
     self.init();
 };
 
@@ -182,11 +181,12 @@ TableChart.prototype.sortTable = function(row_name){
         self.order = "descending";
         self.descending(row_name);
     }
-    //var data = self.tableElements.slice((self.pageNumber-1)*self.recordPerPage,self.pageNumber*self.recordPerPage);
     self.update(self.tableElements,self.country);
 }
 
+
 TableChart.prototype.tableRowCreate = function(data){
+    console.log('here');
     var self = this;
 
     //Data rows created
@@ -231,10 +231,12 @@ TableChart.prototype.tableRowCreate = function(data){
     self.pagenumupdate.text(self.pageNumber);
 };
 
+
 TableChart.prototype.replaceAll = function(str, find, replace) {
     var self = this;
     return str.replace(new RegExp(find, 'g'), replace);
 };
+
 
 TableChart.prototype.getWikiLink = function(content) {
     var self = this;
@@ -244,6 +246,7 @@ TableChart.prototype.getWikiLink = function(content) {
 return html;
 };
 
+
 TableChart.prototype.getYoutubeLink = function(content) {
     var self = this;
     var html ='';
@@ -251,6 +254,7 @@ TableChart.prototype.getYoutubeLink = function(content) {
     html = "<span style='float: right; margin-right: 40px;'><a href='"+link + "' target='_blank'>  Youtube  </a></span>";
     return html;
 };
+
 
 TableChart.prototype.getLastFMLink = function(content) {
     var self = this;
@@ -260,14 +264,16 @@ TableChart.prototype.getLastFMLink = function(content) {
     return html;
 };
 
+
 TableChart.prototype.update = function(table_data, country){
     var self = this;
     self.tableElements = table_data;
-    self.country = country;
 
+    self.country = country;
     var data = self.tableElements.slice((self.pageNumber-1)*self.recordPerPage,self.pageNumber*self.recordPerPage);
 
-    self.tableRowCreate(data);
+    if(data != 0)
+        self.tableRowCreate(data);
 
     self.pageButton.style('visibility','visible');
 
@@ -277,7 +283,17 @@ TableChart.prototype.update = function(table_data, country){
 
     }
 
+    if(self.numTracks <= self.recordPerPage){
+        self.pageButton.select('#next')
+            .style('visibility', 'hidden');
+    }
+
+    if(self.artist_name != ''){
+        self.numTracks = self.tableElements.length;
+    }
+
 };
+
 
 TableChart.prototype.loadPrevious = function() {
     var self = this;
@@ -294,8 +310,10 @@ TableChart.prototype.loadPrevious = function() {
     self.pageButton.select("#next").style('visibility','visible');
 
     var data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.pageNumber * self.recordPerPage);
-    self.tableRowCreate(data);
+    if(data != 0)
+        self.tableRowCreate(data);
 }
+
 
 TableChart.prototype.loadNext = function(){
     var self = this;
@@ -311,9 +329,9 @@ TableChart.prototype.loadNext = function(){
     if(self.offset >= self.tableElements.length) {
         var req;
         if(self.artist_name == '')
-            req  = "https://db03.cs.utah.edu:8181/api/country_track_record/" + self.country + "?limit=500&offset=" + self.offset;
+            req  = "https://db03.cs.utah.edu:8181/api/country_track_record/" + self.country + "?limit=1000&offset=" + self.offset;
         else
-            req  = "https://db03.cs.utah.edu:8181/api/country_track_record_artist/" + self.country + "/"+self.artist_name+"?limit=500&offset=" + self.offset;
+            req  = "https://db03.cs.utah.edu:8181/api/country_track_record_artist/" + self.country + "/"+self.artist_name+"?limit=1000&offset=" + self.offset;
 
         d3.json(req, function (error, data) {
             if (error) throw error;
@@ -323,13 +341,14 @@ TableChart.prototype.loadNext = function(){
 
     var data;
 
-    if((self.pageNumber) * self.recordPerPage <= self.numTracks) {
+    if((self.pageNumber) * self.recordPerPage < self.numTracks) {
         data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.pageNumber * self.recordPerPage);
     }else{
         data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.tableElements.length);
         self.pageButton.select("#next").style('visibility','hidden');
     }
-    self.tableRowCreate(data);
+    if(data.length != 0)
+        self.tableRowCreate(data);
 
 }
 

@@ -13,6 +13,7 @@ function TrackLength(tableChart, wordCloud) {
     self.init();
 };
 
+
 /**
  * Initializes the svg elements required for this chart
  */
@@ -37,7 +38,9 @@ TrackLength.prototype.init = function(){
     self.start_year = 0;
     self.end_year = 0;
     self.country = '';
+    self.numTracks = 0;
 };
+
 
 /**
  * Creates a chart with circles representing min and max slider
@@ -47,9 +50,6 @@ TrackLength.prototype.update = function(length_data){
 
     var max = d3.max(length_data,function(d){ return parseFloat(d.max_length); });
     var min = d3.min(length_data,function(d){ return parseFloat(d.min_length); });
-
-    // console.log(min);
-    // console.log(max);
 
     self.min_length = min;
     self.max_length = max;
@@ -123,11 +123,12 @@ TrackLength.prototype.update = function(length_data){
                     self.wordCloud.min_length = self.min_length;
                     self.wordCloud.max_length = self.max_length;
 
-                    var req = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length+"?limit=500&offset=0";
+                    var req = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length+"?limit=1000&offset=0";
 
                     d3.json(req,function(error,year_track_table_data){
                         if(error) throw error;
 
+                        self.tableChart.numTracks = year_track_table_data.length;
                         self.tableChart.update(year_track_table_data, self.country);
 
                     });
@@ -161,6 +162,7 @@ TrackLength.prototype.update = function(length_data){
         });
 
 };
+
 
 TrackLength.prototype.setpos = function(selection,pos) {
     var self = this;

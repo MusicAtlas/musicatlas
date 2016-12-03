@@ -52,9 +52,9 @@ WordCloud.prototype.init = function(){
     self.max_length = 0;
 };
 
+
 WordCloud.prototype.draw = function(data, bounds) {
     var self = this;
-    //console.log(self);
 
     self.fill = d3_v3.scale.category20b();
 
@@ -64,8 +64,6 @@ WordCloud.prototype.draw = function(data, bounds) {
         self.svgHeight / Math.abs(bounds[1].y - self.svgHeight / 2),
         self.svgHeight / Math.abs(bounds[0].y - self.svgHeight / 2)) / 2 : 1;
 
-
-    //console.log(self.viz);
     var text = self.viz.selectAll("text")
         .data(data, function(d) {
             return d.text.toLowerCase();
@@ -98,7 +96,6 @@ WordCloud.prototype.draw = function(data, bounds) {
         .duration(1000)
         .style("opacity", 1);
 
-
     text.style("font-family", function(d) {
             return d.font;
         })
@@ -106,7 +103,6 @@ WordCloud.prototype.draw = function(data, bounds) {
             return self.fill(d.text.toLowerCase());
         })
         .text(function(d) {
-            //console.log(d.text);
             return d.text;
         })
         .on("click",function(d){
@@ -115,6 +111,8 @@ WordCloud.prototype.draw = function(data, bounds) {
             self.tableChart.artist_name = artist_name;
 
             var req  = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length_artist/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length+"/"+artist_name+"?limit=500";
+
+            console.log(req);
 
             d3.json(req, function (error, table_data) {
                 if (error) throw error;
@@ -130,6 +128,7 @@ WordCloud.prototype.draw = function(data, bounds) {
 
 
 };
+
 
 /**
  * Creates a chart with rectangles representing each year
@@ -148,6 +147,7 @@ WordCloud.prototype.update = function(tags, max_value){
 
 };
 
+
 WordCloud.prototype.updateScale = function(max_value){
 
     var self = this;
@@ -155,7 +155,6 @@ WordCloud.prototype.updateScale = function(max_value){
 
 
     max_value =Math.ceil(max_value);
-    //console.log(max_value);
 
     self.layout.font('impact').spiral('archimedean');
     self.fontSize = d3_v3.scale["linear"]().range([10, 60, 5]);
