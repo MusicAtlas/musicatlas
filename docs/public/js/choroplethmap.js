@@ -231,7 +231,11 @@ ChoroplethMap.prototype.update = function(){
                     .defer(d3.json,"https://db03.cs.utah.edu:8181/api/artist_tags/"+ t.id + "?limit=100&offset=0")
                     .defer(d3.json,"https://db03.cs.utah.edu:8181/api/genre_tags/"+ t.id + "?limit=100&offset=0")
                     .await(function(error,year_data,length_data,table_data,cloud_data, genre_data){
-                        if(error) throw error;
+                        if(error) {
+                            console.log("SSL Error or API server down");
+                            d3.select("#errordiv").html('<i>Blank Page Error? <a href="https://db03.cs.utah.edu:8181/api/ssl_auth" target="_blank">  click here and accept SSL </a></i>');
+                            throw error;
+                        }
 
                         self.yearChart.update(year_data);
                         self.trackLength.update(length_data);

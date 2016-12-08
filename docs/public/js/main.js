@@ -34,7 +34,11 @@
             .defer(d3.tsv,"public/data/world-country-names.tsv")
             .defer(d3.json,"https://db03.cs.utah.edu:8181/api/country_track")
             .await(function(error,world,names,track_data){
-                if(error) throw error;
+                if(error) {
+                    console.log("SSL Error or API server down");
+                    d3.select("#errordiv").html('<i>Blank Page Error? <a href="https://db03.cs.utah.edu:8181/api/ssl_auth" target="_blank">  click here and accept SSL </a></i>');
+                    throw error;
+                }
 
                 var choroplethmap = new ChoroplethMap(track_data,world,names,yearChart,trackLength,tableChart,scaleSlider, wordCloud, genreCloud);
                 choroplethmap.update();
