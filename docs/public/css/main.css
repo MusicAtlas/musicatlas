@@ -25,6 +25,12 @@ p{
     min-height: 450px;
 }
 
+
+.legendclass {
+    display: inline-block;
+    width: 70%;
+}
+
 .svg-content{
     display: inline-block;
     position: absolute;
@@ -55,9 +61,9 @@ p{
 }
 
 
-#extrasvg{
+#genrecloud{
     width: 100%;
-    min-height: 450px;
+    min-height: 410px;
     overflow: hidden;
     padding-left: 20px;
 }

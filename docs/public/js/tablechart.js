@@ -1,19 +1,23 @@
 /**
  * Created by shweta on 11/29/16.
  */
-
+/**
+ * Constructor for the Table Chart
+ *
+ */
 function TableChart() {
     var self = this;
-    // self.wordCloud = wordCloud;
+
     self.init();
 };
 
 /**
- * Initializes the svg elements required for this chart
+ * Initializes the table elements required for this chart
  */
 TableChart.prototype.init = function(){
     var self = this;
 
+    //set variable for creating and manipulating table
     self.offset = 0;
     self.pageNumber = 1;
     self.recordPerPage = 20;
@@ -33,6 +37,7 @@ TableChart.prototype.init = function(){
     self.numTracks = 0;
     self.artist_name = '';
 
+    //column headers
     self.columns =['Track','Artist','Album', 'Length', 'Year', 'Language'];
 
     //button layer hidden
@@ -78,6 +83,10 @@ TableChart.prototype.init = function(){
 
 };
 
+/**
+ * Sort the data in descending order
+ * @param row_name
+ */
 TableChart.prototype.descending = function(row_name){
     var self = this;
     switch(row_name) {
@@ -122,6 +131,10 @@ TableChart.prototype.descending = function(row_name){
 
 }
 
+/**
+ * Sort the data in ascending order
+ * @param row_name
+ */
 TableChart.prototype.ascending = function(row_name){
     var self = this;
     switch(row_name) {
@@ -165,6 +178,10 @@ TableChart.prototype.ascending = function(row_name){
     }
 }
 
+/**
+ * Sort the data based on the column clicked and handle toggle
+ * @param row_name
+ */
 TableChart.prototype.sortTable = function(row_name){
     var self = this;
     if(self.row == row_name){
@@ -182,10 +199,13 @@ TableChart.prototype.sortTable = function(row_name){
         self.order = "descending";
         self.descending(row_name);
     }
-    //var data = self.tableElements.slice((self.pageNumber-1)*self.recordPerPage,self.pageNumber*self.recordPerPage);
     self.update(self.tableElements,self.country);
 }
 
+/**
+ * Create table based on data refresh
+ * @param data
+ */
 TableChart.prototype.tableRowCreate = function(data){
     var self = this;
 
@@ -210,7 +230,7 @@ TableChart.prototype.tableRowCreate = function(data){
         .append("td")
         .merge(cell);
 
-
+    //add links for artist, album and tracks for user to interact
     cell.html(function(d,i){
         //search link to artist and track
 
@@ -231,11 +251,23 @@ TableChart.prototype.tableRowCreate = function(data){
     self.pagenumupdate.text(self.pageNumber);
 };
 
+/**
+ * Replace string
+ * @param str
+ * @param find
+ * @param replace
+ * @returns {void|string|XML}
+ */
 TableChart.prototype.replaceAll = function(str, find, replace) {
     var self = this;
     return str.replace(new RegExp(find, 'g'), replace);
 };
 
+/**
+ * Create Wiki link for the content
+ * @param content
+ * @returns {string}
+ */
 TableChart.prototype.getWikiLink = function(content) {
     var self = this;
     var html ='';
@@ -244,6 +276,11 @@ TableChart.prototype.getWikiLink = function(content) {
 return html;
 };
 
+/**
+ * Craete Youtube link for the content
+ * @param content
+ * @returns {string}
+ */
 TableChart.prototype.getYoutubeLink = function(content) {
     var self = this;
     var html ='';
@@ -252,6 +289,11 @@ TableChart.prototype.getYoutubeLink = function(content) {
     return html;
 };
 
+/**
+ * Create LastFM link for the content
+ * @param content
+ * @returns {string}
+ */
 TableChart.prototype.getLastFMLink = function(content) {
     var self = this;
     var html ='';
@@ -260,14 +302,21 @@ TableChart.prototype.getLastFMLink = function(content) {
     return html;
 };
 
+/**
+ * Update date based on data received and handle pagination
+ * @param table_data
+ * @param country
+ */
 TableChart.prototype.update = function(table_data, country){
     var self = this;
     self.tableElements = table_data;
-    self.country = country;
 
+    //slice data to show few records at a time
+    self.country = country;
     var data = self.tableElements.slice((self.pageNumber-1)*self.recordPerPage,self.pageNumber*self.recordPerPage);
 
-    self.tableRowCreate(data);
+    if(data != 0)
+        self.tableRowCreate(data);
 
     self.pageButton.style('visibility','visible');
 
@@ -277,8 +326,20 @@ TableChart.prototype.update = function(table_data, country){
 
     }
 
+    if(self.numTracks <= self.recordPerPage){
+        self.pageButton.select('#next')
+            .style('visibility', 'hidden');
+    }
+
+    if(self.artist_name != ''){
+        self.numTracks = self.tableElements.length;
+    }
+
 };
 
+/**
+ * Handle previous button click
+ */
 TableChart.prototype.loadPrevious = function() {
     var self = this;
 
@@ -294,9 +355,13 @@ TableChart.prototype.loadPrevious = function() {
     self.pageButton.select("#next").style('visibility','visible');
 
     var data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.pageNumber * self.recordPerPage);
-    self.tableRowCreate(data);
+    if(data != 0)
+        self.tableRowCreate(data);
 }
 
+/**
+ * Handle next button click
+ */
 TableChart.prototype.loadNext = function(){
     var self = this;
     self.offset = (self.pageNumber) * self.recordPerPage;
@@ -311,9 +376,9 @@ TableChart.prototype.loadNext = function(){
     if(self.offset >= self.tableElements.length) {
         var req;
         if(self.artist_name == '')
-            req  = "https://db03.cs.utah.edu:8181/api/country_track_record/" + self.country + "?limit=500&offset=" + self.offset;
+            req  = "https://db03.cs.utah.edu:8181/api/country_track_record/" + self.country + "?limit=1000&offset=" + self.offset;
         else
-            req  = "https://db03.cs.utah.edu:8181/api/country_track_record_artist/" + self.country + "/"+self.artist_name+"?limit=500&offset=" + self.offset;
+            req  = "https://db03.cs.utah.edu:8181/api/country_track_record_artist/" + self.country + "/"+self.artist_name+"?limit=1000&offset=" + self.offset;
 
         d3.json(req, function (error, data) {
             if (error) throw error;
@@ -323,17 +388,20 @@ TableChart.prototype.loadNext = function(){
 
     var data;
 
-    if((self.pageNumber) * self.recordPerPage <= self.numTracks) {
+    if((self.pageNumber) * self.recordPerPage < self.numTracks) {
         data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.pageNumber * self.recordPerPage);
     }else{
         data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.tableElements.length);
         self.pageButton.select("#next").style('visibility','hidden');
     }
-    self.tableRowCreate(data);
+    if(data.length != 0)
+        self.tableRowCreate(data);
 
 }
 
-
+/**
+ * Set the action for nect and previous buttons
+ */
 TableChart.prototype.buttonAction = function() {
     var self = this;
 

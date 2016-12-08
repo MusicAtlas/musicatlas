@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Atlas Process Book</title>
+    <script src="public/js/jquery-3.1.1.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="public/js/topojson.js"></script>
+
+    <!-- BOOTSTRAP -->
+    <link href="public/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="public/bootstrap/js/bootstrap.min.js"></script>
+
+
+
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="public/css/navbar-style.css">
+    <link rel="stylesheet" href="public/css/main.css">
+
+    <style>
+
+        /*
+        PDFObject appends the classname "pdfobject-container" to the target element.
+        This enables you to style the element differently depending on whether the embed was successful.
+        In this example, a successful embed will result in a large box.
+        A failed embed will not have dimensions specified, so you don't see an oddly large empty box.
+        */
+
+        .pdfobject-container {
+            float:none;
+            /*width: 80%;*/
+            /*max-width: 600px;*/
+            height: 640px;
+            margin: 2em auto;
+        }
+
+        .pdfobject { border: solid 1px #666; }
+        #results { padding: 1rem; }
+        .hidden { display: none; }
+        .success { color: #4F8A10; background-color: #DFF2BF; }
+        .fail { color: #D8000C; background-color: #FFBABA; }
+    </style>
+
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+</head>
+<body>
+
+<header id="fh5co-header" role="banner">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <!-- Mobile Toggle Menu Button -->
+                <a href="#" class="js-fh5co-nav-toggle fh5co-nav-toggle" data-toggle="collapse" data-target="#fh5co-navbar" aria-expanded="false" aria-controls="navbar"><i></i></a>
+                <a class="navbar-brand" href="index.html">musicatlas</a>
+            </div>
+            <div id="fh5co-navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="index.html"><span>Home <span class="border"></span></span></a></li>
+                    <li class="active"><a href="process_book.html"><span>Docs <span class="border"></span></span></a></li>
+                    <li><a href="https://www.youtube.com/watch?v=afVEXWe9Xfg"><span>Screencast<span class="border"></span></span></a></li>
+                    <li><a href="about.html"><span>About <span class="border"></span></span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container-fluid" style="margin-top: 70px;">
+
+    <div class="row">
+
+    <h2>musicatlas<span style=" font-size:12px;"> <i class="fa fa-twitter fa-3"></i><i> Music Worldwide!</i> </span></h2>
+    </div>
+
+    <div class="row">
+        This Visualization is idealized and built by Debjyoti Paul, Nishant Agarwal and Shweta Singhal, graduate students at the Computer Science department at University of Utah. It is the final project for the Data Visualization course.
+
+    </br>
+    This website is designed for music lovers or any user interested to know or search about music to get more insight related to music industry and popularity of countries in the same by visualizing the music data (Almost all data from 19th century to till date) and playing around with the various visualizations to find more interesting details. You can browse through various languages and search the respective tracks and many more.
+
+
+    <h3><i>Credits:</i></h3>
+    This project is an effort from School of Computing,
+    University of Utah
+    </br>
+    Team Members:
+    <ul>
+        <li> Carolina Nobre (Team Mentor)  </li>
+        <li> Debjyoti Paul </li>
+        <li> Nishant Agarwal</li>
+        <li> Shweta Singhal </li>
+        <ul>
+
+    </div>
+
+
+    <!--<div id="results" class="hidden"></div>-->
+
+
+</div>
+
+<!--https://github.com/shprink/d3js-wordcloud/blob/master/word-cloud.js-->
+<!--http://v4-alpha.getbootstrap.com/components/collapse/-->
+
+<div class="modal fade" id="mediaModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <!-- content dynamically inserted -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</div>
+
+<script>
+    function toggleChevron(e) {
+        $(e.target)
+                .prev('.card-header')
+                .find("i.indicator")
+                .toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
+    }
+    $('#accordion').on('hidden.bs.collapse', toggleChevron);
+    $('#accordion').on('shown.bs.collapse', toggleChevron);
+</script>
+
+
+<script src="public/js/pdfobject.min.js"></script>
+<script>
+
+    var clickHandler = function (e){
+
+        e.preventDefault();
+
+        var pdfURL = this.getAttribute("href");
+
+        var options = {
+            pdfOpenParams: {
+                navpanes: 1,
+                page:1,
+                toolbar: 0,
+                statusbar: 1,
+                view: "FitV"
+            }
+        };
+
+        var myPDF = PDFObject.embed(pdfURL, "#pdf", options);
+
+//        var el = document.querySelector("#results");
+//        el.setAttribute("class", (myPDF) ? "success" : "fail");
+//        el.innerHTML = (myPDF) ? "PDFObject successfully embedded '" + pdfURL + "'!" : "Uh-oh, the embed didn't work.";
+
+    };
+
+
+    $.each($(".embed-link"),function(index,item)
+    {
+        item.addEventListener("click",clickHandler);
+    });
+
+    console.log($(".btn"));
+    $('.btn')[0].click();
+
+
+
+    // YOUTUBE MODAL FOR SCREEN CAST
+    // https://codepen.io/anon/pen/eBVBge
+    (function($){var pl=/\+/g,searchStrict=/([^&=]+)=+([^&]*)/g,searchTolerant=/([^&=]+)=?([^&]*)/g,decode=function(s){return decodeURIComponent(s.replace(pl," "));};$.parseQuery=function(query,options){var match,o={},opts=options||{},search=opts.tolerant?searchTolerant:searchStrict;if('?'===query.substring(0,1)){query=query.substring(1);}while(match=search.exec(query)){o[decode(match[1])]=decode(match[2]);}return o;};$.getQuery=function(options){return $.parseQuery(window.location.search,options);};$.fn.parseQuery=function(options){return $.parseQuery($(this).serialize(),options);};}(jQuery));
+    $(document).ready(function(){$('a[href^="https://www.youtube.com"]').on("click",function(a){var b=$(this).attr("href").slice($(this).attr("href").indexOf("?")+1),c=$.parseQuery(b);if("v"in c){a.preventDefault();var d=900,e=600;$(this).attr("data-width")&&(d=parseInt($(this).attr("data-width"))),$(this).attr("data-height")&&(e=parseInt($(this).attr("data-height")));var f='<iframe width="'+d+'" height="'+e+'" scrolling="no" allowtransparency="true" allowfullscreen="true" src="https://www.youtube.com/embed/'+c.v+'?rel=0&wmode=transparent&showinfo=0" frameborder="0"></iframe>';$("#mediaModal .modal-body").html(f),$("#mediaModal").on("show.bs.modal",function(){var a=$(this).find(".modal-body"),b=$(this).find(".modal-dialog"),c=d+parseInt(a.css("padding-left"))+parseInt(a.css("padding-right"));c+=parseInt(b.css("padding-left"))+parseInt(b.css("padding-right")),c+="px",$(this).find(".modal-dialog").css("width",c)}),$("#mediaModal").modal()}}),$("#mediaModal").on("hidden.bs.modal",function(){$("#mediaModal .modal-body").html("")})});
+
+</script>
+
+</body>
+</html>

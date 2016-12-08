@@ -59,8 +59,8 @@
             <div id="fh5co-navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="index.html"><span>Home <span class="border"></span></span></a></li>
-                    <li class="active"><a href="process_book.html"><span>Process Book <span class="border"></span></span></a></li>
-                    <li><a href="description.html"><span>Description<span class="border"></span></span></a></li>
+                    <li class="active"><a href="process_book.html"><span>Docs <span class="border"></span></span></a></li>
+                    <li><a href="https://www.youtube.com/watch?v=afVEXWe9Xfg"><span>Screencast<span class="border"></span></span></a></li>
                     <li><a href="about.html"><span>About <span class="border"></span></span></a></li>
                 </ul>
             </div>
@@ -71,8 +71,8 @@
 
     <div class="row">
         <div class="btn-group-vertical col-sm-2" style="margin-top: 40px;">
-            <a href="files/process_book.pdf" class="btn btn-success embed-link">How to use</a>
             <a href="files/process_book.pdf" class="btn btn-info embed-link">Process Book</a>
+            <a href="files/musicatlas_api.pdf" class="btn btn-success embed-link">Music Atlas APIs</a>
         </div>
         <div class="col-sm-10">
             <div id="pdf"></div>
@@ -86,6 +86,18 @@
 
 <!--https://github.com/shprink/d3js-wordcloud/blob/master/word-cloud.js-->
 <!--http://v4-alpha.getbootstrap.com/components/collapse/-->
+
+<div class="modal fade" id="mediaModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <!-- content dynamically inserted -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 </div>
 
@@ -136,6 +148,13 @@
 
     console.log($(".btn"));
     $('.btn')[0].click();
+
+
+
+    // YOUTUBE MODAL FOR SCREEN CAST
+    // https://codepen.io/anon/pen/eBVBge
+    (function($){var pl=/\+/g,searchStrict=/([^&=]+)=+([^&]*)/g,searchTolerant=/([^&=]+)=?([^&]*)/g,decode=function(s){return decodeURIComponent(s.replace(pl," "));};$.parseQuery=function(query,options){var match,o={},opts=options||{},search=opts.tolerant?searchTolerant:searchStrict;if('?'===query.substring(0,1)){query=query.substring(1);}while(match=search.exec(query)){o[decode(match[1])]=decode(match[2]);}return o;};$.getQuery=function(options){return $.parseQuery(window.location.search,options);};$.fn.parseQuery=function(options){return $.parseQuery($(this).serialize(),options);};}(jQuery));
+    $(document).ready(function(){$('a[href^="https://www.youtube.com"]').on("click",function(a){var b=$(this).attr("href").slice($(this).attr("href").indexOf("?")+1),c=$.parseQuery(b);if("v"in c){a.preventDefault();var d=900,e=600;$(this).attr("data-width")&&(d=parseInt($(this).attr("data-width"))),$(this).attr("data-height")&&(e=parseInt($(this).attr("data-height")));var f='<iframe width="'+d+'" height="'+e+'" scrolling="no" allowtransparency="true" allowfullscreen="true" src="https://www.youtube.com/embed/'+c.v+'?rel=0&wmode=transparent&showinfo=0" frameborder="0"></iframe>';$("#mediaModal .modal-body").html(f),$("#mediaModal").on("show.bs.modal",function(){var a=$(this).find(".modal-body"),b=$(this).find(".modal-dialog"),c=d+parseInt(a.css("padding-left"))+parseInt(a.css("padding-right"));c+=parseInt(b.css("padding-left"))+parseInt(b.css("padding-right")),c+="px",$(this).find(".modal-dialog").css("width",c)}),$("#mediaModal").modal()}}),$("#mediaModal").on("hidden.bs.modal",function(){$("#mediaModal .modal-body").html("")})});
 
 </script>
 

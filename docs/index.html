@@ -6,10 +6,12 @@
     <title>Music Atlas</title>
     <script src="public/js/jquery-3.1.1.min.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script type="text/javascript" src="public/js/d3-legend.js"></script>
     <script src="public/js/d3_v3.js"></script>
     <script src="public/js/d3_v3.layout.cloud.js"></script>
     <script src="public/js/topojson.js"></script>
     <script src="public/js/colorbrewer.js"></script>
+    <script src="public/js/chroma.min.js"></script>
 
     <!-- BOOTSTRAP -->
     <link href="public/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -24,9 +26,13 @@
 </head>
 <body>
 
+
+
 <header id="fh5co-header" role="banner">
+
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
+            <div id="errordiv" style="position:absolute;top:20px; left:50%;font-style: italic"></div>
             <div class="navbar-header">
                 <!-- Mobile Toggle Menu Button -->
                 <a href="#" class="js-fh5co-nav-toggle fh5co-nav-toggle" data-toggle="collapse" data-target="#fh5co-navbar" aria-expanded="false" aria-controls="navbar"><i></i></a>
@@ -39,8 +45,8 @@
             <div id="fh5co-navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="active"><a href="index.html"><span>Home <span class="border"></span></span></a></li>
-                    <li><a href="process_book.html"><span>Process Book <span class="border"></span></span></a></li>
-                    <li><a href="screencast.html"><span>Screencast<span class="border"></span></span></a></li>
+                    <li><a href="process_book.html"><span>Docs <span class="border"></span></span></a></li>
+                    <li><a href="https://www.youtube.com/watch?v=afVEXWe9Xfg"><span>Screencast<span class="border"></span></span></a></li>
                     <li><a href="about.html"><span>About <span class="border"></span></span></a></li>
                 </ul>
             </div>
@@ -60,6 +66,7 @@
             <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
                 <div class="row">
                     <div id="choropleth"></div>
+                    <div id="legend"></div>
                     <p>*click on the country to display dashboard containing details of music.</p>
                 </div>
             </div>
@@ -120,7 +127,7 @@
 
                     <div class="row">
                         <!--Carousel start-->
-                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval=360000>
+                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval=6000>
                             <!-- Indicators -->
                             <!-- Wrapper for slides -->
                             <div class="carousel-inner">
@@ -133,16 +140,21 @@
                                         <div id="wordcloud"  class="col-md-12" >
                                         </div>
                                     </div>
+
+                                    <div class="carousel-caption">
+                                        <h3 style="float: right; margin-right: -160px; margin-bottom: -20px; text-decoration: overline">Artists</h3>
+                                    </div>
                                     <p>*artist word cloud where size is scaled on track count and click updates table.</p>
                                 </div>
                                 <div class="item">
                                     <div class="row">
-                                        <div id="extrasvg"  class="col-md-12" >
+                                        <div id="genrecloud"  class="col-md-12" >
                                         </div>
                                     </div>
                                     <div class="carousel-caption">
-                                        <h3>Caption Text</h3>
+                                        <h3 style="float: right; margin-right: -160px; margin-bottom: -10px; text-decoration: overline">Genre</h3>
                                     </div>
+                                    <p>*genre word cloud where size is scaled on track count.</p>
                                 </div>
                             </div>
 
@@ -162,6 +174,17 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="mediaModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <!-- content dynamically inserted -->
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--https://github.com/shprink/d3js-wordcloud/blob/master/word-cloud.js-->
 <!--http://v4-alpha.getbootstrap.com/components/collapse/-->
 
@@ -172,6 +195,7 @@
 <script type="application/javascript" src="public/js/tablechart.js"></script>
 <script type="application/javascript" src="public/js/scaleslider.js"></script>
 <script type="application/javascript" src="public/js/wordcloud.js"></script>
+<script type="application/javascript" src="public/js/genrewordcloud.js"></script>
 
 <script type="application/javascript" src="public/js/main.js"></script>
 
@@ -188,6 +212,12 @@
     $('#accordion').on('shown.bs.collapse', toggleChevron);
     $('#accordion-dashboard').on('hidden.bs.collapse', toggleChevron);
     $('#accordion-dashboard').on('shown.bs.collapse', toggleChevron);
+
+
+    // YOUTUBE MODAL FOR SCREEN CAST
+    // https://codepen.io/anon/pen/eBVBge
+    (function($){var pl=/\+/g,searchStrict=/([^&=]+)=+([^&]*)/g,searchTolerant=/([^&=]+)=?([^&]*)/g,decode=function(s){return decodeURIComponent(s.replace(pl," "));};$.parseQuery=function(query,options){var match,o={},opts=options||{},search=opts.tolerant?searchTolerant:searchStrict;if('?'===query.substring(0,1)){query=query.substring(1);}while(match=search.exec(query)){o[decode(match[1])]=decode(match[2]);}return o;};$.getQuery=function(options){return $.parseQuery(window.location.search,options);};$.fn.parseQuery=function(options){return $.parseQuery($(this).serialize(),options);};}(jQuery));
+    $(document).ready(function(){$('a[href^="https://www.youtube.com"]').on("click",function(a){var b=$(this).attr("href").slice($(this).attr("href").indexOf("?")+1),c=$.parseQuery(b);if("v"in c){a.preventDefault();var d=900,e=600;$(this).attr("data-width")&&(d=parseInt($(this).attr("data-width"))),$(this).attr("data-height")&&(e=parseInt($(this).attr("data-height")));var f='<iframe width="'+d+'" height="'+e+'" scrolling="no" allowtransparency="true" allowfullscreen="true" src="https://www.youtube.com/embed/'+c.v+'?rel=0&wmode=transparent&showinfo=0" frameborder="0"></iframe>';$("#mediaModal .modal-body").html(f),$("#mediaModal").on("show.bs.modal",function(){var a=$(this).find(".modal-body"),b=$(this).find(".modal-dialog"),c=d+parseInt(a.css("padding-left"))+parseInt(a.css("padding-right"));c+=parseInt(b.css("padding-left"))+parseInt(b.css("padding-right")),c+="px",$(this).find(".modal-dialog").css("width",c)}),$("#mediaModal").modal()}}),$("#mediaModal").on("hidden.bs.modal",function(){$("#mediaModal .modal-body").html("")})});
 
 </script>
 </body>
