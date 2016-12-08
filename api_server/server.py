@@ -47,6 +47,26 @@ def parseDate( date_string):
     return dparser.parse(date_string, fuzzy=True)
 
 
+@app.route('/api/ssl_auth', methods=['GET'])
+def ssl_auth():
+    """ RELEASE COUNT PER LOCATION
+    GET /api/ssl_auth
+    """
+    if request.method == 'GET':
+        #lim = int(request.args.get('limit', 50000))
+        #off = int(request.args.get('offset', 0))
+        results=[]
+        temp ={}
+        temp["success"]=True
+        temp["remarks"]="MusicAtlas API access enabled on your browser. Thanks for accepting SSL certificate. We will shortly update our SSL to public certificate. "
+        results.append(temp)
+    
+        return ujson.dumps(results)
+    else:
+        return ujson.dumps({"status":"error"})
+
+
+
 @app.route('/api/release_location_count', methods=['GET'])
 def release_location_count():
     """ RELEASE COUNT PER LOCATION
@@ -68,7 +88,7 @@ def release_location_count():
                 temp= {}
                 temp["release_count"] = item[0]
                 temp["country"] = item[1]
-                results.append(item)
+                results.append(temp)
     
         return ujson.dumps(results)
     else:
