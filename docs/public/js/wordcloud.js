@@ -119,7 +119,7 @@ WordCloud.prototype.draw = function(data, bounds) {
 
             self.tableChart.artist_name = artist_name;
 
-            var req  = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length_artist/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length+"/"+artist_name+"?limit=500";
+            var req  = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length_artist/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length+"/"+artist_name+"?limit=200";
 
 
             d3.json(req, function (error, table_data) {

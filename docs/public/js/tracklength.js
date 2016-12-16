@@ -123,7 +123,7 @@ TrackLength.prototype.update = function(length_data){
                     self.wordCloud.min_length = self.min_length;
                     self.wordCloud.max_length = self.max_length;
 
-                    var req = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length+"?limit=1000&offset=0";
+                    var req = "https://db03.cs.utah.edu:8181/api/country_track_year_range_length/"+self.country+"/"+self.start_year+"/"+self.end_year+"/"+self.min_length+"/"+self.max_length+"?limit=200&offset=0";
 
                     d3.json(req,function(error,year_track_table_data){
                         if(error) throw error;
