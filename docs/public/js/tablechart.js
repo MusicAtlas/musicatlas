@@ -376,9 +376,9 @@ TableChart.prototype.loadNext = function(){
     if(self.offset >= self.tableElements.length) {
         var req;
         if(self.artist_name == '')
-            req  = "https://db03.cs.utah.edu:8181/api/country_track_record/" + self.country + "?limit=1000&offset=" + self.offset;
+            req  = "//db03.cs.utah.edu:8181/api/country_track_record/" + self.country + "?limit=1000&offset=" + self.offset;
         else
-            req  = "https://db03.cs.utah.edu:8181/api/country_track_record_artist/" + self.country + "/"+self.artist_name+"?limit=1000&offset=" + self.offset;
+            req  = "//db03.cs.utah.edu:8181/api/country_track_record_artist/" + self.country + "/"+self.artist_name+"?limit=1000&offset=" + self.offset;
 
         d3.json(req, function (error, data) {
             if (error) throw error;
