@@ -467,8 +467,7 @@ def country_length_per_year_range(country_id, start_year, end_year):
         results=[]
         with app.app_context():
             conn = get_db().cursor()
-            query = "select min(length), max(length), year from country_track where country_id="+ str(country_id) +" and year between "+ start_year +" AND "+ end_year +" group by year " ;
-
+            query = "select  min_length, max_length, year, country  from country_track_length_year_group where country_id="+ str(country_id)  +" and year between "+ start_year +" AND "+ end_year
             conn.execute(query)
             data = conn.fetchall()
             for item in data:
@@ -674,6 +673,9 @@ def artist_releasegroup():
 
 if __name__ == '__main__':
     from gevent.wsgi import WSGIServer
-    http_server = WSGIServer(('db03.cs.utah.edu', 8181), app,keyfile='ssl/musicatlas_github.key', certfile='ssl/musicatlas.crt')
+    ##### WITH SSL
+    #http_server = WSGIServer(('db03.cs.utah.edu', 8181), app,keyfile='ssl/musicatlas_github.key', certfile='ssl/musicatlas.crt')
+    ##### WITHOUT SSL
+    http_server = WSGIServer(('db03.cs.utah.edu', 8181), app)
     http_server.serve_forever()
 
