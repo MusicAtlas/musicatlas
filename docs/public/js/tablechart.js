@@ -200,6 +200,8 @@ TableChart.prototype.sortTable = function(row_name){
         self.descending(row_name);
     }
     self.pageNumber=1;
+    self.pageButton.select('#next')
+        .style('visibility', 'visible');
     self.update(self.tableElements,self.country);
 }
 
@@ -413,7 +415,7 @@ TableChart.prototype.updateData = function(){
 
 
 /**
- * Set the action for nect and previous buttons
+ * Set the action for next and previous buttons
  */
 TableChart.prototype.buttonAction = function() {
     var self = this;
