@@ -76,7 +76,11 @@ TableChart.prototype.init = function(){
 
     d3.selectAll("th")
         .on("click",function(){
-            self.sortTable(this.innerText);
+            var attribute = this.innerText;
+            if (attribute == undefined){
+                attribute = this.innerHTML.match(/([A-Za-z]+)/g)[0];
+            }
+            self.sortTable(attribute);
         });
 
     self.buttonAction();
