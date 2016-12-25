@@ -275,7 +275,7 @@ def country_track_record_artist(country_id, artist_name):
             data = conn.fetchall()
             for item in data:
                 year = parseInt(item[8])
-                if yar != None :
+                if year != None :
                     temp = {}
                     temp["release_id"] = item[0]
                     temp["release_name"] = item[1]
