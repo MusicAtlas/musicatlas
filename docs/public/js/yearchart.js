@@ -41,7 +41,7 @@ YearChart.prototype.init = function(){
         .attr("width",self.svgWidth)
         .attr("height",self.svgHeight);
 
-    self.brush = d3.brushX().extent([[0,self.svgHeight/2-10],[self.svgWidth,self.svgHeight/2+40]]).on("end", function(){
+    self.brush = d3.brushX().extent([[0,self.svgHeight/2-30],[self.svgWidth,self.svgHeight/2+40]]).on("end", function(){
         self.brushed();
     });
 
@@ -191,6 +191,7 @@ YearChart.prototype.update = function(year_data){
         .style("font-size","10px");
 
 
+
 };
 
 //http://bl.ocks.org/mbostock/34f08d5e11952a80609169b7917d4172
@@ -259,4 +260,4 @@ YearChart.prototype.brushed = function (){
                 self.genreCloud.update(genre_data);
             }
         });
-}
+};
