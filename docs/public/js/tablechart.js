@@ -202,6 +202,8 @@ TableChart.prototype.sortTable = function(row_name){
     self.pageNumber=1;
     self.pageButton.select('#next')
         .style('visibility', 'visible');
+    self.pageButton.select('#first')
+        .style('visibility', 'hidden');
     self.update(self.tableElements,self.country);
 }
 
@@ -327,6 +329,8 @@ TableChart.prototype.update = function(table_data, country){
         self.pageButton.select('#previous')
             .style('visibility', 'hidden');
 
+        self.pageButton.select('#first')
+            .style('visibility', 'hidden');
     }
 
     if(self.numTracks <= self.recordPerPage){
@@ -339,6 +343,30 @@ TableChart.prototype.update = function(table_data, country){
     }
 
 };
+
+
+/**
+ * Handle first button click
+ */
+TableChart.prototype.loadFirst = function() {
+    var self = this;
+
+
+    self.pageNumber=1;
+
+    self.pageButton.select('#previous')
+        .style('visibility','hidden');
+    self.pageButton.select('#first')
+        .style('visibility', 'hidden');
+
+    self.pageButton.select("#next").style('visibility','visible');
+
+    var data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.pageNumber * self.recordPerPage);
+    if(data != 0)
+        self.tableRowCreate(data);
+};
+
+
 
 /**
  * Handle previous button click
@@ -354,13 +382,15 @@ TableChart.prototype.loadPrevious = function() {
     if(self.pageNumber ==1){
         self.pageButton.select('#previous')
             .style('visibility','hidden');
+        self.pageButton.select('#first')
+            .style('visibility', 'hidden');
     }
     self.pageButton.select("#next").style('visibility','visible');
 
     var data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.pageNumber * self.recordPerPage);
     if(data != 0)
         self.tableRowCreate(data);
-}
+};
 
 /**
  * Handle next button click
@@ -409,6 +439,8 @@ TableChart.prototype.updateData = function(){
     if(self.pageNumber > 1) {
         self.pageButton.select('#previous')
             .style('visibility', 'visible');
+        self.pageButton.select('#first')
+            .style('visibility', 'visible');
     }
 
 };
@@ -419,6 +451,11 @@ TableChart.prototype.updateData = function(){
  */
 TableChart.prototype.buttonAction = function() {
     var self = this;
+
+    var nextBtn = d3.select('#first');
+    nextBtn.on('click',function(){
+        self.loadFirst();
+    });
 
     var previousBtn = d3.select('#previous');
         previousBtn.on('click', function(){
