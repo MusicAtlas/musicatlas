@@ -124,6 +124,7 @@ WordCloud.prototype.draw = function(data, bounds) {
 
             d3.json(req, function (error, table_data) {
                 if (error) throw error;
+                self.tableChart.pageNumber =1;
                 self.tableChart.update(table_data, self.country);
             });
 

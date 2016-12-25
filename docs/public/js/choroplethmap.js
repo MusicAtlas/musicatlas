@@ -227,7 +227,7 @@ ChoroplethMap.prototype.update = function(){
                 d3.queue()
                     .defer(d3.json,"//db03.cs.utah.edu:8181/api/country_track_year/"+t.id)
                     .defer(d3.json,"//db03.cs.utah.edu:8181/api/country_length_per_year/"+t.id)
-                    .defer(d3.json,"//db03.cs.utah.edu:8181/api/country_track_record/"+t.id+"?limit=1000&offset=0")
+                    .defer(d3.json,"//db03.cs.utah.edu:8181/api/country_track_record/"+t.id+"?limit=500&offset=0")
                     .defer(d3.json,"//db03.cs.utah.edu:8181/api/artist_tags/"+ t.id + "?limit=100&offset=0")
                     .defer(d3.json,"//db03.cs.utah.edu:8181/api/genre_tags/"+ t.id + "?limit=100&offset=0")
                     .await(function(error,year_data,length_data,table_data,cloud_data, genre_data){

@@ -129,7 +129,7 @@ TableChart.prototype.descending = function(row_name){
         default : console.log("Something Went Wrong In Descending!!!!!")
     }
 
-}
+};
 
 /**
  * Sort the data in ascending order
@@ -199,6 +199,7 @@ TableChart.prototype.sortTable = function(row_name){
         self.order = "descending";
         self.descending(row_name);
     }
+    self.pageNumber=1;
     self.update(self.tableElements,self.country);
 }
 
@@ -366,29 +367,34 @@ TableChart.prototype.loadNext = function(){
     var self = this;
     self.offset = (self.pageNumber) * self.recordPerPage;
 
-    self.pageNumber++;
 
-    if(self.pageNumber > 1) {
-        self.pageButton.select('#previous')
-            .style('visibility', 'visible');
-    }
 
-    if(self.offset >= self.tableElements.length) {
+    if(self.offset + self.recordPerPage >= self.tableElements.length) {
         var req;
         if(self.artist_name == '')
-            req  = "//db03.cs.utah.edu:8181/api/country_track_record/" + self.country + "?limit=1000&offset=" + self.offset;
+            req  = "//db03.cs.utah.edu:8181/api/country_track_record/" + self.country + "?limit=200&offset=" + self.tableElements.length;
         else
-            req  = "//db03.cs.utah.edu:8181/api/country_track_record_artist/" + self.country + "/"+self.artist_name+"?limit=1000&offset=" + self.offset;
+            req  = "//db03.cs.utah.edu:8181/api/country_track_record_artist/" + self.country + "/"+self.artist_name+"?limit=200&offset=" + self.tableElements.length;
 
         d3.json(req, function (error, data) {
             if (error) throw error;
-            self.tableElements.push(data);
+            self.tableElements.push.apply(self.tableElements,data);
+            self.updateData();
         });
     }
+    else{
+        self.updateData();
+    }
+};
 
+TableChart.prototype.updateData = function(){
+
+    var self = this;
+
+    self.pageNumber++;
     var data;
 
-    if((self.pageNumber) * self.recordPerPage < self.numTracks) {
+    if((self.pageNumber) * self.recordPerPage <= self.tableElements.length) {
         data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.pageNumber * self.recordPerPage);
     }else{
         data = self.tableElements.slice((self.pageNumber - 1) * self.recordPerPage, self.tableElements.length);
@@ -397,7 +403,14 @@ TableChart.prototype.loadNext = function(){
     if(data.length != 0)
         self.tableRowCreate(data);
 
-}
+
+    if(self.pageNumber > 1) {
+        self.pageButton.select('#previous')
+            .style('visibility', 'visible');
+    }
+
+};
+
 
 /**
  * Set the action for nect and previous buttons
